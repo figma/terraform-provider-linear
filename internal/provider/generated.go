@@ -1104,6 +1104,10 @@ type Team struct {
 	Color *string `json:"color"`
 	// The team's parent team.
 	Parent *TeamParentTeam `json:"parent"`
+	// Whether the team should inherit its estimation settings from its parent. Only applies to sub-teams.
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+	// Whether the team should inherit its workflow statuses from its parent. Only applies to sub-teams.
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
 	// The timezone of the team. Defaults to "America/Los_Angeles"
 	Timezone string `json:"timezone"`
 	// Whether to group recent issue history entries.
@@ -1178,6 +1182,12 @@ func (v *Team) GetColor() *string { return v.Color }
 
 // GetParent returns Team.Parent, and is useful for accessing the field via an interface.
 func (v *Team) GetParent() *TeamParentTeam { return v.Parent }
+
+// GetInheritIssueEstimation returns Team.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *Team) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+
+// GetInheritWorkflowStatuses returns Team.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *Team) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
 
 // GetTimezone returns Team.Timezone, and is useful for accessing the field via an interface.
 func (v *Team) GetTimezone() string { return v.Timezone }
@@ -1284,9 +1294,9 @@ type TeamCreateInput struct {
 	// The timezone of the team.
 	Timezone string `json:"timezone"`
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
-	InheritIssueEstimation bool `json:"inheritIssueEstimation,omitempty"`
+	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// [Internal] Whether the team should inherit workflow statuses from its parent.
-	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+	InheritWorkflowStatuses *bool `json:"inheritWorkflowStatuses,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
 	IssueEstimationType string `json:"issueEstimationType"`
 	// Whether to allow zeros in issues estimates.
@@ -1387,10 +1397,10 @@ func (v *TeamCreateInput) GetRequirePriorityToLeaveTriage() bool {
 func (v *TeamCreateInput) GetTimezone() string { return v.Timezone }
 
 // GetInheritIssueEstimation returns TeamCreateInput.InheritIssueEstimation, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+func (v *TeamCreateInput) GetInheritIssueEstimation() *bool { return v.InheritIssueEstimation }
 
 // GetInheritWorkflowStatuses returns TeamCreateInput.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
+func (v *TeamCreateInput) GetInheritWorkflowStatuses() *bool { return v.InheritWorkflowStatuses }
 
 // GetIssueEstimationType returns TeamCreateInput.IssueEstimationType, and is useful for accessing the field via an interface.
 func (v *TeamCreateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
@@ -1559,7 +1569,7 @@ type TeamUpdateInput struct {
 	// The timezone of the team.
 	Timezone string `json:"timezone"`
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
-	InheritIssueEstimation bool `json:"inheritIssueEstimation,omitempty"`
+	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
 	IssueEstimationType string `json:"issueEstimationType"`
 	// Whether to allow zeros in issues estimates.
@@ -1616,7 +1626,7 @@ type TeamUpdateInput struct {
 	// The parent team ID.
 	ParentId *string `json:"parentId"`
 	// [Internal] Whether the team should inherit workflow statuses from its parent.
-	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+	InheritWorkflowStatuses *bool `json:"inheritWorkflowStatuses,omitempty"`
 	// [Internal] Whether the team should inherit its product intelligence scope from its parent. Only applies to sub-teams.
 	InheritProductIntelligenceScope bool `json:"inheritProductIntelligenceScope,omitempty"`
 	// [Internal] The scope of product intelligence suggestion data for the team.
@@ -1686,7 +1696,7 @@ func (v *TeamUpdateInput) GetUpcomingCycleCount() float64 { return v.UpcomingCyc
 func (v *TeamUpdateInput) GetTimezone() string { return v.Timezone }
 
 // GetInheritIssueEstimation returns TeamUpdateInput.InheritIssueEstimation, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+func (v *TeamUpdateInput) GetInheritIssueEstimation() *bool { return v.InheritIssueEstimation }
 
 // GetIssueEstimationType returns TeamUpdateInput.IssueEstimationType, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
@@ -1782,7 +1792,7 @@ func (v *TeamUpdateInput) GetScimManaged() bool { return v.ScimManaged }
 func (v *TeamUpdateInput) GetParentId() *string { return v.ParentId }
 
 // GetInheritWorkflowStatuses returns TeamUpdateInput.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
+func (v *TeamUpdateInput) GetInheritWorkflowStatuses() *bool { return v.InheritWorkflowStatuses }
 
 // GetInheritProductIntelligenceScope returns TeamUpdateInput.InheritProductIntelligenceScope, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetInheritProductIntelligenceScope() bool {
@@ -2872,6 +2882,16 @@ func (v *createTeamTeamCreateTeamPayloadTeam) GetColor() *string { return v.Team
 // GetParent returns createTeamTeamCreateTeamPayloadTeam.Parent, and is useful for accessing the field via an interface.
 func (v *createTeamTeamCreateTeamPayloadTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
 
+// GetInheritIssueEstimation returns createTeamTeamCreateTeamPayloadTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *createTeamTeamCreateTeamPayloadTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns createTeamTeamCreateTeamPayloadTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *createTeamTeamCreateTeamPayloadTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
 // GetTimezone returns createTeamTeamCreateTeamPayloadTeam.Timezone, and is useful for accessing the field via an interface.
 func (v *createTeamTeamCreateTeamPayloadTeam) GetTimezone() string { return v.Team.Timezone }
 
@@ -3019,6 +3039,10 @@ type __premarshalcreateTeamTeamCreateTeamPayloadTeam struct {
 
 	Parent *TeamParentTeam `json:"parent"`
 
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
 	Timezone string `json:"timezone"`
 
 	GroupIssueHistory bool `json:"groupIssueHistory"`
@@ -3085,6 +3109,8 @@ func (v *createTeamTeamCreateTeamPayloadTeam) __premarshalJSON() (*__premarshalc
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -3779,6 +3805,12 @@ func (v *getTeamTeam) GetColor() *string { return v.Team.Color }
 // GetParent returns getTeamTeam.Parent, and is useful for accessing the field via an interface.
 func (v *getTeamTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
 
+// GetInheritIssueEstimation returns getTeamTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *getTeamTeam) GetInheritIssueEstimation() bool { return v.Team.InheritIssueEstimation }
+
+// GetInheritWorkflowStatuses returns getTeamTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *getTeamTeam) GetInheritWorkflowStatuses() bool { return v.Team.InheritWorkflowStatuses }
+
 // GetTimezone returns getTeamTeam.Timezone, and is useful for accessing the field via an interface.
 func (v *getTeamTeam) GetTimezone() string { return v.Team.Timezone }
 
@@ -3898,6 +3930,10 @@ type __premarshalgetTeamTeam struct {
 
 	Parent *TeamParentTeam `json:"parent"`
 
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
 	Timezone string `json:"timezone"`
 
 	GroupIssueHistory bool `json:"groupIssueHistory"`
@@ -3964,6 +4000,8 @@ func (v *getTeamTeam) __premarshalJSON() (*__premarshalgetTeamTeam, error) {
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -5281,6 +5319,16 @@ func (v *updateTeamTeamUpdateTeamPayloadTeam) GetColor() *string { return v.Team
 // GetParent returns updateTeamTeamUpdateTeamPayloadTeam.Parent, and is useful for accessing the field via an interface.
 func (v *updateTeamTeamUpdateTeamPayloadTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
 
+// GetInheritIssueEstimation returns updateTeamTeamUpdateTeamPayloadTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *updateTeamTeamUpdateTeamPayloadTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns updateTeamTeamUpdateTeamPayloadTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *updateTeamTeamUpdateTeamPayloadTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
 // GetTimezone returns updateTeamTeamUpdateTeamPayloadTeam.Timezone, and is useful for accessing the field via an interface.
 func (v *updateTeamTeamUpdateTeamPayloadTeam) GetTimezone() string { return v.Team.Timezone }
 
@@ -5428,6 +5476,10 @@ type __premarshalupdateTeamTeamUpdateTeamPayloadTeam struct {
 
 	Parent *TeamParentTeam `json:"parent"`
 
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
 	Timezone string `json:"timezone"`
 
 	GroupIssueHistory bool `json:"groupIssueHistory"`
@@ -5494,6 +5546,8 @@ func (v *updateTeamTeamUpdateTeamPayloadTeam) __premarshalJSON() (*__premarshalu
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -6031,6 +6085,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange
@@ -6534,6 +6590,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange
@@ -7120,6 +7178,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange
