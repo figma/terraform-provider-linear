@@ -42,8 +42,10 @@ fragment Team on Team {
 }
 
 query getTeam($key: String!) {
-  team(id: $key) {
-    ...Team
+  administrableTeams(filter: {key: {eq: $key}}, first: 1, includeArchived: true) {
+    nodes {
+      ...Team
+    }
   }
 }
 

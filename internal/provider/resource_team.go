@@ -1054,7 +1054,12 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	team := response.Team
+	if len(response.AdministrableTeams.Nodes) == 0 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+
+	team := response.AdministrableTeams.Nodes[0]
 
 	data.Id = types.StringValue(team.Id)
 	data.Name = types.StringValue(team.Name)
