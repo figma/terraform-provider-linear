@@ -2,8 +2,19 @@
 
 ## Unreleased
 
+## 0.4.0
+
+### Release
+* First release under `registry.terraform.io/figma/linear`. Set the provider source to `figma/linear` to use this release.
+* Existing users of `terraform-community-providers/linear` can migrate their state with `terraform state replace-provider registry.terraform.io/terraform-community-providers/linear registry.terraform.io/figma/linear`.
+
 ### Enhancements
-* Added `linear_project_label` resource
+* Added `linear_document` resource to manage Markdown documents attached to projects or issues, including import, reparenting, and moving documents to trash on deletion.
+* Added `linear_project_label` resource with support for label groups, parent-child relationships, and import.
+* Added `inherit_issue_estimation` and `inherit_workflow_statuses` to `linear_team` for sub-teams.
+
+### Bug Fixes
+* Read teams through `administrableTeams` so administrators can find private, restricted, retired, and archived teams.
 
 ## 0.3.7
 
