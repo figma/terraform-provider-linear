@@ -121,7 +121,8 @@ func TestAccProjectLabelResource(t *testing.T) {
 			},
 			{
 				Config: testAccProjectLabelResourceConfigCleared(),
-				Check:  testAccDeleteProjectLabel("linear_project_label.child"),
+				Check:              testAccDeleteProjectLabel("linear_project_label.child"),
+				ExpectNonEmptyPlan: true,
 			},
 			{
 				RefreshState:       true,

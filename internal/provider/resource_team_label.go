@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -288,11 +289,23 @@ func (r *TeamLabelResource) ImportState(ctx context.Context, req resource.Import
 		return
 	}
 
-	response, err := findTeamLabel(ctx, *r.client, parts[0], parts[1])
-
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to import team label, got error: %s", err))
-		return
+	var response *findTeamLabelResponse
+	for attempt := 0; attempt < 5; attempt++ {
+		var err error
+		response, err = findTeamLabel(ctx, *r.client, parts[0], parts[1])
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to import team label, got error: %s", err))
+			return
+		}
+		if len(response.IssueLabels.Nodes) != 0 || attempt == 4 {
+			break
+		}
+		select {
+		case <-ctx.Done():
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to import team label, got error: %s", ctx.Err()))
+			return
+		case <-time.After(time.Second):
+		}
 	}
 
 	if len(response.IssueLabels.Nodes) != 1 {

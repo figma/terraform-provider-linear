@@ -1428,7 +1428,7 @@ type TeamCreateInput struct {
 	// [Internal] Whether the team should inherit workflow statuses from its parent.
 	InheritWorkflowStatuses *bool `json:"inheritWorkflowStatuses,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
-	IssueEstimationType string `json:"issueEstimationType"`
+	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
 	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
 	// Whether to move issues to bottom of the column when changing state.
@@ -1701,7 +1701,7 @@ type TeamUpdateInput struct {
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
 	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
-	IssueEstimationType string `json:"issueEstimationType"`
+	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
 	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
 	// Whether to move issues to bottom of the column when changing state.
