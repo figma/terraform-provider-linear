@@ -1085,6 +1085,9 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		data.ParentId = types.StringValue(team.Parent.Id)
 	} else {
 		data.ParentId = types.StringNull()
+		// Linear can report inheritance enabled for root teams, which have no parent to inherit from.
+		data.InheritIssueEstimation = types.BoolValue(false)
+		data.InheritWorkflowStatuses = types.BoolValue(false)
 	}
 
 	if team.AutoClosePeriod != nil {
@@ -1430,6 +1433,9 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 		data.ParentId = types.StringValue(team.Parent.Id)
 	} else {
 		data.ParentId = types.StringNull()
+		// Linear can report inheritance enabled for root teams, which have no parent to inherit from.
+		data.InheritIssueEstimation = types.BoolValue(false)
+		data.InheritWorkflowStatuses = types.BoolValue(false)
 	}
 
 	if team.AutoClosePeriod != nil {

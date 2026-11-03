@@ -52,7 +52,7 @@ func TestAccWorkspaceLabelResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "description", "lots of it"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "is_group", "false"),
-					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "09b38784-8d8b-453a-83b6-84c08d094803"),
+					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "d86b277e-3607-463b-b966-9250f417ad6b"),
 				),
 			},
 			// ImportState testing
@@ -141,7 +141,7 @@ func TestAccWorkspaceLabelResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "description", "lots of it"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "is_group", "false"),
-					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "09b38784-8d8b-453a-83b6-84c08d094803"),
+					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "d86b277e-3607-463b-b966-9250f417ad6b"),
 				),
 			},
 			// ImportState testing
@@ -160,7 +160,7 @@ func TestAccWorkspaceLabelResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "description", "lots of it"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_workspace_label.test", "is_group", "false"),
-					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "09b38784-8d8b-453a-83b6-84c08d094803"),
+					resource.TestCheckResourceAttr("linear_workspace_label.test", "parent_id", "d86b277e-3607-463b-b966-9250f417ad6b"),
 				),
 			},
 			// Update with null values
@@ -261,7 +261,7 @@ resource "linear_workspace_label" "test" {
   name = "%s"
   description = "lots of it"
   color = "#00ff00"
-  parent_id = "09b38784-8d8b-453a-83b6-84c08d094803"
+  parent_id = "d86b277e-3607-463b-b966-9250f417ad6b"
 }
 `, name)
 }

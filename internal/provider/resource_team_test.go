@@ -23,6 +23,8 @@ func TestAccTeamResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "name", "Acc Tests"),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "false"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "parent_id"),
+					resource.TestCheckResourceAttr("linear_team.test", "inherit_issue_estimation", "false"),
+					resource.TestCheckResourceAttr("linear_team.test", "inherit_workflow_statuses", "false"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "description"),
 					resource.TestCheckResourceAttr("linear_team.test", "icon", "Bank"),
 					resource.TestMatchResourceAttr("linear_team.test", "color", colorRegex()),
@@ -159,7 +161,7 @@ func TestAccTeamResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "key", "AC"),
 					resource.TestCheckResourceAttr("linear_team.test", "name", "Acceptance"),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
+					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
 					resource.TestCheckResourceAttr("linear_team.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_team.test", "color", "#00ff00"),
@@ -279,7 +281,7 @@ resource "linear_team" "test" {
 resource "linear_team" "test" {
   key                      = "TEST"
   name                     = "Test"
-  parent_id                = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  parent_id                = "ab69b823-f187-444d-8848-782045b86656"
   inherit_issue_estimation = true
   estimation = {
     type = "linear"
@@ -293,7 +295,7 @@ resource "linear_team" "test" {
 resource "linear_team" "test" {
   key                       = "TEST"
   name                      = "Test"
-  parent_id                 = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  parent_id                 = "ab69b823-f187-444d-8848-782045b86656"
   inherit_workflow_statuses = true
   started_workflow_state = {
     name = "Working"
@@ -325,7 +327,7 @@ func TestTeamResourceMixedInheritancePlans(t *testing.T) {
 resource "linear_team" "test" {
   key                      = "TEST"
   name                     = "Test"
-  parent_id                = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  parent_id                = "ab69b823-f187-444d-8848-782045b86656"
   inherit_issue_estimation = true
   started_workflow_state = {
     name = "Working"
@@ -335,7 +337,7 @@ resource "linear_team" "test" {
 resource "linear_team" "test" {
   key                       = "TEST"
   name                      = "Test"
-  parent_id                 = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  parent_id                 = "ab69b823-f187-444d-8848-782045b86656"
   inherit_workflow_statuses = true
   estimation = {
     type = "linear"
@@ -372,7 +374,7 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "key", "DEV"),
 					resource.TestCheckResourceAttr("linear_team.test", "name", "DevOps"),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
+					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
 					resource.TestCheckResourceAttr("linear_team.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_team.test", "color", "#00ff00"),
@@ -444,7 +446,7 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_team.test", "key", "DEV"),
 					resource.TestCheckResourceAttr("linear_team.test", "name", "DevOps"),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
-					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
+					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
 					resource.TestCheckResourceAttr("linear_team.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_team.test", "color", "#00ff00"),
@@ -667,7 +669,8 @@ resource "linear_team" "test" {
   key = "%s"
   name = "%s"
   private = true
-  parent_id = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  parent_id = "ab69b823-f187-444d-8848-782045b86656"
+  inherit_workflow_statuses = false
   description = "nice team"
   icon = "Image"
   color = "#00ff00"

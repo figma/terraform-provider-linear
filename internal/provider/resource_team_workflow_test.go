@@ -14,10 +14,10 @@ func TestAccTeamWorkflowResourceDefault(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -31,15 +31,15 @@ func TestAccTeamWorkflowResourceDefault(t *testing.T) {
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF",
+				ImportStateId:     "TFAC",
 				ImportStateVerify: true,
 			},
 			// Update with null values
 			{
-				Config: testAccTeamWorkflowResourceConfigDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -51,24 +51,24 @@ func TestAccTeamWorkflowResourceDefault(t *testing.T) {
 			},
 			// Update and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// ImportState testing
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF",
+				ImportStateId:     "TFAC",
 				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
@@ -83,10 +83,10 @@ func TestAccTeamWorkflowResourceDefaultUpdateBranch(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -100,15 +100,15 @@ func TestAccTeamWorkflowResourceDefaultUpdateBranch(t *testing.T) {
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF",
+				ImportStateId:     "TFAC",
 				ImportStateVerify: true,
 			},
 			// Update with null values
 			{
-				Config: testAccTeamWorkflowResourceConfigDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -120,24 +120,24 @@ func TestAccTeamWorkflowResourceDefaultUpdateBranch(t *testing.T) {
 			},
 			// Update and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// ImportState testing
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF:feature/.*:true",
+				ImportStateId:     "TFAC:feature/.*:true",
 				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
@@ -152,47 +152,47 @@ func TestAccTeamWorkflowResourceNonDefault(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// ImportState testing
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF:feature/.*:true",
+				ImportStateId:     "TFAC:feature/.*:true",
 				ImportStateVerify: true,
 			},
 			// Update with same values
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// Update with null values
 			{
-				Config: testAccTeamWorkflowResourceConfigDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -207,7 +207,7 @@ func TestAccTeamWorkflowResourceNonDefault(t *testing.T) {
 			// {
 			// 	ResourceName:      "linear_team_workflow.test",
 			// 	ImportState:       true,
-			// 	ImportStateId:     "DEF:feature/.*:true",
+			// 	ImportStateId:     "TFAC:feature/.*:true",
 			// 	ImportStateVerify: true,
 			// },
 			// Delete testing automatically occurs in TestCase
@@ -221,47 +221,47 @@ func TestAccTeamWorkflowResourceNonDefaultUpdateBranch(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// ImportState testing
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF:feature/.*:true",
+				ImportStateId:     "TFAC:feature/.*:true",
 				ImportStateVerify: true,
 			},
 			// Update with same values
 			{
-				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("DEF"),
+				Config: testAccTeamWorkflowResourceConfigNonDefaultBranch("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.pattern", "feature/.*"),
 					resource.TestCheckResourceAttr("linear_team_workflow.test", "branch.is_regex", "true"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "53099a59-c811-4b9c-8016-5443ce513de4"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "66df5c88-cae8-416b-b4e9-85a42b159e18"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "draft", "5c5382ee-9b07-425a-8a95-138227f2c9de"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "start", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "review", "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "mergeable", "df4b3f19-1285-46a4-899d-7f3d51357ec4"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "merge", "57a06c56-4200-42e3-9d01-06965cf1ec90"),
 				),
 			},
 			// Update with null values
 			{
-				Config: testAccTeamWorkflowResourceConfigDefault("DEF"),
+				Config: testAccTeamWorkflowResourceConfigDefault("TFAC"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "DEF"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_team_workflow.test", "key", "TFAC"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.pattern"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "branch.is_regex"),
 					resource.TestCheckNoResourceAttr("linear_team_workflow.test", "draft"),
@@ -275,7 +275,7 @@ func TestAccTeamWorkflowResourceNonDefaultUpdateBranch(t *testing.T) {
 			{
 				ResourceName:      "linear_team_workflow.test",
 				ImportState:       true,
-				ImportStateId:     "DEF",
+				ImportStateId:     "TFAC",
 				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
@@ -309,11 +309,11 @@ func testAccTeamWorkflowResourceConfigNonDefault(key string) string {
 resource "linear_team_workflow" "test" {
   key = "%s"
 
-  draft = "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"
-  start = "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"
-  review = "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"
-  mergeable = "53099a59-c811-4b9c-8016-5443ce513de4"
-  merge = "66df5c88-cae8-416b-b4e9-85a42b159e18"
+  draft = "5c5382ee-9b07-425a-8a95-138227f2c9de"
+  start = "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"
+  review = "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"
+  mergeable = "df4b3f19-1285-46a4-899d-7f3d51357ec4"
+  merge = "57a06c56-4200-42e3-9d01-06965cf1ec90"
 }
 `, key)
 }
@@ -328,11 +328,11 @@ resource "linear_team_workflow" "test" {
     is_regex = true
   }
 
-  draft = "5dbca6c1-9ee2-4bf7-a275-8b69ae27ad14"
-  start = "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"
-  review = "9b6fdbd0-fd66-4ea2-a01d-a24ecf0c1191"
-  mergeable = "53099a59-c811-4b9c-8016-5443ce513de4"
-  merge = "66df5c88-cae8-416b-b4e9-85a42b159e18"
+  draft = "5c5382ee-9b07-425a-8a95-138227f2c9de"
+  start = "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"
+  review = "4823a72a-3850-4be1-bcfd-93ea2f0c45ff"
+  mergeable = "df4b3f19-1285-46a4-899d-7f3d51357ec4"
+  merge = "57a06c56-4200-42e3-9d01-06965cf1ec90"
 }
 `, key)
 }
