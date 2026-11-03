@@ -72,5 +72,7 @@ jobs:
         env:
           TF_ACC: 1
           LINEAR_TOKEN: ${{ secrets.LINEAR_TOKEN }}
+          # Workspace security settings require an owner token; the CI bot is an admin.
+          LINEAR_SKIP_WORKSPACE_SETTINGS_ACC: '1'
         run: go test -v -cover ./internal/provider/
         timeout-minutes: 10
