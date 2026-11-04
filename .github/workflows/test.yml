@@ -4,7 +4,7 @@ on:
     paths-ignore:
       - 'README.md'
   push:
-    branches: [master]
+    branches: [main]
     paths-ignore:
       - 'README.md'
 concurrency:
@@ -48,8 +48,22 @@ jobs:
           go generate ./...
           git diff --compact-summary --exit-code || \
             (echo; echo "Unexpected difference in directories after code generation. Run 'go generate ./...' command and commit."; exit 1)
+  unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: Test
+        run: go test ./...
   test:
     name: Terraform Provider Acceptance Test
+    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
