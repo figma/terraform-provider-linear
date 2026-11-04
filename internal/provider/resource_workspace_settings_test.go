@@ -1,12 +1,15 @@
 package provider
 
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccWorkspaceSettingsResourceDefault(t *testing.T) {
+	skipWorkspaceSettingsAcceptanceInCI(t)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -101,6 +104,8 @@ func TestAccWorkspaceSettingsResourceDefault(t *testing.T) {
 }
 
 func TestAccWorkspaceSettingsResourceNonDefault(t *testing.T) {
+	skipWorkspaceSettingsAcceptanceInCI(t)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -192,6 +197,13 @@ func TestAccWorkspaceSettingsResourceNonDefault(t *testing.T) {
 			// Delete testing automatically occurs in TestCase
 		},
 	})
+}
+
+func skipWorkspaceSettingsAcceptanceInCI(t *testing.T) {
+	t.Helper()
+	if os.Getenv("LINEAR_SKIP_WORKSPACE_SETTINGS_ACC") == "1" {
+		t.Skip("workspace settings require a Linear workspace owner token")
+	}
 }
 
 func testAccWorkspaceSettingsResourceConfigDefault() string {

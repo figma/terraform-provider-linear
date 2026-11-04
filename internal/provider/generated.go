@@ -23,6 +23,245 @@ const (
 	DaySaturday  Day = "Saturday"
 )
 
+// Document includes the GraphQL fields of Document requested by the fragment Document.
+// The GraphQL type's documentation follows.
+//
+// A rich-text document that lives within a project, initiative, team, issue,
+// release, or cycle. Documents support collaborative editing via ProseMirror/Yjs
+// and store their content in a separate DocumentContent entity. Each document is
+// associated with exactly one parent entity.
+type Document struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The title of the document. An empty string indicates an untitled document.
+	Title string `json:"title"`
+	// The document's content in markdown format.
+	Content *string `json:"content"`
+	// A flag that indicates whether the document is in the trash bin. Trashed documents are archived and can be restored.
+	Trashed bool `json:"trashed"`
+	// The project that the document is associated with. Null if the document belongs to a different parent entity type.
+	Project *DocumentProject `json:"project"`
+	// The issue that the document is associated with. Null if the document belongs to a different parent entity type.
+	Issue *DocumentIssue `json:"issue"`
+}
+
+// GetId returns Document.Id, and is useful for accessing the field via an interface.
+func (v *Document) GetId() string { return v.Id }
+
+// GetTitle returns Document.Title, and is useful for accessing the field via an interface.
+func (v *Document) GetTitle() string { return v.Title }
+
+// GetContent returns Document.Content, and is useful for accessing the field via an interface.
+func (v *Document) GetContent() *string { return v.Content }
+
+// GetTrashed returns Document.Trashed, and is useful for accessing the field via an interface.
+func (v *Document) GetTrashed() bool { return v.Trashed }
+
+// GetProject returns Document.Project, and is useful for accessing the field via an interface.
+func (v *Document) GetProject() *DocumentProject { return v.Project }
+
+// GetIssue returns Document.Issue, and is useful for accessing the field via an interface.
+func (v *Document) GetIssue() *DocumentIssue { return v.Issue }
+
+// Input for creating a new document.
+type DocumentCreateInput struct {
+	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
+	Id *string `json:"id,omitempty"`
+	// The title of the document.
+	Title string `json:"title"`
+	// The icon of the document.
+	Icon *string `json:"icon,omitempty"`
+	// The color of the icon.
+	Color *string `json:"color,omitempty"`
+	// The document content as markdown.
+	Content string `json:"content"`
+	// Related project for the document.
+	ProjectId *string `json:"projectId,omitempty"`
+	// [Internal] Related initiative for the document.
+	InitiativeId *string `json:"initiativeId,omitempty"`
+	// [Internal] Related team for the document.
+	TeamId *string `json:"teamId,omitempty"`
+	// Related issue for the document. Can be a UUID or issue identifier (e.g., 'LIN-123').
+	IssueId *string `json:"issueId,omitempty"`
+	// [Internal] Related release for the document.
+	ReleaseId *string `json:"releaseId,omitempty"`
+	// [Internal] Related cycle for the document.
+	CycleId *string `json:"cycleId,omitempty"`
+	// [Internal] The resource folder containing the document.
+	ResourceFolderId *string `json:"resourceFolderId,omitempty"`
+	// The ID of the last template applied to the document.
+	LastAppliedTemplateId *string `json:"lastAppliedTemplateId,omitempty"`
+	// The order of the item in the resources list.
+	SortOrder *float64 `json:"sortOrder,omitempty"`
+	// [INTERNAL] The identifiers of the users subscribing to this document.
+	SubscriberIds []string `json:"subscriberIds,omitempty"`
+}
+
+// GetId returns DocumentCreateInput.Id, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetId() *string { return v.Id }
+
+// GetTitle returns DocumentCreateInput.Title, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetTitle() string { return v.Title }
+
+// GetIcon returns DocumentCreateInput.Icon, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetIcon() *string { return v.Icon }
+
+// GetColor returns DocumentCreateInput.Color, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetColor() *string { return v.Color }
+
+// GetContent returns DocumentCreateInput.Content, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetContent() string { return v.Content }
+
+// GetProjectId returns DocumentCreateInput.ProjectId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetProjectId() *string { return v.ProjectId }
+
+// GetInitiativeId returns DocumentCreateInput.InitiativeId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetInitiativeId() *string { return v.InitiativeId }
+
+// GetTeamId returns DocumentCreateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetTeamId() *string { return v.TeamId }
+
+// GetIssueId returns DocumentCreateInput.IssueId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetIssueId() *string { return v.IssueId }
+
+// GetReleaseId returns DocumentCreateInput.ReleaseId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetReleaseId() *string { return v.ReleaseId }
+
+// GetCycleId returns DocumentCreateInput.CycleId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetCycleId() *string { return v.CycleId }
+
+// GetResourceFolderId returns DocumentCreateInput.ResourceFolderId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetResourceFolderId() *string { return v.ResourceFolderId }
+
+// GetLastAppliedTemplateId returns DocumentCreateInput.LastAppliedTemplateId, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetLastAppliedTemplateId() *string { return v.LastAppliedTemplateId }
+
+// GetSortOrder returns DocumentCreateInput.SortOrder, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetSortOrder() *float64 { return v.SortOrder }
+
+// GetSubscriberIds returns DocumentCreateInput.SubscriberIds, and is useful for accessing the field via an interface.
+func (v *DocumentCreateInput) GetSubscriberIds() []string { return v.SubscriberIds }
+
+// DocumentIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue is the core work item in Linear. Issues belong to a team, have a
+// workflow status, can be assigned to users, carry a priority level, and can be
+// organized into projects and cycles. Issues support sub-issues (parent-child
+// hierarchy up to 10 levels deep), labels, due dates, estimates, and SLA tracking.
+// They can also be linked to other issues via relations, attached to releases, and
+// tracked through their full history of changes.
+type DocumentIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+}
+
+// GetId returns DocumentIssue.Id, and is useful for accessing the field via an interface.
+func (v *DocumentIssue) GetId() string { return v.Id }
+
+// GetIdentifier returns DocumentIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *DocumentIssue) GetIdentifier() string { return v.Identifier }
+
+// DocumentProject includes the requested fields of the GraphQL type Project.
+// The GraphQL type's documentation follows.
+//
+// A project is a collection of issues working toward a shared goal. Projects have
+// start and target dates, milestones, status tracking, and progress metrics. They
+// can span multiple teams and be grouped under initiatives.
+type DocumentProject struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns DocumentProject.Id, and is useful for accessing the field via an interface.
+func (v *DocumentProject) GetId() string { return v.Id }
+
+// Input for updating an existing document.
+type DocumentUpdateInput struct {
+	// The title of the document.
+	Title string `json:"title"`
+	// The icon of the document.
+	Icon *string `json:"icon,omitempty"`
+	// The color of the icon.
+	Color *string `json:"color,omitempty"`
+	// The document content as markdown.
+	Content string `json:"content"`
+	// Related project for the document.
+	ProjectId *string `json:"projectId,omitempty"`
+	// [Internal] Related initiative for the document.
+	InitiativeId *string `json:"initiativeId,omitempty"`
+	// [Internal] Related team for the document.
+	TeamId *string `json:"teamId,omitempty"`
+	// Related issue for the document. Can be a UUID or issue identifier (e.g., 'LIN-123').
+	IssueId *string `json:"issueId,omitempty"`
+	// [Internal] Related release for the document.
+	ReleaseId *string `json:"releaseId,omitempty"`
+	// [Internal] Related cycle for the document.
+	CycleId *string `json:"cycleId,omitempty"`
+	// [Internal] The resource folder containing the document.
+	ResourceFolderId *string `json:"resourceFolderId,omitempty"`
+	// The ID of the last template applied to the document.
+	LastAppliedTemplateId *string `json:"lastAppliedTemplateId,omitempty"`
+	// The time at which the document was hidden. Set to null to unhide.
+	HiddenAt *time.Time `json:"hiddenAt,omitempty"`
+	// The order of the item in the resources list.
+	SortOrder *float64 `json:"sortOrder,omitempty"`
+	// Whether the document has been trashed. Set to true to trash, or null to restore from trash.
+	Trashed *bool `json:"trashed,omitempty"`
+	// [INTERNAL] The identifiers of the users subscribing to this document.
+	SubscriberIds []string `json:"subscriberIds,omitempty"`
+}
+
+// GetTitle returns DocumentUpdateInput.Title, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetTitle() string { return v.Title }
+
+// GetIcon returns DocumentUpdateInput.Icon, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetIcon() *string { return v.Icon }
+
+// GetColor returns DocumentUpdateInput.Color, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetColor() *string { return v.Color }
+
+// GetContent returns DocumentUpdateInput.Content, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetContent() string { return v.Content }
+
+// GetProjectId returns DocumentUpdateInput.ProjectId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetProjectId() *string { return v.ProjectId }
+
+// GetInitiativeId returns DocumentUpdateInput.InitiativeId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetInitiativeId() *string { return v.InitiativeId }
+
+// GetTeamId returns DocumentUpdateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetTeamId() *string { return v.TeamId }
+
+// GetIssueId returns DocumentUpdateInput.IssueId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetIssueId() *string { return v.IssueId }
+
+// GetReleaseId returns DocumentUpdateInput.ReleaseId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetReleaseId() *string { return v.ReleaseId }
+
+// GetCycleId returns DocumentUpdateInput.CycleId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetCycleId() *string { return v.CycleId }
+
+// GetResourceFolderId returns DocumentUpdateInput.ResourceFolderId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetResourceFolderId() *string { return v.ResourceFolderId }
+
+// GetLastAppliedTemplateId returns DocumentUpdateInput.LastAppliedTemplateId, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetLastAppliedTemplateId() *string { return v.LastAppliedTemplateId }
+
+// GetHiddenAt returns DocumentUpdateInput.HiddenAt, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetHiddenAt() *time.Time { return v.HiddenAt }
+
+// GetSortOrder returns DocumentUpdateInput.SortOrder, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetSortOrder() *float64 { return v.SortOrder }
+
+// GetTrashed returns DocumentUpdateInput.Trashed, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetTrashed() *bool { return v.Trashed }
+
+// GetSubscriberIds returns DocumentUpdateInput.SubscriberIds, and is useful for accessing the field via an interface.
+func (v *DocumentUpdateInput) GetSubscriberIds() []string { return v.SubscriberIds }
+
 // Cadence to generate feed summary
 type FeedSummarySchedule string
 
@@ -841,6 +1080,136 @@ const (
 	ProductIntelligenceScopeNone          ProductIntelligenceScope = "none"
 )
 
+// ProjectLabel includes the GraphQL fields of ProjectLabel requested by the fragment ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The label's name.
+	Name string `json:"name"`
+	// The label's description.
+	Description *string `json:"description"`
+	// The label's color as a HEX string (e.g., '#EB5757'). Used for visual identification of the label in the UI.
+	Color string `json:"color"`
+	// Whether the label is a group. When true, this label acts as a container for
+	// child labels and cannot be directly applied to issues or projects. When false,
+	// the label can be directly applied.
+	IsGroup bool `json:"isGroup"`
+	// The parent label group. If set, this label is a child within a group. Only one
+	// child label from each group can be applied to a project at a time.
+	Parent *ProjectLabelParentProjectLabel `json:"parent"`
+}
+
+// GetId returns ProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetId() string { return v.Id }
+
+// GetName returns ProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetName() string { return v.Name }
+
+// GetDescription returns ProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetDescription() *string { return v.Description }
+
+// GetColor returns ProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetColor() string { return v.Color }
+
+// GetIsGroup returns ProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetIsGroup() bool { return v.IsGroup }
+
+// GetParent returns ProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetParent() *ProjectLabelParentProjectLabel { return v.Parent }
+
+// Input for creating a new project label. A name is required. The label is created
+// as a workspace-level label available to all projects.
+type ProjectLabelCreateInput struct {
+	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
+	Id *string `json:"id,omitempty"`
+	// The name of the label.
+	Name string `json:"name"`
+	// The description of the label.
+	Description *string `json:"description"`
+	// The color of the label.
+	Color *string `json:"color,omitempty"`
+	// The identifier of the parent label.
+	ParentId *string `json:"parentId"`
+	// Whether the label is a group.
+	IsGroup bool `json:"isGroup"`
+	// The time at which the label was retired. Set to null to restore a retired label.
+	RetiredAt *time.Time `json:"retiredAt,omitempty"`
+}
+
+// GetId returns ProjectLabelCreateInput.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetId() *string { return v.Id }
+
+// GetName returns ProjectLabelCreateInput.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetName() string { return v.Name }
+
+// GetDescription returns ProjectLabelCreateInput.Description, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetDescription() *string { return v.Description }
+
+// GetColor returns ProjectLabelCreateInput.Color, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetColor() *string { return v.Color }
+
+// GetParentId returns ProjectLabelCreateInput.ParentId, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetParentId() *string { return v.ParentId }
+
+// GetIsGroup returns ProjectLabelCreateInput.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetIsGroup() bool { return v.IsGroup }
+
+// GetRetiredAt returns ProjectLabelCreateInput.RetiredAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
+
+// ProjectLabelParentProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabelParentProjectLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelParentProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelParentProjectLabel) GetId() string { return v.Id }
+
+// Input for updating an existing project label. All fields are optional; only provided fields will be updated.
+type ProjectLabelUpdateInput struct {
+	// The name of the label.
+	Name string `json:"name"`
+	// The description of the label.
+	Description *string `json:"description"`
+	// The identifier of the parent label.
+	ParentId *string `json:"parentId"`
+	// The color of the label.
+	Color *string `json:"color,omitempty"`
+	// Whether the label is a group.
+	IsGroup bool `json:"isGroup"`
+	// The time at which the label was retired. Set to null to restore a retired label.
+	RetiredAt *time.Time `json:"retiredAt,omitempty"`
+}
+
+// GetName returns ProjectLabelUpdateInput.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetName() string { return v.Name }
+
+// GetDescription returns ProjectLabelUpdateInput.Description, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetDescription() *string { return v.Description }
+
+// GetParentId returns ProjectLabelUpdateInput.ParentId, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetParentId() *string { return v.ParentId }
+
+// GetColor returns ProjectLabelUpdateInput.Color, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetColor() *string { return v.Color }
+
+// GetIsGroup returns ProjectLabelUpdateInput.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetIsGroup() bool { return v.IsGroup }
+
+// GetRetiredAt returns ProjectLabelUpdateInput.RetiredAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
+
 // Team includes the GraphQL fields of Team requested by the fragment Team.
 // The GraphQL type's documentation follows.
 //
@@ -865,6 +1234,10 @@ type Team struct {
 	Color *string `json:"color"`
 	// The team's parent team.
 	Parent *TeamParentTeam `json:"parent"`
+	// Whether the team should inherit its estimation settings from its parent. Only applies to sub-teams.
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+	// Whether the team should inherit its workflow statuses from its parent. Only applies to sub-teams.
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
 	// The timezone of the team. Defaults to "America/Los_Angeles"
 	Timezone string `json:"timezone"`
 	// Whether to group recent issue history entries.
@@ -939,6 +1312,12 @@ func (v *Team) GetColor() *string { return v.Color }
 
 // GetParent returns Team.Parent, and is useful for accessing the field via an interface.
 func (v *Team) GetParent() *TeamParentTeam { return v.Parent }
+
+// GetInheritIssueEstimation returns Team.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *Team) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+
+// GetInheritWorkflowStatuses returns Team.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *Team) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
 
 // GetTimezone returns Team.Timezone, and is useful for accessing the field via an interface.
 func (v *Team) GetTimezone() string { return v.Timezone }
@@ -1045,11 +1424,11 @@ type TeamCreateInput struct {
 	// The timezone of the team.
 	Timezone string `json:"timezone"`
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
-	InheritIssueEstimation bool `json:"inheritIssueEstimation,omitempty"`
+	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// [Internal] Whether the team should inherit workflow statuses from its parent.
-	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+	InheritWorkflowStatuses *bool `json:"inheritWorkflowStatuses,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
-	IssueEstimationType string `json:"issueEstimationType"`
+	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
 	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
 	// Whether to move issues to bottom of the column when changing state.
@@ -1148,10 +1527,10 @@ func (v *TeamCreateInput) GetRequirePriorityToLeaveTriage() bool {
 func (v *TeamCreateInput) GetTimezone() string { return v.Timezone }
 
 // GetInheritIssueEstimation returns TeamCreateInput.InheritIssueEstimation, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+func (v *TeamCreateInput) GetInheritIssueEstimation() *bool { return v.InheritIssueEstimation }
 
 // GetInheritWorkflowStatuses returns TeamCreateInput.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
+func (v *TeamCreateInput) GetInheritWorkflowStatuses() *bool { return v.InheritWorkflowStatuses }
 
 // GetIssueEstimationType returns TeamCreateInput.IssueEstimationType, and is useful for accessing the field via an interface.
 func (v *TeamCreateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
@@ -1320,9 +1699,9 @@ type TeamUpdateInput struct {
 	// The timezone of the team.
 	Timezone string `json:"timezone"`
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
-	InheritIssueEstimation bool `json:"inheritIssueEstimation,omitempty"`
+	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
-	IssueEstimationType string `json:"issueEstimationType"`
+	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
 	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
 	// Whether to move issues to bottom of the column when changing state.
@@ -1377,7 +1756,7 @@ type TeamUpdateInput struct {
 	// The parent team ID.
 	ParentId *string `json:"parentId"`
 	// [Internal] Whether the team should inherit workflow statuses from its parent.
-	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+	InheritWorkflowStatuses *bool `json:"inheritWorkflowStatuses,omitempty"`
 	// [Internal] Whether the team should inherit its product intelligence scope from its parent. Only applies to sub-teams.
 	InheritProductIntelligenceScope bool `json:"inheritProductIntelligenceScope,omitempty"`
 	// [Internal] The scope of product intelligence suggestion data for the team.
@@ -1447,7 +1826,7 @@ func (v *TeamUpdateInput) GetUpcomingCycleCount() float64 { return v.UpcomingCyc
 func (v *TeamUpdateInput) GetTimezone() string { return v.Timezone }
 
 // GetInheritIssueEstimation returns TeamUpdateInput.InheritIssueEstimation, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetInheritIssueEstimation() bool { return v.InheritIssueEstimation }
+func (v *TeamUpdateInput) GetInheritIssueEstimation() *bool { return v.InheritIssueEstimation }
 
 // GetIssueEstimationType returns TeamUpdateInput.IssueEstimationType, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
@@ -1543,7 +1922,7 @@ func (v *TeamUpdateInput) GetScimManaged() bool { return v.ScimManaged }
 func (v *TeamUpdateInput) GetParentId() *string { return v.ParentId }
 
 // GetInheritWorkflowStatuses returns TeamUpdateInput.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetInheritWorkflowStatuses() bool { return v.InheritWorkflowStatuses }
+func (v *TeamUpdateInput) GetInheritWorkflowStatuses() *bool { return v.InheritWorkflowStatuses }
 
 // GetInheritProductIntelligenceScope returns TeamUpdateInput.InheritProductIntelligenceScope, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetInheritProductIntelligenceScope() bool {
@@ -2019,6 +2398,14 @@ func (v *WorkflowStateUpdateInput) GetDescription() *string { return v.Descripti
 // GetPosition returns WorkflowStateUpdateInput.Position, and is useful for accessing the field via an interface.
 func (v *WorkflowStateUpdateInput) GetPosition() float64 { return v.Position }
 
+// __createDocumentInput is used internally by genqlient
+type __createDocumentInput struct {
+	Input DocumentCreateInput `json:"input"`
+}
+
+// GetInput returns __createDocumentInput.Input, and is useful for accessing the field via an interface.
+func (v *__createDocumentInput) GetInput() DocumentCreateInput { return v.Input }
+
 // __createGitAutomationStateInput is used internally by genqlient
 type __createGitAutomationStateInput struct {
 	Input GitAutomationStateCreateInput `json:"input"`
@@ -2060,6 +2447,14 @@ type __createWorkflowStateInput struct {
 
 // GetInput returns __createWorkflowStateInput.Input, and is useful for accessing the field via an interface.
 func (v *__createWorkflowStateInput) GetInput() WorkflowStateCreateInput { return v.Input }
+
+// __deleteDocumentInput is used internally by genqlient
+type __deleteDocumentInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __deleteDocumentInput.Id, and is useful for accessing the field via an interface.
+func (v *__deleteDocumentInput) GetId() string { return v.Id }
 
 // __deleteGitAutomationStateInput is used internally by genqlient
 type __deleteGitAutomationStateInput struct {
@@ -2133,6 +2528,14 @@ type __findWorkspaceLabelInput struct {
 // GetName returns __findWorkspaceLabelInput.Name, and is useful for accessing the field via an interface.
 func (v *__findWorkspaceLabelInput) GetName() string { return v.Name }
 
+// __getDocumentInput is used internally by genqlient
+type __getDocumentInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getDocumentInput.Id, and is useful for accessing the field via an interface.
+func (v *__getDocumentInput) GetId() string { return v.Id }
+
 // __getLabelInput is used internally by genqlient
 type __getLabelInput struct {
 	Id string `json:"id"`
@@ -2140,6 +2543,14 @@ type __getLabelInput struct {
 
 // GetId returns __getLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__getLabelInput) GetId() string { return v.Id }
+
+// __getProjectLabelInput is used internally by genqlient
+type __getProjectLabelInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getProjectLabelInput.Id, and is useful for accessing the field via an interface.
+func (v *__getProjectLabelInput) GetId() string { return v.Id }
 
 // __getTeamInput is used internally by genqlient
 type __getTeamInput struct {
@@ -2181,6 +2592,34 @@ type __getWorkflowStateInput struct {
 // GetId returns __getWorkflowStateInput.Id, and is useful for accessing the field via an interface.
 func (v *__getWorkflowStateInput) GetId() string { return v.Id }
 
+// __projectLabelCreateInput is used internally by genqlient
+type __projectLabelCreateInput struct {
+	Input ProjectLabelCreateInput `json:"input"`
+}
+
+// GetInput returns __projectLabelCreateInput.Input, and is useful for accessing the field via an interface.
+func (v *__projectLabelCreateInput) GetInput() ProjectLabelCreateInput { return v.Input }
+
+// __projectLabelDeleteInput is used internally by genqlient
+type __projectLabelDeleteInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __projectLabelDeleteInput.Id, and is useful for accessing the field via an interface.
+func (v *__projectLabelDeleteInput) GetId() string { return v.Id }
+
+// __projectLabelUpdateInput is used internally by genqlient
+type __projectLabelUpdateInput struct {
+	Input ProjectLabelUpdateInput `json:"input"`
+	Id    string                  `json:"id"`
+}
+
+// GetInput returns __projectLabelUpdateInput.Input, and is useful for accessing the field via an interface.
+func (v *__projectLabelUpdateInput) GetInput() ProjectLabelUpdateInput { return v.Input }
+
+// GetId returns __projectLabelUpdateInput.Id, and is useful for accessing the field via an interface.
+func (v *__projectLabelUpdateInput) GetId() string { return v.Id }
+
 // __templateCreateInput is used internally by genqlient
 type __templateCreateInput struct {
 	Input TemplateCreateInput `json:"input"`
@@ -2208,6 +2647,18 @@ func (v *__templateUpdateInput) GetInput() TemplateUpdateInput { return v.Input 
 
 // GetId returns __templateUpdateInput.Id, and is useful for accessing the field via an interface.
 func (v *__templateUpdateInput) GetId() string { return v.Id }
+
+// __updateDocumentInput is used internally by genqlient
+type __updateDocumentInput struct {
+	Id    string              `json:"id"`
+	Input DocumentUpdateInput `json:"input"`
+}
+
+// GetId returns __updateDocumentInput.Id, and is useful for accessing the field via an interface.
+func (v *__updateDocumentInput) GetId() string { return v.Id }
+
+// GetInput returns __updateDocumentInput.Input, and is useful for accessing the field via an interface.
+func (v *__updateDocumentInput) GetInput() DocumentUpdateInput { return v.Input }
 
 // __updateGitAutomationStateInput is used internally by genqlient
 type __updateGitAutomationStateInput struct {
@@ -2264,6 +2715,51 @@ type __updateWorkspaceSettingsInput struct {
 
 // GetInput returns __updateWorkspaceSettingsInput.Input, and is useful for accessing the field via an interface.
 func (v *__updateWorkspaceSettingsInput) GetInput() OrganizationUpdateInput { return v.Input }
+
+// createDocumentDocumentCreateDocumentPayload includes the requested fields of the GraphQL type DocumentPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a document mutation.
+type createDocumentDocumentCreateDocumentPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The document that was created or updated.
+	Document createDocumentDocumentCreateDocumentPayloadDocument `json:"document"`
+}
+
+// GetSuccess returns createDocumentDocumentCreateDocumentPayload.Success, and is useful for accessing the field via an interface.
+func (v *createDocumentDocumentCreateDocumentPayload) GetSuccess() bool { return v.Success }
+
+// GetDocument returns createDocumentDocumentCreateDocumentPayload.Document, and is useful for accessing the field via an interface.
+func (v *createDocumentDocumentCreateDocumentPayload) GetDocument() createDocumentDocumentCreateDocumentPayloadDocument {
+	return v.Document
+}
+
+// createDocumentDocumentCreateDocumentPayloadDocument includes the requested fields of the GraphQL type Document.
+// The GraphQL type's documentation follows.
+//
+// A rich-text document that lives within a project, initiative, team, issue,
+// release, or cycle. Documents support collaborative editing via ProseMirror/Yjs
+// and store their content in a separate DocumentContent entity. Each document is
+// associated with exactly one parent entity.
+type createDocumentDocumentCreateDocumentPayloadDocument struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns createDocumentDocumentCreateDocumentPayloadDocument.Id, and is useful for accessing the field via an interface.
+func (v *createDocumentDocumentCreateDocumentPayloadDocument) GetId() string { return v.Id }
+
+// createDocumentResponse is returned by createDocument on success.
+type createDocumentResponse struct {
+	// Creates a new document.
+	DocumentCreate createDocumentDocumentCreateDocumentPayload `json:"documentCreate"`
+}
+
+// GetDocumentCreate returns createDocumentResponse.DocumentCreate, and is useful for accessing the field via an interface.
+func (v *createDocumentResponse) GetDocumentCreate() createDocumentDocumentCreateDocumentPayload {
+	return v.DocumentCreate
+}
 
 // createGitAutomationStateGitAutomationStateCreateGitAutomationStatePayload includes the requested fields of the GraphQL type GitAutomationStatePayload.
 // The GraphQL type's documentation follows.
@@ -2552,6 +3048,16 @@ func (v *createTeamTeamCreateTeamPayloadTeam) GetColor() *string { return v.Team
 // GetParent returns createTeamTeamCreateTeamPayloadTeam.Parent, and is useful for accessing the field via an interface.
 func (v *createTeamTeamCreateTeamPayloadTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
 
+// GetInheritIssueEstimation returns createTeamTeamCreateTeamPayloadTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *createTeamTeamCreateTeamPayloadTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns createTeamTeamCreateTeamPayloadTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *createTeamTeamCreateTeamPayloadTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
 // GetTimezone returns createTeamTeamCreateTeamPayloadTeam.Timezone, and is useful for accessing the field via an interface.
 func (v *createTeamTeamCreateTeamPayloadTeam) GetTimezone() string { return v.Team.Timezone }
 
@@ -2699,6 +3205,10 @@ type __premarshalcreateTeamTeamCreateTeamPayloadTeam struct {
 
 	Parent *TeamParentTeam `json:"parent"`
 
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
 	Timezone string `json:"timezone"`
 
 	GroupIssueHistory bool `json:"groupIssueHistory"`
@@ -2765,6 +3275,8 @@ func (v *createTeamTeamCreateTeamPayloadTeam) __premarshalJSON() (*__premarshalc
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -2925,6 +3437,29 @@ func (v *createWorkflowStateWorkflowStateCreateWorkflowStatePayloadWorkflowState
 	retval.Position = v.WorkflowState.Position
 	retval.Team = v.WorkflowState.Team
 	return &retval, nil
+}
+
+// deleteDocumentDocumentDeleteDocumentArchivePayload includes the requested fields of the GraphQL type DocumentArchivePayload.
+// The GraphQL type's documentation follows.
+//
+// A generic payload return from entity archive mutations.
+type deleteDocumentDocumentDeleteDocumentArchivePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+}
+
+// GetSuccess returns deleteDocumentDocumentDeleteDocumentArchivePayload.Success, and is useful for accessing the field via an interface.
+func (v *deleteDocumentDocumentDeleteDocumentArchivePayload) GetSuccess() bool { return v.Success }
+
+// deleteDocumentResponse is returned by deleteDocument on success.
+type deleteDocumentResponse struct {
+	// Deletes (trashes) a document. The document is marked as trashed and archived, but not permanently removed.
+	DocumentDelete deleteDocumentDocumentDeleteDocumentArchivePayload `json:"documentDelete"`
+}
+
+// GetDocumentDelete returns deleteDocumentResponse.DocumentDelete, and is useful for accessing the field via an interface.
+func (v *deleteDocumentResponse) GetDocumentDelete() deleteDocumentDocumentDeleteDocumentArchivePayload {
+	return v.DocumentDelete
 }
 
 // deleteGitAutomationStateGitAutomationStateDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
@@ -3191,6 +3726,103 @@ func (v *findWorkspaceLabelResponse) GetIssueLabels() findWorkspaceLabelIssueLab
 	return v.IssueLabels
 }
 
+// getDocumentDocument includes the requested fields of the GraphQL type Document.
+// The GraphQL type's documentation follows.
+//
+// A rich-text document that lives within a project, initiative, team, issue,
+// release, or cycle. Documents support collaborative editing via ProseMirror/Yjs
+// and store their content in a separate DocumentContent entity. Each document is
+// associated with exactly one parent entity.
+type getDocumentDocument struct {
+	Document `json:"-"`
+}
+
+// GetId returns getDocumentDocument.Id, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetId() string { return v.Document.Id }
+
+// GetTitle returns getDocumentDocument.Title, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetTitle() string { return v.Document.Title }
+
+// GetContent returns getDocumentDocument.Content, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetContent() *string { return v.Document.Content }
+
+// GetTrashed returns getDocumentDocument.Trashed, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetTrashed() bool { return v.Document.Trashed }
+
+// GetProject returns getDocumentDocument.Project, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetProject() *DocumentProject { return v.Document.Project }
+
+// GetIssue returns getDocumentDocument.Issue, and is useful for accessing the field via an interface.
+func (v *getDocumentDocument) GetIssue() *DocumentIssue { return v.Document.Issue }
+
+func (v *getDocumentDocument) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*getDocumentDocument
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.getDocumentDocument = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.Document)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalgetDocumentDocument struct {
+	Id string `json:"id"`
+
+	Title string `json:"title"`
+
+	Content *string `json:"content"`
+
+	Trashed bool `json:"trashed"`
+
+	Project *DocumentProject `json:"project"`
+
+	Issue *DocumentIssue `json:"issue"`
+}
+
+func (v *getDocumentDocument) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *getDocumentDocument) __premarshalJSON() (*__premarshalgetDocumentDocument, error) {
+	var retval __premarshalgetDocumentDocument
+
+	retval.Id = v.Document.Id
+	retval.Title = v.Document.Title
+	retval.Content = v.Document.Content
+	retval.Trashed = v.Document.Trashed
+	retval.Project = v.Document.Project
+	retval.Issue = v.Document.Issue
+	return &retval, nil
+}
+
+// getDocumentResponse is returned by getDocument on success.
+type getDocumentResponse struct {
+	// A specific document by ID or slug.
+	Document getDocumentDocument `json:"document"`
+}
+
+// GetDocument returns getDocumentResponse.Document, and is useful for accessing the field via an interface.
+func (v *getDocumentResponse) GetDocument() getDocumentDocument { return v.Document }
+
 // getLabelIssueLabel includes the requested fields of the GraphQL type IssueLabel.
 // The GraphQL type's documentation follows.
 //
@@ -3295,138 +3927,291 @@ type getLabelResponse struct {
 // GetIssueLabel returns getLabelResponse.IssueLabel, and is useful for accessing the field via an interface.
 func (v *getLabelResponse) GetIssueLabel() getLabelIssueLabel { return v.IssueLabel }
 
-// getTeamResponse is returned by getTeam on success.
-type getTeamResponse struct {
-	// Fetches a specific team by its ID.
-	Team getTeamTeam `json:"team"`
-}
-
-// GetTeam returns getTeamResponse.Team, and is useful for accessing the field via an interface.
-func (v *getTeamResponse) GetTeam() getTeamTeam { return v.Team }
-
-// getTeamTeam includes the requested fields of the GraphQL type Team.
+// getProjectLabelProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
 // The GraphQL type's documentation follows.
 //
-// A team is the primary organizational unit in Linear. Issues belong to teams, and
-// each team has its own workflow states, cycles, labels, and settings. Teams can
-// be public (visible to all workspace members) or private (visible only to team
-// members). Teams can also have sub-teams that inherit settings from their parent.
-type getTeamTeam struct {
-	Team `json:"-"`
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type getProjectLabelProjectLabel struct {
+	ProjectLabel `json:"-"`
 }
 
-// GetId returns getTeamTeam.Id, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetId() string { return v.Team.Id }
+// GetId returns getProjectLabelProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetId() string { return v.ProjectLabel.Id }
 
-// GetName returns getTeamTeam.Name, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetName() string { return v.Team.Name }
+// GetName returns getProjectLabelProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetName() string { return v.ProjectLabel.Name }
 
-// GetKey returns getTeamTeam.Key, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetKey() string { return v.Team.Key }
+// GetDescription returns getProjectLabelProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetDescription() *string { return v.ProjectLabel.Description }
 
-// GetPrivate returns getTeamTeam.Private, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetPrivate() bool { return v.Team.Private }
+// GetColor returns getProjectLabelProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetColor() string { return v.ProjectLabel.Color }
 
-// GetDescription returns getTeamTeam.Description, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetDescription() *string { return v.Team.Description }
+// GetIsGroup returns getProjectLabelProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetIsGroup() bool { return v.ProjectLabel.IsGroup }
 
-// GetIcon returns getTeamTeam.Icon, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetIcon() *string { return v.Team.Icon }
-
-// GetColor returns getTeamTeam.Color, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetColor() *string { return v.Team.Color }
-
-// GetParent returns getTeamTeam.Parent, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
-
-// GetTimezone returns getTeamTeam.Timezone, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetTimezone() string { return v.Team.Timezone }
-
-// GetGroupIssueHistory returns getTeamTeam.GroupIssueHistory, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetGroupIssueHistory() bool { return v.Team.GroupIssueHistory }
-
-// GetSetIssueSortOrderOnStateChange returns getTeamTeam.SetIssueSortOrderOnStateChange, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetSetIssueSortOrderOnStateChange() string {
-	return v.Team.SetIssueSortOrderOnStateChange
+// GetParent returns getProjectLabelProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
+	return v.ProjectLabel.Parent
 }
 
-// GetAiThreadSummariesEnabled returns getTeamTeam.AiThreadSummariesEnabled, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetAiThreadSummariesEnabled() bool { return v.Team.AiThreadSummariesEnabled }
-
-// GetAutoArchivePeriod returns getTeamTeam.AutoArchivePeriod, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetAutoArchivePeriod() float64 { return v.Team.AutoArchivePeriod }
-
-// GetAutoClosePeriod returns getTeamTeam.AutoClosePeriod, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetAutoClosePeriod() *float64 { return v.Team.AutoClosePeriod }
-
-// GetAutoCloseParentIssues returns getTeamTeam.AutoCloseParentIssues, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetAutoCloseParentIssues() bool { return v.Team.AutoCloseParentIssues }
-
-// GetAutoCloseChildIssues returns getTeamTeam.AutoCloseChildIssues, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetAutoCloseChildIssues() bool { return v.Team.AutoCloseChildIssues }
-
-// GetTriageEnabled returns getTeamTeam.TriageEnabled, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetTriageEnabled() bool { return v.Team.TriageEnabled }
-
-// GetRequirePriorityToLeaveTriage returns getTeamTeam.RequirePriorityToLeaveTriage, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetRequirePriorityToLeaveTriage() bool {
-	return v.Team.RequirePriorityToLeaveTriage
-}
-
-// GetCyclesEnabled returns getTeamTeam.CyclesEnabled, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCyclesEnabled() bool { return v.Team.CyclesEnabled }
-
-// GetCycleStartDay returns getTeamTeam.CycleStartDay, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleStartDay() float64 { return v.Team.CycleStartDay }
-
-// GetCycleDuration returns getTeamTeam.CycleDuration, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleDuration() float64 { return v.Team.CycleDuration }
-
-// GetCycleCooldownTime returns getTeamTeam.CycleCooldownTime, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleCooldownTime() float64 { return v.Team.CycleCooldownTime }
-
-// GetUpcomingCycleCount returns getTeamTeam.UpcomingCycleCount, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetUpcomingCycleCount() float64 { return v.Team.UpcomingCycleCount }
-
-// GetCycleIssueAutoAssignStarted returns getTeamTeam.CycleIssueAutoAssignStarted, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleIssueAutoAssignStarted() bool {
-	return v.Team.CycleIssueAutoAssignStarted
-}
-
-// GetCycleIssueAutoAssignCompleted returns getTeamTeam.CycleIssueAutoAssignCompleted, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleIssueAutoAssignCompleted() bool {
-	return v.Team.CycleIssueAutoAssignCompleted
-}
-
-// GetCycleLockToActive returns getTeamTeam.CycleLockToActive, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetCycleLockToActive() bool { return v.Team.CycleLockToActive }
-
-// GetIssueEstimationType returns getTeamTeam.IssueEstimationType, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetIssueEstimationType() string { return v.Team.IssueEstimationType }
-
-// GetIssueEstimationAllowZero returns getTeamTeam.IssueEstimationAllowZero, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetIssueEstimationAllowZero() bool { return v.Team.IssueEstimationAllowZero }
-
-// GetIssueEstimationExtended returns getTeamTeam.IssueEstimationExtended, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetIssueEstimationExtended() bool { return v.Team.IssueEstimationExtended }
-
-// GetDefaultIssueEstimate returns getTeamTeam.DefaultIssueEstimate, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetDefaultIssueEstimate() float64 { return v.Team.DefaultIssueEstimate }
-
-// GetSecuritySettings returns getTeamTeam.SecuritySettings, and is useful for accessing the field via an interface.
-func (v *getTeamTeam) GetSecuritySettings() map[string]interface{} { return v.Team.SecuritySettings }
-
-func (v *getTeamTeam) UnmarshalJSON(b []byte) error {
+func (v *getProjectLabelProjectLabel) UnmarshalJSON(b []byte) error {
 
 	if string(b) == "null" {
 		return nil
 	}
 
 	var firstPass struct {
-		*getTeamTeam
+		*getProjectLabelProjectLabel
 		graphql.NoUnmarshalJSON
 	}
-	firstPass.getTeamTeam = v
+	firstPass.getProjectLabelProjectLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.ProjectLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalgetProjectLabelProjectLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	Parent *ProjectLabelParentProjectLabel `json:"parent"`
+}
+
+func (v *getProjectLabelProjectLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *getProjectLabelProjectLabel) __premarshalJSON() (*__premarshalgetProjectLabelProjectLabel, error) {
+	var retval __premarshalgetProjectLabelProjectLabel
+
+	retval.Id = v.ProjectLabel.Id
+	retval.Name = v.ProjectLabel.Name
+	retval.Description = v.ProjectLabel.Description
+	retval.Color = v.ProjectLabel.Color
+	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Parent = v.ProjectLabel.Parent
+	return &retval, nil
+}
+
+// getProjectLabelResponse is returned by getProjectLabel on success.
+type getProjectLabelResponse struct {
+	// Returns a single project label by its identifier.
+	ProjectLabel getProjectLabelProjectLabel `json:"projectLabel"`
+}
+
+// GetProjectLabel returns getProjectLabelResponse.ProjectLabel, and is useful for accessing the field via an interface.
+func (v *getProjectLabelResponse) GetProjectLabel() getProjectLabelProjectLabel {
+	return v.ProjectLabel
+}
+
+// getTeamAdministrableTeamsTeamConnection includes the requested fields of the GraphQL type TeamConnection.
+type getTeamAdministrableTeamsTeamConnection struct {
+	Nodes []getTeamAdministrableTeamsTeamConnectionNodesTeam `json:"nodes"`
+}
+
+// GetNodes returns getTeamAdministrableTeamsTeamConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnection) GetNodes() []getTeamAdministrableTeamsTeamConnectionNodesTeam {
+	return v.Nodes
+}
+
+// getTeamAdministrableTeamsTeamConnectionNodesTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type getTeamAdministrableTeamsTeamConnectionNodesTeam struct {
+	Team `json:"-"`
+}
+
+// GetId returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Id, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetId() string { return v.Team.Id }
+
+// GetName returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Name, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetName() string { return v.Team.Name }
+
+// GetKey returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Key, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetKey() string { return v.Team.Key }
+
+// GetPrivate returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Private, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetPrivate() bool { return v.Team.Private }
+
+// GetDescription returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Description, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetDescription() *string {
+	return v.Team.Description
+}
+
+// GetIcon returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Icon, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetIcon() *string { return v.Team.Icon }
+
+// GetColor returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Color, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetColor() *string { return v.Team.Color }
+
+// GetParent returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Parent, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetParent() *TeamParentTeam {
+	return v.Team.Parent
+}
+
+// GetInheritIssueEstimation returns getTeamAdministrableTeamsTeamConnectionNodesTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns getTeamAdministrableTeamsTeamConnectionNodesTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
+// GetTimezone returns getTeamAdministrableTeamsTeamConnectionNodesTeam.Timezone, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetTimezone() string {
+	return v.Team.Timezone
+}
+
+// GetGroupIssueHistory returns getTeamAdministrableTeamsTeamConnectionNodesTeam.GroupIssueHistory, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetGroupIssueHistory() bool {
+	return v.Team.GroupIssueHistory
+}
+
+// GetSetIssueSortOrderOnStateChange returns getTeamAdministrableTeamsTeamConnectionNodesTeam.SetIssueSortOrderOnStateChange, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetSetIssueSortOrderOnStateChange() string {
+	return v.Team.SetIssueSortOrderOnStateChange
+}
+
+// GetAiThreadSummariesEnabled returns getTeamAdministrableTeamsTeamConnectionNodesTeam.AiThreadSummariesEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetAiThreadSummariesEnabled() bool {
+	return v.Team.AiThreadSummariesEnabled
+}
+
+// GetAutoArchivePeriod returns getTeamAdministrableTeamsTeamConnectionNodesTeam.AutoArchivePeriod, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetAutoArchivePeriod() float64 {
+	return v.Team.AutoArchivePeriod
+}
+
+// GetAutoClosePeriod returns getTeamAdministrableTeamsTeamConnectionNodesTeam.AutoClosePeriod, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetAutoClosePeriod() *float64 {
+	return v.Team.AutoClosePeriod
+}
+
+// GetAutoCloseParentIssues returns getTeamAdministrableTeamsTeamConnectionNodesTeam.AutoCloseParentIssues, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetAutoCloseParentIssues() bool {
+	return v.Team.AutoCloseParentIssues
+}
+
+// GetAutoCloseChildIssues returns getTeamAdministrableTeamsTeamConnectionNodesTeam.AutoCloseChildIssues, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetAutoCloseChildIssues() bool {
+	return v.Team.AutoCloseChildIssues
+}
+
+// GetTriageEnabled returns getTeamAdministrableTeamsTeamConnectionNodesTeam.TriageEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetTriageEnabled() bool {
+	return v.Team.TriageEnabled
+}
+
+// GetRequirePriorityToLeaveTriage returns getTeamAdministrableTeamsTeamConnectionNodesTeam.RequirePriorityToLeaveTriage, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetRequirePriorityToLeaveTriage() bool {
+	return v.Team.RequirePriorityToLeaveTriage
+}
+
+// GetCyclesEnabled returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CyclesEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCyclesEnabled() bool {
+	return v.Team.CyclesEnabled
+}
+
+// GetCycleStartDay returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleStartDay, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleStartDay() float64 {
+	return v.Team.CycleStartDay
+}
+
+// GetCycleDuration returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleDuration, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleDuration() float64 {
+	return v.Team.CycleDuration
+}
+
+// GetCycleCooldownTime returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleCooldownTime, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleCooldownTime() float64 {
+	return v.Team.CycleCooldownTime
+}
+
+// GetUpcomingCycleCount returns getTeamAdministrableTeamsTeamConnectionNodesTeam.UpcomingCycleCount, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetUpcomingCycleCount() float64 {
+	return v.Team.UpcomingCycleCount
+}
+
+// GetCycleIssueAutoAssignStarted returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleIssueAutoAssignStarted, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleIssueAutoAssignStarted() bool {
+	return v.Team.CycleIssueAutoAssignStarted
+}
+
+// GetCycleIssueAutoAssignCompleted returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleIssueAutoAssignCompleted, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleIssueAutoAssignCompleted() bool {
+	return v.Team.CycleIssueAutoAssignCompleted
+}
+
+// GetCycleLockToActive returns getTeamAdministrableTeamsTeamConnectionNodesTeam.CycleLockToActive, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetCycleLockToActive() bool {
+	return v.Team.CycleLockToActive
+}
+
+// GetIssueEstimationType returns getTeamAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationType, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationType() string {
+	return v.Team.IssueEstimationType
+}
+
+// GetIssueEstimationAllowZero returns getTeamAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationAllowZero, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationAllowZero() bool {
+	return v.Team.IssueEstimationAllowZero
+}
+
+// GetIssueEstimationExtended returns getTeamAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationExtended, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationExtended() bool {
+	return v.Team.IssueEstimationExtended
+}
+
+// GetDefaultIssueEstimate returns getTeamAdministrableTeamsTeamConnectionNodesTeam.DefaultIssueEstimate, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetDefaultIssueEstimate() float64 {
+	return v.Team.DefaultIssueEstimate
+}
+
+// GetSecuritySettings returns getTeamAdministrableTeamsTeamConnectionNodesTeam.SecuritySettings, and is useful for accessing the field via an interface.
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) GetSecuritySettings() map[string]interface{} {
+	return v.Team.SecuritySettings
+}
+
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*getTeamAdministrableTeamsTeamConnectionNodesTeam
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.getTeamAdministrableTeamsTeamConnectionNodesTeam = v
 
 	err := json.Unmarshal(b, &firstPass)
 	if err != nil {
@@ -3441,7 +4226,7 @@ func (v *getTeamTeam) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-type __premarshalgetTeamTeam struct {
+type __premarshalgetTeamAdministrableTeamsTeamConnectionNodesTeam struct {
 	Id string `json:"id"`
 
 	Name string `json:"name"`
@@ -3457,6 +4242,10 @@ type __premarshalgetTeamTeam struct {
 	Color *string `json:"color"`
 
 	Parent *TeamParentTeam `json:"parent"`
+
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
 
 	Timezone string `json:"timezone"`
 
@@ -3505,7 +4294,7 @@ type __premarshalgetTeamTeam struct {
 	SecuritySettings map[string]interface{} `json:"securitySettings"`
 }
 
-func (v *getTeamTeam) MarshalJSON() ([]byte, error) {
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) MarshalJSON() ([]byte, error) {
 	premarshaled, err := v.__premarshalJSON()
 	if err != nil {
 		return nil, err
@@ -3513,8 +4302,8 @@ func (v *getTeamTeam) MarshalJSON() ([]byte, error) {
 	return json.Marshal(premarshaled)
 }
 
-func (v *getTeamTeam) __premarshalJSON() (*__premarshalgetTeamTeam, error) {
-	var retval __premarshalgetTeamTeam
+func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) __premarshalJSON() (*__premarshalgetTeamAdministrableTeamsTeamConnectionNodesTeam, error) {
+	var retval __premarshalgetTeamAdministrableTeamsTeamConnectionNodesTeam
 
 	retval.Id = v.Team.Id
 	retval.Name = v.Team.Name
@@ -3524,6 +4313,8 @@ func (v *getTeamTeam) __premarshalJSON() (*__premarshalgetTeamTeam, error) {
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -3548,6 +4339,19 @@ func (v *getTeamTeam) __premarshalJSON() (*__premarshalgetTeamTeam, error) {
 	retval.DefaultIssueEstimate = v.Team.DefaultIssueEstimate
 	retval.SecuritySettings = v.Team.SecuritySettings
 	return &retval, nil
+}
+
+// getTeamResponse is returned by getTeam on success.
+type getTeamResponse struct {
+	// All teams whose settings the user can administer. This includes teams the user
+	// can change settings for, but whose issues they may not have direct access to.
+	// This differs from the `teams` query which returns teams based on issue access.
+	AdministrableTeams getTeamAdministrableTeamsTeamConnection `json:"administrableTeams"`
+}
+
+// GetAdministrableTeams returns getTeamResponse.AdministrableTeams, and is useful for accessing the field via an interface.
+func (v *getTeamResponse) GetAdministrableTeams() getTeamAdministrableTeamsTeamConnection {
+	return v.AdministrableTeams
 }
 
 // getTeamWorkflowResponse is returned by getTeamWorkflow on success.
@@ -4194,6 +4998,287 @@ func (v *getWorkspaceSettingsResponse) GetOrganization() getWorkspaceSettingsOrg
 	return v.Organization
 }
 
+// projectLabelCreateProjectLabelCreateProjectLabelPayload includes the requested fields of the GraphQL type ProjectLabelPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a project label mutation.
+type projectLabelCreateProjectLabelCreateProjectLabelPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The label that was created or updated.
+	ProjectLabel projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel `json:"projectLabel"`
+}
+
+// GetSuccess returns projectLabelCreateProjectLabelCreateProjectLabelPayload.Success, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayload) GetSuccess() bool { return v.Success }
+
+// GetProjectLabel returns projectLabelCreateProjectLabelCreateProjectLabelPayload.ProjectLabel, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayload) GetProjectLabel() projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel {
+	return v.ProjectLabel
+}
+
+// projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel struct {
+	ProjectLabel `json:"-"`
+}
+
+// GetId returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetId() string {
+	return v.ProjectLabel.Id
+}
+
+// GetName returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetName() string {
+	return v.ProjectLabel.Name
+}
+
+// GetDescription returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetDescription() *string {
+	return v.ProjectLabel.Description
+}
+
+// GetColor returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetColor() string {
+	return v.ProjectLabel.Color
+}
+
+// GetIsGroup returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetIsGroup() bool {
+	return v.ProjectLabel.IsGroup
+}
+
+// GetParent returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
+	return v.ProjectLabel.Parent
+}
+
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.ProjectLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	Parent *ProjectLabelParentProjectLabel `json:"parent"`
+}
+
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) __premarshalJSON() (*__premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel, error) {
+	var retval __premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel
+
+	retval.Id = v.ProjectLabel.Id
+	retval.Name = v.ProjectLabel.Name
+	retval.Description = v.ProjectLabel.Description
+	retval.Color = v.ProjectLabel.Color
+	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Parent = v.ProjectLabel.Parent
+	return &retval, nil
+}
+
+// projectLabelCreateResponse is returned by projectLabelCreate on success.
+type projectLabelCreateResponse struct {
+	// Creates a new project label.
+	ProjectLabelCreate projectLabelCreateProjectLabelCreateProjectLabelPayload `json:"projectLabelCreate"`
+}
+
+// GetProjectLabelCreate returns projectLabelCreateResponse.ProjectLabelCreate, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateResponse) GetProjectLabelCreate() projectLabelCreateProjectLabelCreateProjectLabelPayload {
+	return v.ProjectLabelCreate
+}
+
+// projectLabelDeleteProjectLabelDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
+// The GraphQL type's documentation follows.
+//
+// A generic payload return from entity deletion mutations.
+type projectLabelDeleteProjectLabelDeleteDeletePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+}
+
+// GetSuccess returns projectLabelDeleteProjectLabelDeleteDeletePayload.Success, and is useful for accessing the field via an interface.
+func (v *projectLabelDeleteProjectLabelDeleteDeletePayload) GetSuccess() bool { return v.Success }
+
+// projectLabelDeleteResponse is returned by projectLabelDelete on success.
+type projectLabelDeleteResponse struct {
+	// Deletes a project label.
+	ProjectLabelDelete projectLabelDeleteProjectLabelDeleteDeletePayload `json:"projectLabelDelete"`
+}
+
+// GetProjectLabelDelete returns projectLabelDeleteResponse.ProjectLabelDelete, and is useful for accessing the field via an interface.
+func (v *projectLabelDeleteResponse) GetProjectLabelDelete() projectLabelDeleteProjectLabelDeleteDeletePayload {
+	return v.ProjectLabelDelete
+}
+
+// projectLabelUpdateProjectLabelUpdateProjectLabelPayload includes the requested fields of the GraphQL type ProjectLabelPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a project label mutation.
+type projectLabelUpdateProjectLabelUpdateProjectLabelPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The label that was created or updated.
+	ProjectLabel projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel `json:"projectLabel"`
+}
+
+// GetSuccess returns projectLabelUpdateProjectLabelUpdateProjectLabelPayload.Success, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayload) GetSuccess() bool { return v.Success }
+
+// GetProjectLabel returns projectLabelUpdateProjectLabelUpdateProjectLabelPayload.ProjectLabel, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayload) GetProjectLabel() projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel {
+	return v.ProjectLabel
+}
+
+// projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel struct {
+	ProjectLabel `json:"-"`
+}
+
+// GetId returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetId() string {
+	return v.ProjectLabel.Id
+}
+
+// GetName returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetName() string {
+	return v.ProjectLabel.Name
+}
+
+// GetDescription returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetDescription() *string {
+	return v.ProjectLabel.Description
+}
+
+// GetColor returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetColor() string {
+	return v.ProjectLabel.Color
+}
+
+// GetIsGroup returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetIsGroup() bool {
+	return v.ProjectLabel.IsGroup
+}
+
+// GetParent returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
+	return v.ProjectLabel.Parent
+}
+
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.ProjectLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	Parent *ProjectLabelParentProjectLabel `json:"parent"`
+}
+
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) __premarshalJSON() (*__premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel, error) {
+	var retval __premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel
+
+	retval.Id = v.ProjectLabel.Id
+	retval.Name = v.ProjectLabel.Name
+	retval.Description = v.ProjectLabel.Description
+	retval.Color = v.ProjectLabel.Color
+	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Parent = v.ProjectLabel.Parent
+	return &retval, nil
+}
+
+// projectLabelUpdateResponse is returned by projectLabelUpdate on success.
+type projectLabelUpdateResponse struct {
+	// Updates a project label.
+	ProjectLabelUpdate projectLabelUpdateProjectLabelUpdateProjectLabelPayload `json:"projectLabelUpdate"`
+}
+
+// GetProjectLabelUpdate returns projectLabelUpdateResponse.ProjectLabelUpdate, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateResponse) GetProjectLabelUpdate() projectLabelUpdateProjectLabelUpdateProjectLabelPayload {
+	return v.ProjectLabelUpdate
+}
+
 // templateCreateResponse is returned by templateCreate on success.
 type templateCreateResponse struct {
 	// Creates a new template.
@@ -4495,6 +5580,134 @@ func (v *templateUpdateTemplateUpdateTemplatePayloadTemplate) __premarshalJSON()
 	return &retval, nil
 }
 
+// updateDocumentDocumentUpdateDocumentPayload includes the requested fields of the GraphQL type DocumentPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a document mutation.
+type updateDocumentDocumentUpdateDocumentPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The document that was created or updated.
+	Document updateDocumentDocumentUpdateDocumentPayloadDocument `json:"document"`
+}
+
+// GetSuccess returns updateDocumentDocumentUpdateDocumentPayload.Success, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayload) GetSuccess() bool { return v.Success }
+
+// GetDocument returns updateDocumentDocumentUpdateDocumentPayload.Document, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayload) GetDocument() updateDocumentDocumentUpdateDocumentPayloadDocument {
+	return v.Document
+}
+
+// updateDocumentDocumentUpdateDocumentPayloadDocument includes the requested fields of the GraphQL type Document.
+// The GraphQL type's documentation follows.
+//
+// A rich-text document that lives within a project, initiative, team, issue,
+// release, or cycle. Documents support collaborative editing via ProseMirror/Yjs
+// and store their content in a separate DocumentContent entity. Each document is
+// associated with exactly one parent entity.
+type updateDocumentDocumentUpdateDocumentPayloadDocument struct {
+	Document `json:"-"`
+}
+
+// GetId returns updateDocumentDocumentUpdateDocumentPayloadDocument.Id, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetId() string { return v.Document.Id }
+
+// GetTitle returns updateDocumentDocumentUpdateDocumentPayloadDocument.Title, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetTitle() string {
+	return v.Document.Title
+}
+
+// GetContent returns updateDocumentDocumentUpdateDocumentPayloadDocument.Content, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetContent() *string {
+	return v.Document.Content
+}
+
+// GetTrashed returns updateDocumentDocumentUpdateDocumentPayloadDocument.Trashed, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetTrashed() bool {
+	return v.Document.Trashed
+}
+
+// GetProject returns updateDocumentDocumentUpdateDocumentPayloadDocument.Project, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetProject() *DocumentProject {
+	return v.Document.Project
+}
+
+// GetIssue returns updateDocumentDocumentUpdateDocumentPayloadDocument.Issue, and is useful for accessing the field via an interface.
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) GetIssue() *DocumentIssue {
+	return v.Document.Issue
+}
+
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*updateDocumentDocumentUpdateDocumentPayloadDocument
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.updateDocumentDocumentUpdateDocumentPayloadDocument = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.Document)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalupdateDocumentDocumentUpdateDocumentPayloadDocument struct {
+	Id string `json:"id"`
+
+	Title string `json:"title"`
+
+	Content *string `json:"content"`
+
+	Trashed bool `json:"trashed"`
+
+	Project *DocumentProject `json:"project"`
+
+	Issue *DocumentIssue `json:"issue"`
+}
+
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *updateDocumentDocumentUpdateDocumentPayloadDocument) __premarshalJSON() (*__premarshalupdateDocumentDocumentUpdateDocumentPayloadDocument, error) {
+	var retval __premarshalupdateDocumentDocumentUpdateDocumentPayloadDocument
+
+	retval.Id = v.Document.Id
+	retval.Title = v.Document.Title
+	retval.Content = v.Document.Content
+	retval.Trashed = v.Document.Trashed
+	retval.Project = v.Document.Project
+	retval.Issue = v.Document.Issue
+	return &retval, nil
+}
+
+// updateDocumentResponse is returned by updateDocument on success.
+type updateDocumentResponse struct {
+	// Updates a document.
+	DocumentUpdate updateDocumentDocumentUpdateDocumentPayload `json:"documentUpdate"`
+}
+
+// GetDocumentUpdate returns updateDocumentResponse.DocumentUpdate, and is useful for accessing the field via an interface.
+func (v *updateDocumentResponse) GetDocumentUpdate() updateDocumentDocumentUpdateDocumentPayload {
+	return v.DocumentUpdate
+}
+
 // updateGitAutomationStateGitAutomationStateUpdateGitAutomationStatePayload includes the requested fields of the GraphQL type GitAutomationStatePayload.
 // The GraphQL type's documentation follows.
 //
@@ -4713,6 +5926,16 @@ func (v *updateTeamTeamUpdateTeamPayloadTeam) GetColor() *string { return v.Team
 // GetParent returns updateTeamTeamUpdateTeamPayloadTeam.Parent, and is useful for accessing the field via an interface.
 func (v *updateTeamTeamUpdateTeamPayloadTeam) GetParent() *TeamParentTeam { return v.Team.Parent }
 
+// GetInheritIssueEstimation returns updateTeamTeamUpdateTeamPayloadTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *updateTeamTeamUpdateTeamPayloadTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns updateTeamTeamUpdateTeamPayloadTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *updateTeamTeamUpdateTeamPayloadTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
 // GetTimezone returns updateTeamTeamUpdateTeamPayloadTeam.Timezone, and is useful for accessing the field via an interface.
 func (v *updateTeamTeamUpdateTeamPayloadTeam) GetTimezone() string { return v.Team.Timezone }
 
@@ -4860,6 +6083,10 @@ type __premarshalupdateTeamTeamUpdateTeamPayloadTeam struct {
 
 	Parent *TeamParentTeam `json:"parent"`
 
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
 	Timezone string `json:"timezone"`
 
 	GroupIssueHistory bool `json:"groupIssueHistory"`
@@ -4926,6 +6153,8 @@ func (v *updateTeamTeamUpdateTeamPayloadTeam) __premarshalJSON() (*__premarshalu
 	retval.Icon = v.Team.Icon
 	retval.Color = v.Team.Color
 	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
 	retval.Timezone = v.Team.Timezone
 	retval.GroupIssueHistory = v.Team.GroupIssueHistory
 	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
@@ -5286,6 +6515,41 @@ func (v *updateWorkspaceSettingsResponse) GetOrganizationUpdate() updateWorkspac
 	return v.OrganizationUpdate
 }
 
+func createDocument(
+	ctx context.Context,
+	client graphql.Client,
+	input DocumentCreateInput,
+) (*createDocumentResponse, error) {
+	req := &graphql.Request{
+		OpName: "createDocument",
+		Query: `
+mutation createDocument ($input: DocumentCreateInput!) {
+	documentCreate(input: $input) {
+		success
+		document {
+			id
+		}
+	}
+}
+`,
+		Variables: &__createDocumentInput{
+			Input: input,
+		},
+	}
+	var err error
+
+	var data createDocumentResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func createGitAutomationState(
 	ctx context.Context,
 	client graphql.Client,
@@ -5428,6 +6692,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange
@@ -5505,6 +6771,38 @@ fragment WorkflowState on WorkflowState {
 	var err error
 
 	var data createWorkflowStateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func deleteDocument(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*deleteDocumentResponse, error) {
+	req := &graphql.Request{
+		OpName: "deleteDocument",
+		Query: `
+mutation deleteDocument ($id: String!) {
+	documentDelete(id: $id) {
+		success
+	}
+}
+`,
+		Variables: &__deleteDocumentInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data deleteDocumentResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -5785,6 +7083,51 @@ query findWorkspaceLabel ($name: String!) {
 	return &data, err
 }
 
+func getDocument(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getDocumentResponse, error) {
+	req := &graphql.Request{
+		OpName: "getDocument",
+		Query: `
+query getDocument ($id: String!) {
+	document(id: $id) {
+		... Document
+	}
+}
+fragment Document on Document {
+	id
+	title
+	content
+	trashed
+	project {
+		id
+	}
+	issue {
+		id
+		identifier
+	}
+}
+`,
+		Variables: &__getDocumentInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getDocumentResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func getLabel(
 	ctx context.Context,
 	client graphql.Client,
@@ -5830,6 +7173,48 @@ fragment IssueLabel on IssueLabel {
 	return &data, err
 }
 
+func getProjectLabel(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getProjectLabelResponse, error) {
+	req := &graphql.Request{
+		OpName: "getProjectLabel",
+		Query: `
+query getProjectLabel ($id: String!) {
+	projectLabel(id: $id) {
+		... ProjectLabel
+	}
+}
+fragment ProjectLabel on ProjectLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__getProjectLabelInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getProjectLabelResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func getTeam(
 	ctx context.Context,
 	client graphql.Client,
@@ -5839,8 +7224,10 @@ func getTeam(
 		OpName: "getTeam",
 		Query: `
 query getTeam ($key: String!) {
-	team(id: $key) {
-		... Team
+	administrableTeams(filter: {key:{eq:$key}}, first: 1, includeArchived: true) {
+		nodes {
+			... Team
+		}
 	}
 }
 fragment Team on Team {
@@ -5854,6 +7241,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange
@@ -6154,6 +7543,130 @@ fragment Organization on Organization {
 	return &data, err
 }
 
+func projectLabelCreate(
+	ctx context.Context,
+	client graphql.Client,
+	input ProjectLabelCreateInput,
+) (*projectLabelCreateResponse, error) {
+	req := &graphql.Request{
+		OpName: "projectLabelCreate",
+		Query: `
+mutation projectLabelCreate ($input: ProjectLabelCreateInput!) {
+	projectLabelCreate(input: $input) {
+		success
+		projectLabel {
+			... ProjectLabel
+		}
+	}
+}
+fragment ProjectLabel on ProjectLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__projectLabelCreateInput{
+			Input: input,
+		},
+	}
+	var err error
+
+	var data projectLabelCreateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func projectLabelDelete(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*projectLabelDeleteResponse, error) {
+	req := &graphql.Request{
+		OpName: "projectLabelDelete",
+		Query: `
+mutation projectLabelDelete ($id: String!) {
+	projectLabelDelete(id: $id) {
+		success
+	}
+}
+`,
+		Variables: &__projectLabelDeleteInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data projectLabelDeleteResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func projectLabelUpdate(
+	ctx context.Context,
+	client graphql.Client,
+	input ProjectLabelUpdateInput,
+	id string,
+) (*projectLabelUpdateResponse, error) {
+	req := &graphql.Request{
+		OpName: "projectLabelUpdate",
+		Query: `
+mutation projectLabelUpdate ($input: ProjectLabelUpdateInput!, $id: String!) {
+	projectLabelUpdate(input: $input, id: $id) {
+		success
+		projectLabel {
+			... ProjectLabel
+		}
+	}
+}
+fragment ProjectLabel on ProjectLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__projectLabelUpdateInput{
+			Input: input,
+			Id:    id,
+		},
+	}
+	var err error
+
+	var data projectLabelUpdateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func templateCreate(
 	ctx context.Context,
 	client graphql.Client,
@@ -6280,6 +7793,56 @@ fragment Template on Template {
 	return &data, err
 }
 
+func updateDocument(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+	input DocumentUpdateInput,
+) (*updateDocumentResponse, error) {
+	req := &graphql.Request{
+		OpName: "updateDocument",
+		Query: `
+mutation updateDocument ($id: String!, $input: DocumentUpdateInput!) {
+	documentUpdate(id: $id, input: $input) {
+		success
+		document {
+			... Document
+		}
+	}
+}
+fragment Document on Document {
+	id
+	title
+	content
+	trashed
+	project {
+		id
+	}
+	issue {
+		id
+		identifier
+	}
+}
+`,
+		Variables: &__updateDocumentInput{
+			Id:    id,
+			Input: input,
+		},
+	}
+	var err error
+
+	var data updateDocumentResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func updateGitAutomationState(
 	ctx context.Context,
 	client graphql.Client,
@@ -6390,6 +7953,8 @@ fragment Team on Team {
 	parent {
 		id
 	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
 	timezone
 	groupIssueHistory
 	setIssueSortOrderOnStateChange

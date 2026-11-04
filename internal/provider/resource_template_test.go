@@ -58,8 +58,8 @@ func TestAccTemplateResourceDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_template.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_template.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_template.test", "type", "issue"),
-					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"53c7964a-5bd4-4679-8cca-a5b78498b2b3\"],\"priority\":0,\"title\":\"\"}"),
+					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"49e77ab4-300f-4e51-8b35-8df34f7690e1\"],\"priority\":0,\"title\":\"\"}"),
 				),
 			},
 			// ImportState testing
@@ -89,8 +89,8 @@ func TestAccTemplateResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_template.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_template.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_template.test", "type", "issue"),
-					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"53c7964a-5bd4-4679-8cca-a5b78498b2b3\"],\"priority\":0,\"title\":\"\"}"),
+					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"49e77ab4-300f-4e51-8b35-8df34f7690e1\"],\"priority\":0,\"title\":\"\"}"),
 				),
 			},
 			// ImportState testing
@@ -110,8 +110,8 @@ func TestAccTemplateResourceNonDefault(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_template.test", "icon", "Image"),
 					resource.TestCheckResourceAttr("linear_template.test", "color", "#00ff00"),
 					resource.TestCheckResourceAttr("linear_template.test", "type", "issue"),
-					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ff0a060a-eceb-4b34-9140-fd7231f0cd28"),
-					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"53c7964a-5bd4-4679-8cca-a5b78498b2b3\"],\"priority\":0,\"title\":\"\"}"),
+					resource.TestCheckResourceAttr("linear_template.test", "team_id", "ab69b823-f187-444d-8848-782045b86656"),
+					resource.TestCheckResourceAttr("linear_template.test", "data", "{\"labelIds\":[\"49e77ab4-300f-4e51-8b35-8df34f7690e1\"],\"priority\":0,\"title\":\"\"}"),
 				),
 			},
 			// Update and Read testing
@@ -160,11 +160,11 @@ resource "linear_template" "test" {
   icon = "Image"
   color = "#00ff00"
   type = "issue"
-  team_id = "ff0a060a-eceb-4b34-9140-fd7231f0cd28"
+  team_id = "ab69b823-f187-444d-8848-782045b86656"
   data = jsonencode({
     "title" = ""
     "priority" = 0
-    "labelIds" = ["53c7964a-5bd4-4679-8cca-a5b78498b2b3"]
+    "labelIds" = ["49e77ab4-300f-4e51-8b35-8df34f7690e1"]
   })
 }
 `, name)

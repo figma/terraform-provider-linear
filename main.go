@@ -34,7 +34,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/terraform-community-providers/linear",
+		Address: "registry.terraform.io/figma/linear",
 		Debug:   debug,
 	}
 
