@@ -1,5 +1,5 @@
 # Terraform Linear Provider
 
-A terraform provider for [linear.app](https://linear.app).
+A Terraform provider for [Linear](https://linear.app).
 
-* [Documentation](https://registry.terraform.io/providers/terraform-community-providers/linear/latest/docs)
+[Provider documentation](docs/index.md) is in this repository.

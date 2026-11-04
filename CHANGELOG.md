@@ -2,11 +2,18 @@
 
 ## Unreleased
 
+## 0.4.1
+
+### Security
+* Update gRPC to 1.83.2, including upstream security fixes.
+
+### Release
+* Change the provider address to `spacelift.io/figma/linear`.
+
 ## 0.4.0
 
 ### Release
-* First release under `registry.terraform.io/figma/linear`. Set the provider source to `figma/linear` to use this release.
-* Existing users of `terraform-community-providers/linear` can migrate their state with `terraform state replace-provider registry.terraform.io/terraform-community-providers/linear registry.terraform.io/figma/linear`.
+* Initial GitHub release of Figma's fork. This version was not published to a Terraform provider registry.
 
 ### Enhancements
 * Added `linear_document` resource to manage Markdown documents attached to projects or issues, including import, reparenting, and moving documents to trash on deletion.

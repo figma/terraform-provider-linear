@@ -34,7 +34,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/figma/linear",
+		Address: "spacelift.io/figma/linear",
 		Debug:   debug,
 	}
 
