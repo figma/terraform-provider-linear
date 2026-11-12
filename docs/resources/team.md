@@ -4,11 +4,17 @@ page_title: "linear_team Resource - terraform-provider-linear"
 subcategory: ""
 description: |-
   Linear team.
+  The resource uses the team's UUID as its identity. Changing a team key does not change which team Terraform manages. Import by UUID; legacy key imports remain supported.
+  Removing the resource makes the team private in Linear, then Terraform removes it from state. The team, its issues, and its workflows remain in Linear. Its parent is unchanged.
 ---
 
 # linear_team (Resource)
 
 Linear team.
+
+The resource uses the team's UUID as its identity. Changing a team key does not change which team Terraform manages. Import by UUID; legacy key imports remain supported.
+
+Removing the resource makes the team private in Linear, then Terraform removes it from state. The team, its issues, and its workflows remain in Linear. Its parent is unchanged.
 
 ## Example Usage
 
@@ -183,5 +189,5 @@ Read-Only:
 Import is supported using the following syntax:
 
 ```shell
-terraform import linear_team.example SOME
+terraform import linear_team.example 53c7964a-5bd4-4679-8cca-a5b78498b2b3
 ```
