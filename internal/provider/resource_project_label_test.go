@@ -117,9 +117,14 @@ func TestAccProjectLabelResource(t *testing.T) {
 			{
 				Config: testAccProjectLabelResourceConfigCleared(),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("linear_project_label.group", "group_type", "singleSelect"),
 					resource.TestCheckNoResourceAttr("linear_project_label.child", "description"),
 					resource.TestCheckNoResourceAttr("linear_project_label.child", "parent_id"),
 				),
+			},
+			{
+				Config:   testAccProjectLabelResourceConfigCleared(),
+				PlanOnly: true,
 			},
 			{
 				Config:             testAccProjectLabelResourceConfigCleared(),
@@ -160,7 +165,6 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
-  group_type  = "singleSelect"
 }
 
 resource "linear_project_label" "child" {
