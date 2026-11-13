@@ -165,6 +165,7 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
+  group_type  = "singleSelect"
 }
 
 resource "linear_project_label" "child" {
@@ -183,7 +184,6 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
-  group_type  = "singleSelect"
 }
 
 resource "linear_project_label" "child" {
