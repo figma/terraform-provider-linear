@@ -100,6 +100,7 @@ func (p *LinearProvider) Configure(ctx context.Context, req provider.ConfigureRe
 func (p *LinearProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewDocumentResource,
+		NewInitiativeLabelResource,
 		NewProjectLabelResource,
 		NewWebhookResource,
 		NewTeamResource,

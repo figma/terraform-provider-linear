@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Enhancements
+* Add workspace-level project and initiative labels, including label groups and group selection behavior.
+
+### Bug Fixes
+* Preserve the existing `linear_project_label.group_type` when omitted from configuration so plans stay stable.
+
+## 0.5.0
+
+### Enhancements
+* Track `linear_team` resources by UUID so key changes do not change resource identity. UUID and legacy key imports are supported.
+
+### Behavior Changes
+* Removing a `linear_team` makes that team private and removes it from Terraform state. Its issues, workflows, and parent remain in Linear; the provider no longer calls `teamDelete`.
+
 ## 0.4.1
 
 ### Security

@@ -15891,6 +15891,10 @@ input MilestoneSort {
 }
 
 type Mutation {
+  initiativeLabelCreate(input: InitiativeLabelCreateInput!): InitiativeLabelPayload!
+  initiativeLabelUpdate(id: String!, input: InitiativeLabelUpdateInput!): InitiativeLabelPayload!
+  initiativeLabelDelete(id: String!): DeletePayload!
+
   """
   XHR request payload to upload an images, video and other attachments directly to Linear's cloud storage.
   """
@@ -24142,6 +24146,7 @@ workspace-level and can be organized into groups with a parent-child hierarchy.
 Only child labels (not group labels) can be directly applied to projects.
 """
 type ProjectLabel implements Node {
+  groupType: LabelGroupType
   """The unique identifier of the entity."""
   id: ID!
 
@@ -24320,6 +24325,7 @@ Input for creating a new project label. A name is required. The label is created
 as a workspace-level label available to all projects.
 """
 input ProjectLabelCreateInput {
+  groupType: LabelGroupType
   """
   The identifier in UUID v4 format. If none is provided, the backend will generate one.
   """
@@ -24399,6 +24405,7 @@ type ProjectLabelPayload {
 Input for updating an existing project label. All fields are optional; only provided fields will be updated.
 """
 input ProjectLabelUpdateInput {
+  groupType: LabelGroupType
   """The name of the label."""
   name: String
 
@@ -27091,6 +27098,7 @@ enum PushSubscriptionType {
 }
 
 type Query {
+  initiativeLabel(id: String!): InitiativeLabel!
   """
   All issue workflow states (issue statuses). Returns a paginated list of
   workflow states visible to the authenticated user, across all teams they have access to.
@@ -37171,3 +37179,45 @@ input ZendeskSettingsInput {
   hostMappings: [String!]
 }
 
+
+type InitiativeLabel implements Node {
+  id: ID!
+  name: String!
+  description: String
+  color: String!
+  isGroup: Boolean!
+  groupType: LabelGroupType
+  parent: InitiativeLabel
+}
+
+enum LabelGroupType {
+  multiSelect
+  singleSelect
+}
+
+input InitiativeLabelCreateInput {
+  color: String
+  description: String
+  groupType: LabelGroupType
+  id: String
+  isGroup: Boolean
+  name: String!
+  parentId: String
+  retiredAt: DateTime
+}
+
+input InitiativeLabelUpdateInput {
+  color: String
+  description: String
+  groupType: LabelGroupType
+  isGroup: Boolean
+  name: String
+  parentId: String
+  retiredAt: DateTime
+}
+
+type InitiativeLabelPayload {
+  initiativeLabel: InitiativeLabel!
+  lastSyncId: Float!
+  success: Boolean!
+}
