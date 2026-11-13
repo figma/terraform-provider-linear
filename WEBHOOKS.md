@@ -4,48 +4,64 @@
 `linear_webhooks` data sources return subscription metadata without signing
 secrets. The provider never selects `Webhook.secret`, including during import.
 
+## Secret lifecycle
+
+Provide `secret_wo` through an ephemeral, sensitive variable populated by your
+secret manager, and set `secret_wo_version` to a positive integer. Use the same
+secret in the receiver, which must verify Linear's HMAC-SHA256 signature over the
+raw request body. See [Linear's webhook documentation](https://linear.app/developers/webhooks).
+
+The provider reads the secret from configuration, never from the plan or state.
+Resource state contains only `secret_wo_version`. Supplying the secret through
+an ephemeral variable also excludes the variable value from saved plans; a
+regular sensitive variable can still persist in plan artifacts. Do not hardcode
+secrets in configuration. Supply ephemeral inputs during both plan and apply.
+
+Change `secret_wo_version` whenever rotating the secret. Changing only
+`secret_wo` cannot produce a plan difference. Unrelated updates do not resend the
+secret. Coordinate rotation with the receiver: Linear does not promise an overlap
+window for old and new signatures. Removing both arguments leaves the remote
+secret untouched. Refresh cannot detect external rotation.
+
+Omit both arguments to leave the signing secret unmanaged. On creation Linear
+generates it; obtain that value through Linear's API settings and configure the
+receiver separately. Import does not recover a secret or rotation version.
+Configuring both arguments after import sets the supplied secret on the next apply.
+
+## Compatibility and rollout
+
+Keep this PR draft until Figma's OpenTofu upgrade lands, then rebase and repeat
+live acceptance checks. The Linear Spacelift stack currently uses OpenTofu 1.9.1;
+Foundation has stated a target of 1.13.0 without a committed rollout date.
+
+Write-only signing secrets require **OpenTofu 1.11+** or **Terraform 1.11.1+**
+for the recommended sensitive ephemeral variable. Terraform 1.11.0 introduced
+write-only arguments but has a sensitive/ephemeral serialization bug fixed in
+[1.11.1](https://github.com/hashicorp/terraform/pull/36619).
+Older clients can still use the provider with `secret_wo` omitted, including
+webhooks whose signing secrets are managed outside Terraform.
+
+Plugin Framework 1.16.1 supplies write-only support, with plugin-testing 1.13.3
+and its matching protocol/SDK dependencies. CI acceptance tests use Terraform
+1.11.1. Framework 1.14.0 was the initial implementation; 1.14.1 fixed perpetual
+diffs involving computed attributes.
+
 ## Practices adopted from established providers
 
 - The [GitHub provider](https://github.com/integrations/terraform-provider-github/blob/main/github/resource_github_repository_webhook.go)
-  preserves the configured signing secret when GitHub returns a masked value.
-  This provider likewise keeps the configured secret through refresh and sends
-  it on update only when its configured value changes.
+  avoids replacing configured webhook secrets with masked API responses. This
+  provider never queries the remote signing secret.
 - The [GitLab provider](https://github.com/gitlabhq/terraform-provider-gitlab/blob/main/docs/resources/project_hook.md)
-  marks webhook tokens and signing tokens sensitive, and documents that imported
-  subscriptions cannot recover their secrets. This provider follows that import
-  contract and explicitly excludes secrets from lookup schemas.
-- [Terraform sensitive attributes](https://developer.hashicorp.com/terraform/language/manage-sensitive-data)
-  redact normal CLI output but still persist values in state. This provider
-  documents that distinction, accepts secrets through sensitive variables, and
-  omits raw API errors from webhook diagnostics because upstream errors can
-  echo submitted credentials or credential-bearing URLs.
+  documents that imported subscriptions cannot recover their secrets. This
+  provider likewise excludes signing secrets from lookups and import.
+- [HashiCorp's write-only guidance](https://developer.hashicorp.com/terraform/plugin/framework/resources/write-only-arguments)
+  recommends a companion version attribute to trigger rotation. Sensitive alone
+  provides output redaction, so this resource uses write-only configuration.
+  Raw API errors are omitted because they can echo credentials.
 
-## Secret lifecycle
-
-Provide `secret` through a sensitive variable populated by your secret manager,
-or a separately generated secret. Use the same value in the receiver, which
-must verify Linear's HMAC-SHA256 signature over the raw request body. See
-[Linear's webhook documentation](https://linear.app/developers/webhooks).
-
-If `secret` is omitted at creation, Linear generates it. Terraform neither
-retrieves nor stores that generated value; obtain it through Linear's API
-settings and configure the receiver separately. Omitting `secret` on an imported
-subscription leaves the existing credential untouched. Setting it explicitly
-manages that value on the next apply.
-
-Changing a configured `secret` rotates it in place. Coordinate the receiver
-change: Linear does not promise an overlap window for old and new signatures.
-Removing the attribute stops managing the secret without clearing or rotating
-it. Refresh cannot detect external rotation because it does not retrieve the
-remote secret. An unchanged secret is not resent during unrelated updates.
-
-Terraform's newer write-only attributes can avoid persisting an input secret.
-The provider currently uses Terraform Plugin Framework 1.2 and supports older
-Terraform versions; that framework does not offer write-only attributes. Adding
-that capability requires a separately reviewed framework/protocol compatibility
-upgrade. This resource does not claim to keep configured secrets out of state.
-Restrict access to state and plan artifacts. Do not embed credentials in the
-receiver URL; URL configuration is ordinary metadata and is returned by lookups.
+Do not embed credentials in receiver URLs; URLs remain ordinary metadata and
+are returned by lookups. An ephemeral source cannot remove a secret already
+stored by another resource or data source upstream.
 
 ## Scope, updates, and import
 
@@ -66,9 +82,9 @@ exactly. Lookups can display OAuth subscription metadata, including a null URL.
 
 ## Verification
 
-Local tests exercise secret serialization, refresh/import preservation, explicit
-rotation, omission on unrelated changes, credential-safe diagnostics, scope/URL
+Local tests exercise configuration-only secret reads, secret-free state and import,
+version-triggered rotation, omission on unrelated changes, credential-safe diagnostics, scope/URL
 validation, and paginated metadata lookups. Live acceptance tests create a
 **disabled** subscription, update its secret and events, verify both lookups,
-import without recovering the secret, and check a clean plan. They require the
+import without recovering the secret or version, and check a clean plan. They require the
 existing CI Linear credential and never enable event delivery.

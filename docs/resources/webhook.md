@@ -16,14 +16,16 @@ Linear webhook subscription for one team or all public teams. Requires workspace
 variable "webhook_signing_secret" {
   type      = string
   sensitive = true
+  ephemeral = true
 }
 
 resource "linear_webhook" "security" {
-  label            = "Security issue events"
-  url              = "https://hooks.example.com/linear"
-  all_public_teams = true
-  resource_types   = ["Issue", "Comment"]
-  secret           = var.webhook_signing_secret
+  label             = "Security issue events"
+  url               = "https://hooks.example.com/linear"
+  all_public_teams  = true
+  resource_types    = ["Issue", "Comment"]
+  secret_wo         = var.webhook_signing_secret
+  secret_wo_version = 1
 }
 ```
 
@@ -40,7 +42,8 @@ resource "linear_webhook" "security" {
 - `all_public_teams` (Boolean) Subscribe to all public teams, including future public teams. Scope changes replace the subscription.
 - `enabled` (Boolean) Whether to deliver events. Defaults to true.
 - `label` (String) Human-readable description of the subscription.
-- `secret` (String, Sensitive) HMAC-SHA256 signing secret. Sensitive values are still stored in Terraform state. Supply through a sensitive variable or secret manager. Omit to let Linear generate a secret outside Terraform management. Removing this attribute stops managing the secret; it does not clear or rotate it. Imported resources have no secret in state until configured. Reads never retrieve secrets, so external rotations are not detected.
+- `secret_wo` (String, Sensitive) HMAC-SHA256 signing secret. Requires OpenTofu 1.11+ or Terraform 1.11.1+ for sensitive ephemeral variables. Read only from configuration and never stored in resource state. Supply through an ephemeral, sensitive variable to also exclude its value from saved plans. Configure secret_wo_version alongside it and change the version to rotate. Omit both to leave the secret unmanaged; Linear generates one on creation. Refresh/import never retrieve secrets, so external rotations are not detected.
+- `secret_wo_version` (Number) Positive rotation version, required with secret_wo. Change this value whenever changing the signing secret; changing only secret_wo does not trigger an update. Removing both arguments leaves the remote secret untouched.
 - `team_id` (String) Team UUID. Choose this or all_public_teams = true. Scope changes replace the subscription.
 
 ### Read-Only
