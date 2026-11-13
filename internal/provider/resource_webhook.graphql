@@ -1,0 +1,53 @@
+# @genqlient(for: "Webhook.label", pointer: true)
+# @genqlient(for: "Webhook.url", pointer: true)
+# @genqlient(for: "Webhook.team", pointer: true)
+fragment WebhookConfig on Webhook {
+  id
+  label
+  url
+  enabled
+  allPublicTeams
+  team { id }
+  resourceTypes
+}
+
+query getWebhook($id: String!) {
+  webhook(id: $id) { ...WebhookConfig }
+}
+
+# @genqlient(for: "WebhookCreateInput.id", pointer: true, omitempty: true)
+# @genqlient(for: "WebhookCreateInput.label", pointer: true)
+# @genqlient(for: "WebhookCreateInput.secret", pointer: true, omitempty: true)
+# @genqlient(for: "WebhookCreateInput.teamId", pointer: true, omitempty: true)
+mutation createWebhook(
+  $input: WebhookCreateInput!
+) {
+  webhookCreate(input: $input) { success webhook { ...WebhookConfig } }
+}
+
+# @genqlient(for: "WebhookUpdateInput.label", pointer: true)
+# @genqlient(for: "WebhookUpdateInput.secret", pointer: true, omitempty: true)
+mutation updateWebhook(
+  $id: String!,
+  $input: WebhookUpdateInput!
+) {
+  webhookUpdate(id: $id, input: $input) { success webhook { ...WebhookConfig } }
+}
+
+mutation deleteWebhook($id: String!) {
+  webhookDelete(id: $id) { success }
+}
+
+query listWebhooks(
+  # @genqlient(pointer: true)
+  $after: String
+) {
+  webhooks(first: 100, after: $after) {
+    nodes { ...WebhookConfig }
+    pageInfo {
+      hasNextPage
+      # @genqlient(pointer: true)
+      endCursor
+    }
+  }
+}

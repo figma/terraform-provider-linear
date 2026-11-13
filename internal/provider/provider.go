@@ -101,6 +101,7 @@ func (p *LinearProvider) Resources(ctx context.Context) []func() resource.Resour
 	return []func() resource.Resource{
 		NewDocumentResource,
 		NewProjectLabelResource,
+		NewWebhookResource,
 		NewTeamResource,
 		NewTeamLabelResource,
 		NewTeamWorkflowResource,
@@ -114,6 +115,8 @@ func (p *LinearProvider) Resources(ctx context.Context) []func() resource.Resour
 func (p *LinearProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewWorkspaceDataSource,
+		NewWebhookDataSource,
+		NewWebhooksDataSource,
 	}
 }
 
