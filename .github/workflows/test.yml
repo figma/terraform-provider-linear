@@ -63,6 +63,9 @@ jobs:
         run: go test ./...
   test:
     name: Terraform Provider Acceptance Test
+    concurrency:
+      group: linear-acceptance-workspace
+      queue: max
     if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     needs: build
     runs-on: ubuntu-latest

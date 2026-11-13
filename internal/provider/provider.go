@@ -117,6 +117,8 @@ func (p *LinearProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewWorkspaceDataSource,
 		NewProjectLabelsDataSource,
 		NewProjectLabelDataSource,
+		NewInitiativeLabelsDataSource,
+		NewInitiativeLabelDataSource,
 	}
 }
 
