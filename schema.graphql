@@ -27098,6 +27098,7 @@ enum PushSubscriptionType {
 }
 
 type Query {
+  initiativeLabels(after: String, first: Int, includeArchived: Boolean): InitiativeLabelConnection!
   initiativeLabel(id: String!): InitiativeLabel!
   """
   All issue workflow states (issue statuses). Returns a paginated list of
@@ -37193,6 +37194,11 @@ type InitiativeLabel implements Node {
 enum LabelGroupType {
   multiSelect
   singleSelect
+}
+
+type InitiativeLabelConnection {
+  nodes: [InitiativeLabel!]!
+  pageInfo: PageInfo!
 }
 
 input InitiativeLabelCreateInput {

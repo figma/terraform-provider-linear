@@ -422,6 +422,48 @@ func (v *InitiativeLabelCreateInput) GetParentId() *string { return v.ParentId }
 // GetRetiredAt returns InitiativeLabelCreateInput.RetiredAt, and is useful for accessing the field via an interface.
 func (v *InitiativeLabelCreateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
+// InitiativeLabelLookup includes the GraphQL fields of InitiativeLabel requested by the fragment InitiativeLabelLookup.
+type InitiativeLabelLookup struct {
+	Id          string                                      `json:"id"`
+	Name        string                                      `json:"name"`
+	Description *string                                     `json:"description"`
+	Color       string                                      `json:"color"`
+	IsGroup     bool                                        `json:"isGroup"`
+	GroupType   *LabelGroupType                             `json:"groupType"`
+	Parent      *InitiativeLabelLookupParentInitiativeLabel `json:"parent"`
+}
+
+// GetId returns InitiativeLabelLookup.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetId() string { return v.Id }
+
+// GetName returns InitiativeLabelLookup.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetName() string { return v.Name }
+
+// GetDescription returns InitiativeLabelLookup.Description, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetDescription() *string { return v.Description }
+
+// GetColor returns InitiativeLabelLookup.Color, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetColor() string { return v.Color }
+
+// GetIsGroup returns InitiativeLabelLookup.IsGroup, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetIsGroup() bool { return v.IsGroup }
+
+// GetGroupType returns InitiativeLabelLookup.GroupType, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetGroupType() *LabelGroupType { return v.GroupType }
+
+// GetParent returns InitiativeLabelLookup.Parent, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookup) GetParent() *InitiativeLabelLookupParentInitiativeLabel {
+	return v.Parent
+}
+
+// InitiativeLabelLookupParentInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type InitiativeLabelLookupParentInitiativeLabel struct {
+	Id string `json:"id"`
+}
+
+// GetId returns InitiativeLabelLookupParentInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelLookupParentInitiativeLabel) GetId() string { return v.Id }
+
 // InitiativeLabelParentInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
 type InitiativeLabelParentInitiativeLabel struct {
 	Id string `json:"id"`
@@ -2752,6 +2794,26 @@ func (v *__initiativeLabelUpdateInput) GetInput() InitiativeLabelUpdateInput { r
 
 // GetId returns __initiativeLabelUpdateInput.Id, and is useful for accessing the field via an interface.
 func (v *__initiativeLabelUpdateInput) GetId() string { return v.Id }
+
+// __listInitiativeLabelsInput is used internally by genqlient
+type __listInitiativeLabelsInput struct {
+	After           *string `json:"after"`
+	IncludeArchived bool    `json:"includeArchived"`
+}
+
+// GetAfter returns __listInitiativeLabelsInput.After, and is useful for accessing the field via an interface.
+func (v *__listInitiativeLabelsInput) GetAfter() *string { return v.After }
+
+// GetIncludeArchived returns __listInitiativeLabelsInput.IncludeArchived, and is useful for accessing the field via an interface.
+func (v *__listInitiativeLabelsInput) GetIncludeArchived() bool { return v.IncludeArchived }
+
+// __lookupInitiativeLabelInput is used internally by genqlient
+type __lookupInitiativeLabelInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __lookupInitiativeLabelInput.Id, and is useful for accessing the field via an interface.
+func (v *__lookupInitiativeLabelInput) GetId() string { return v.Id }
 
 // __makeTeamPrivateInput is used internally by genqlient
 type __makeTeamPrivateInput struct {
@@ -5865,6 +5927,260 @@ func (v *initiativeLabelUpdateResponse) GetInitiativeLabelUpdate() initiativeLab
 	return v.InitiativeLabelUpdate
 }
 
+// listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection includes the requested fields of the GraphQL type InitiativeLabelConnection.
+type listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection struct {
+	Nodes    []listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel `json:"nodes"`
+	PageInfo listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo               `json:"pageInfo"`
+}
+
+// GetNodes returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection) GetNodes() []listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel {
+	return v.Nodes
+}
+
+// GetPageInfo returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection) GetPageInfo() listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo {
+	return v.PageInfo
+}
+
+// listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel struct {
+	InitiativeLabelLookup `json:"-"`
+}
+
+// GetId returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetId() string {
+	return v.InitiativeLabelLookup.Id
+}
+
+// GetName returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetName() string {
+	return v.InitiativeLabelLookup.Name
+}
+
+// GetDescription returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetDescription() *string {
+	return v.InitiativeLabelLookup.Description
+}
+
+// GetColor returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetColor() string {
+	return v.InitiativeLabelLookup.Color
+}
+
+// GetIsGroup returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetIsGroup() bool {
+	return v.InitiativeLabelLookup.IsGroup
+}
+
+// GetGroupType returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetGroupType() *LabelGroupType {
+	return v.InitiativeLabelLookup.GroupType
+}
+
+// GetParent returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) GetParent() *InitiativeLabelLookupParentInitiativeLabel {
+	return v.InitiativeLabelLookup.Parent
+}
+
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.InitiativeLabelLookup)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshallistInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Parent *InitiativeLabelLookupParentInitiativeLabel `json:"parent"`
+}
+
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel) __premarshalJSON() (*__premarshallistInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel, error) {
+	var retval __premarshallistInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel
+
+	retval.Id = v.InitiativeLabelLookup.Id
+	retval.Name = v.InitiativeLabelLookup.Name
+	retval.Description = v.InitiativeLabelLookup.Description
+	retval.Color = v.InitiativeLabelLookup.Color
+	retval.IsGroup = v.InitiativeLabelLookup.IsGroup
+	retval.GroupType = v.InitiativeLabelLookup.GroupType
+	retval.Parent = v.InitiativeLabelLookup.Parent
+	return &retval, nil
+}
+
+// listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
+
+// listInitiativeLabelsResponse is returned by listInitiativeLabels on success.
+type listInitiativeLabelsResponse struct {
+	InitiativeLabels listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection `json:"initiativeLabels"`
+}
+
+// GetInitiativeLabels returns listInitiativeLabelsResponse.InitiativeLabels, and is useful for accessing the field via an interface.
+func (v *listInitiativeLabelsResponse) GetInitiativeLabels() listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection {
+	return v.InitiativeLabels
+}
+
+// lookupInitiativeLabelInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type lookupInitiativeLabelInitiativeLabel struct {
+	InitiativeLabelLookup `json:"-"`
+}
+
+// GetId returns lookupInitiativeLabelInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetId() string { return v.InitiativeLabelLookup.Id }
+
+// GetName returns lookupInitiativeLabelInitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetName() string { return v.InitiativeLabelLookup.Name }
+
+// GetDescription returns lookupInitiativeLabelInitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetDescription() *string {
+	return v.InitiativeLabelLookup.Description
+}
+
+// GetColor returns lookupInitiativeLabelInitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetColor() string {
+	return v.InitiativeLabelLookup.Color
+}
+
+// GetIsGroup returns lookupInitiativeLabelInitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetIsGroup() bool {
+	return v.InitiativeLabelLookup.IsGroup
+}
+
+// GetGroupType returns lookupInitiativeLabelInitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetGroupType() *LabelGroupType {
+	return v.InitiativeLabelLookup.GroupType
+}
+
+// GetParent returns lookupInitiativeLabelInitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelInitiativeLabel) GetParent() *InitiativeLabelLookupParentInitiativeLabel {
+	return v.InitiativeLabelLookup.Parent
+}
+
+func (v *lookupInitiativeLabelInitiativeLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*lookupInitiativeLabelInitiativeLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.lookupInitiativeLabelInitiativeLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.InitiativeLabelLookup)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshallookupInitiativeLabelInitiativeLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Parent *InitiativeLabelLookupParentInitiativeLabel `json:"parent"`
+}
+
+func (v *lookupInitiativeLabelInitiativeLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *lookupInitiativeLabelInitiativeLabel) __premarshalJSON() (*__premarshallookupInitiativeLabelInitiativeLabel, error) {
+	var retval __premarshallookupInitiativeLabelInitiativeLabel
+
+	retval.Id = v.InitiativeLabelLookup.Id
+	retval.Name = v.InitiativeLabelLookup.Name
+	retval.Description = v.InitiativeLabelLookup.Description
+	retval.Color = v.InitiativeLabelLookup.Color
+	retval.IsGroup = v.InitiativeLabelLookup.IsGroup
+	retval.GroupType = v.InitiativeLabelLookup.GroupType
+	retval.Parent = v.InitiativeLabelLookup.Parent
+	return &retval, nil
+}
+
+// lookupInitiativeLabelResponse is returned by lookupInitiativeLabel on success.
+type lookupInitiativeLabelResponse struct {
+	InitiativeLabel lookupInitiativeLabelInitiativeLabel `json:"initiativeLabel"`
+}
+
+// GetInitiativeLabel returns lookupInitiativeLabelResponse.InitiativeLabel, and is useful for accessing the field via an interface.
+func (v *lookupInitiativeLabelResponse) GetInitiativeLabel() lookupInitiativeLabelInitiativeLabel {
+	return v.InitiativeLabel
+}
+
 // makeTeamPrivateResponse is returned by makeTeamPrivate on success.
 type makeTeamPrivateResponse struct {
 	// Updates a team's settings, properties, or configuration. Requires team owner
@@ -8670,6 +8986,100 @@ fragment InitiativeLabel on InitiativeLabel {
 	var err error
 
 	var data initiativeLabelUpdateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func listInitiativeLabels(
+	ctx context.Context,
+	client graphql.Client,
+	after *string,
+	includeArchived bool,
+) (*listInitiativeLabelsResponse, error) {
+	req := &graphql.Request{
+		OpName: "listInitiativeLabels",
+		Query: `
+query listInitiativeLabels ($after: String, $includeArchived: Boolean!) {
+	initiativeLabels(first: 100, after: $after, includeArchived: $includeArchived) {
+		nodes {
+			... InitiativeLabelLookup
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+fragment InitiativeLabelLookup on InitiativeLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__listInitiativeLabelsInput{
+			After:           after,
+			IncludeArchived: includeArchived,
+		},
+	}
+	var err error
+
+	var data listInitiativeLabelsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func lookupInitiativeLabel(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*lookupInitiativeLabelResponse, error) {
+	req := &graphql.Request{
+		OpName: "lookupInitiativeLabel",
+		Query: `
+query lookupInitiativeLabel ($id: String!) {
+	initiativeLabel(id: $id) {
+		... InitiativeLabelLookup
+	}
+}
+fragment InitiativeLabelLookup on InitiativeLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__lookupInitiativeLabelInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data lookupInitiativeLabelResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(

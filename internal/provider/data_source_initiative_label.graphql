@@ -1,0 +1,36 @@
+# @genqlient(for: "InitiativeLabel.groupType", pointer: true)
+# @genqlient(for: "InitiativeLabel.description", pointer: true)
+# @genqlient(for: "InitiativeLabel.parent", pointer: true)
+fragment InitiativeLabelLookup on InitiativeLabel {
+  id
+  name
+  description
+  color
+  isGroup
+  groupType
+  parent {
+    id
+  }
+}
+
+query lookupInitiativeLabel($id: String!) {
+  initiativeLabel(id: $id) {
+    ...InitiativeLabelLookup
+  }
+}
+
+
+query listInitiativeLabels(
+  # @genqlient(pointer: true)
+  $after: String,
+  $includeArchived: Boolean!
+) {
+  initiativeLabels(first: 100, after: $after, includeArchived: $includeArchived) {
+    nodes { ...InitiativeLabelLookup }
+    pageInfo {
+      hasNextPage
+      # @genqlient(pointer: true)
+      endCursor
+    }
+  }
+}
