@@ -5,6 +5,7 @@
 ### Enhancements
 * Add workspace-level project and initiative labels, including label groups and group selection behavior.
 * Add `linear_initiative_label` and `linear_initiative_labels` data sources for exact label lookups and filtered, paginated lists.
+* Add `linear_project_label` and `linear_project_labels` data sources for exact label and group lookups and filtered, paginated lists, with team and workspace scope filters and inheritance metadata.
 
 ### Bug Fixes
 * Preserve the existing `linear_project_label.group_type` when omitted from configuration so plans stay stable.
