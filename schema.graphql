@@ -27091,6 +27091,8 @@ enum PushSubscriptionType {
 }
 
 type Query {
+  initiativeLabels(after: String, first: Int, includeArchived: Boolean): InitiativeLabelConnection!
+  initiativeLabel(id: String!): InitiativeLabel!
   """
   All issue workflow states (issue statuses). Returns a paginated list of
   workflow states visible to the authenticated user, across all teams they have access to.
@@ -37171,3 +37173,23 @@ input ZendeskSettingsInput {
   hostMappings: [String!]
 }
 
+
+type InitiativeLabel implements Node {
+  id: ID!
+  name: String!
+  description: String
+  color: String!
+  isGroup: Boolean!
+  groupType: LabelGroupType
+  parent: InitiativeLabel
+}
+
+enum LabelGroupType {
+  multiSelect
+  singleSelect
+}
+
+type InitiativeLabelConnection {
+  nodes: [InitiativeLabel!]!
+  pageInfo: PageInfo!
+}
