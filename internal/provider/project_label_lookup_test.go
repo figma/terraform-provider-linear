@@ -23,7 +23,7 @@ func (c projectLookupTestClient) MakeRequest(_ context.Context, req *graphql.Req
 	return json.Unmarshal([]byte(payload), resp.Data)
 }
 
-func TestProjectLabelLookupsPreserveTeamAndInheritance(t *testing.T) {
+func TestProjectLabelLookupsScopedPagination(t *testing.T) {
 	ctx := context.Background()
 	page := 0
 	var client graphql.Client = projectLookupTestClient{call: func(req *graphql.Request) (string, error) {
@@ -45,21 +45,89 @@ func TestProjectLabelLookupsPreserveTeamAndInheritance(t *testing.T) {
 	ds := &ProjectLabelsDataSource{ProjectLabelDataSource: ProjectLabelDataSource{client: &client}}
 	var sr datasource.SchemaResponse
 	ds.Schema(ctx, datasource.SchemaRequest{}, &sr)
-	configModel := ProjectLabelsDataSourceModel{Id: types.StringNull(), Name: types.StringValue("T1"), TeamId: types.StringValue("team-id"), ParentId: types.StringValue("group"), IsGroup: types.BoolValue(false), IncludeArchived: types.BoolValue(true)}
-	state := tfsdk.State{Schema: sr.Schema}
-	if d := state.Set(ctx, &configModel); d.HasError() {
-		t.Fatal(d)
+	for _, tc := range []struct {
+		name      string
+		team      types.String
+		workspace types.Bool
+		want      string
+		source    types.String
+	}{
+		{"team", types.StringValue("team-id"), types.BoolNull(), "team-label", types.StringValue("source-label")},
+		{"workspace", types.StringNull(), types.BoolValue(true), "workspace-label", types.StringNull()},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			page = 0
+			configModel := ProjectLabelsDataSourceModel{Id: types.StringNull(), Name: types.StringValue("T1"), TeamId: tc.team, WorkspaceOnly: tc.workspace, ParentId: types.StringValue("group"), IsGroup: types.BoolValue(false), IncludeArchived: types.BoolValue(true)}
+			state := tfsdk.State{Schema: sr.Schema}
+			if d := state.Set(ctx, &configModel); d.HasError() {
+				t.Fatal(d)
+			}
+			resp := datasource.ReadResponse{State: tfsdk.State{Schema: sr.Schema}}
+			ds.Read(ctx, datasource.ReadRequest{Config: tfsdk.Config{Schema: sr.Schema, Raw: state.Raw}}, &resp)
+			if resp.Diagnostics.HasError() {
+				t.Fatal(resp.Diagnostics)
+			}
+			var got ProjectLabelsDataSourceModel
+			if d := resp.State.Get(ctx, &got); d.HasError() {
+				t.Fatal(d)
+			}
+			if len(got.Labels) != 1 || got.Labels[0].Id.ValueString() != tc.want || !got.Labels[0].InheritedFromId.Equal(tc.source) {
+				t.Fatalf("scope filtering must preserve inheritance metadata across pages: %#v", got.Labels)
+			}
+		})
 	}
-	resp := datasource.ReadResponse{State: tfsdk.State{Schema: sr.Schema}}
-	ds.Read(ctx, datasource.ReadRequest{Config: tfsdk.Config{Schema: sr.Schema, Raw: state.Raw}}, &resp)
-	if resp.Diagnostics.HasError() {
-		t.Fatal(resp.Diagnostics)
-	}
-	var got ProjectLabelsDataSourceModel
-	if d := resp.State.Get(ctx, &got); d.HasError() {
-		t.Fatal(d)
-	}
-	if len(got.Labels) != 1 || got.Labels[0].Id.ValueString() != "team-label" || got.Labels[0].InheritedFromId.ValueString() != "source-label" {
-		t.Fatalf("team filter must preserve source metadata: %#v", got.Labels)
+
+}
+
+func TestProjectLabelWorkspaceLookup(t *testing.T) {
+	ctx := context.Background()
+	workspace := `{"id":"workspace-label","name":"T1","color":"#112233","isGroup":false,"team":null}`
+	inherited := `{"id":"team-label","name":"T1","color":"#112233","isGroup":false,"team":{"id":"team-id"},"inheritedFrom":{"id":"workspace-label"}}`
+	var client graphql.Client = projectLookupTestClient{call: func(req *graphql.Request) (string, error) {
+		if req.OpName == "lookupProjectLabel" {
+			return `{"projectLabel":` + inherited + `}`, nil
+		}
+		return `{"projectLabels":{"nodes":[` + inherited + `,` + workspace + `],"pageInfo":{"hasNextPage":false,"endCursor":null}}}`, nil
+	}}
+	ds := &ProjectLabelDataSource{client: &client}
+	var sr datasource.SchemaResponse
+	ds.Schema(ctx, datasource.SchemaRequest{}, &sr)
+	for _, tc := range []struct {
+		name      string
+		id        types.String
+		team      types.String
+		workspace types.Bool
+		want      string
+	}{
+		{"workspace name", types.StringNull(), types.StringNull(), types.BoolValue(true), "workspace-label"},
+		{"team name", types.StringNull(), types.StringValue("team-id"), types.BoolNull(), "team-label"},
+		{"unrestricted name remains ambiguous", types.StringNull(), types.StringNull(), types.BoolNull(), ""},
+		{"workspace scope rejects team UUID", types.StringValue("team-label"), types.StringNull(), types.BoolValue(true), ""},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			model := ProjectLabelDataSourceModel{Id: tc.id, Name: types.StringValue("T1"), TeamId: tc.team, WorkspaceOnly: tc.workspace}
+			config := tfsdk.State{Schema: sr.Schema}
+			if d := config.Set(ctx, &model); d.HasError() {
+				t.Fatal(d)
+			}
+			resp := datasource.ReadResponse{State: tfsdk.State{Schema: sr.Schema}}
+			ds.Read(ctx, datasource.ReadRequest{Config: tfsdk.Config{Schema: sr.Schema, Raw: config.Raw}}, &resp)
+			if tc.want == "" {
+				if !resp.Diagnostics.HasError() {
+					t.Fatal("expected ambiguous or out-of-scope label error")
+				}
+				return
+			}
+			if resp.Diagnostics.HasError() {
+				t.Fatal(resp.Diagnostics)
+			}
+			var got ProjectLabelDataSourceModel
+			if d := resp.State.Get(ctx, &got); d.HasError() {
+				t.Fatal(d)
+			}
+			if got.Id.ValueString() != tc.want {
+				t.Fatalf("got %s, want %s", got.Id, tc.want)
+			}
+		})
 	}
 }

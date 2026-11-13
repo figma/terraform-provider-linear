@@ -14,7 +14,8 @@ Look up one project label or group by UUID or exact name. Name lookups search ac
 
 ```terraform
 data "linear_project_label" "release_tier" {
-  name = "Release Tier"
+  name           = "Release Tier"
+  workspace_only = true
 }
 ```
 
@@ -27,6 +28,7 @@ data "linear_project_label" "release_tier" {
 - `name` (String) Exact label name. Ambiguous names produce an error.
 - `parent_id` (String) Optional parent UUID to disambiguate a name.
 - `team_id` (String) Optional team UUID to disambiguate a name.
+- `workspace_only` (Boolean) Restrict results to workspace labels. Cannot be combined with team_id.
 
 ### Read-Only
 

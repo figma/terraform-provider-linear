@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/Khan/genqlient/graphql"
+	"github.com/hashicorp/terraform-plugin-framework-validators/boolvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -19,7 +20,21 @@ func NewProjectLabelsDataSource() datasource.DataSource { return &ProjectLabelsD
 
 type ProjectLabelDataSource struct{ client *graphql.Client }
 type ProjectLabelsDataSource struct{ ProjectLabelDataSource }
+type ProjectLabelDataSourceModel struct {
+	Id              types.String `tfsdk:"id"`
+	Name            types.String `tfsdk:"name"`
+	Description     types.String `tfsdk:"description"`
+	Color           types.String `tfsdk:"color"`
+	IsGroup         types.Bool   `tfsdk:"is_group"`
+	GroupType       types.String `tfsdk:"group_type"`
+	TeamId          types.String `tfsdk:"team_id"`
+	InheritedFromId types.String `tfsdk:"inherited_from_id"`
+	ParentId        types.String `tfsdk:"parent_id"`
+	WorkspaceOnly   types.Bool   `tfsdk:"workspace_only"`
+}
+
 type ProjectLabelsDataSourceModel struct {
+	WorkspaceOnly   types.Bool                `tfsdk:"workspace_only"`
 	Id              types.String              `tfsdk:"id"`
 	Name            types.String              `tfsdk:"name"`
 	TeamId          types.String              `tfsdk:"team_id"`
@@ -55,6 +70,7 @@ func (d *ProjectLabelDataSource) Schema(_ context.Context, _ datasource.SchemaRe
 	a["id"] = schema.StringAttribute{Optional: true, Computed: true, MarkdownDescription: "Exact label UUID. Specify exactly one of id or name.", Validators: []validator.String{stringvalidator.ExactlyOneOf(path.MatchRoot("name")), stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")}}
 	a["name"] = schema.StringAttribute{Optional: true, Computed: true, MarkdownDescription: "Exact label name. Ambiguous names produce an error."}
 	a["parent_id"] = schema.StringAttribute{Optional: true, Computed: true, MarkdownDescription: "Optional parent UUID to disambiguate a name.", Validators: []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")}}
+	a["workspace_only"] = schema.BoolAttribute{Optional: true, MarkdownDescription: "Restrict results to workspace labels. Cannot be combined with team_id.", Validators: []validator.Bool{boolvalidator.ConflictsWith(path.MatchRoot("team_id"))}}
 	a["team_id"] = schema.StringAttribute{Optional: true, Computed: true, MarkdownDescription: "Optional team UUID to disambiguate a name.", Validators: []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")}}
 	resp.Schema = schema.Schema{MarkdownDescription: "Look up one project label or group by UUID or exact name. Name lookups search active labels; use UUID to retrieve an archived label.", Attributes: a}
 }
@@ -62,6 +78,7 @@ func (d *ProjectLabelDataSource) Schema(_ context.Context, _ datasource.SchemaRe
 func (d *ProjectLabelsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{MarkdownDescription: "List project labels and groups with full cursor pagination. Filters match exactly and combine with AND.", Attributes: map[string]schema.Attribute{
 		"id":               schema.StringAttribute{Computed: true, MarkdownDescription: "Identifier of this collection."},
+		"workspace_only":   schema.BoolAttribute{Optional: true, MarkdownDescription: "Restrict results to workspace labels. Cannot be combined with team_id.", Validators: []validator.Bool{boolvalidator.ConflictsWith(path.MatchRoot("team_id"))}},
 		"team_id":          schema.StringAttribute{Optional: true, MarkdownDescription: "Owning team UUID filter.", Validators: []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")}},
 		"name":             schema.StringAttribute{Optional: true, MarkdownDescription: "Exact name filter."},
 		"parent_id":        schema.StringAttribute{Optional: true, MarkdownDescription: "Parent group UUID filter.", Validators: []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")}},
@@ -84,7 +101,7 @@ func (d *ProjectLabelDataSource) Configure(_ context.Context, req datasource.Con
 }
 
 func (d *ProjectLabelDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ProjectLabelLookupModel
+	var data ProjectLabelDataSourceModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -97,6 +114,10 @@ func (d *ProjectLabelDataSource) Read(ctx context.Context, req datasource.ReadRe
 			return
 		}
 		label = result.ProjectLabel.ProjectLabelLookup
+		if data.WorkspaceOnly.ValueBool() && label.Team != nil {
+			resp.Diagnostics.AddError("Label not found", "The label does not belong to the workspace scope.")
+			return
+		}
 		if !data.TeamId.IsNull() && (label.Team == nil || label.Team.Id != data.TeamId.ValueString()) {
 			resp.Diagnostics.AddError("Label not found", "The label does not belong to the requested team.")
 			return
@@ -111,14 +132,24 @@ func (d *ProjectLabelDataSource) Read(ctx context.Context, req datasource.ReadRe
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to list project labels: %s", err))
 			return
 		}
-		matches := filterProjectLabels(labels, data.Name, data.ParentId, data.TeamId, types.BoolNull())
+		matches := filterProjectLabels(labels, data.Name, data.ParentId, data.TeamId, types.BoolNull(), data.WorkspaceOnly)
 		if len(matches) != 1 {
-			resp.Diagnostics.AddError("Label lookup failed", fmt.Sprintf("Expected exactly one project label, found %d. Use id or parent_id to disambiguate.", len(matches)))
+			resp.Diagnostics.AddError("Label lookup failed", fmt.Sprintf("Expected exactly one project label, found %d. Use id, parent_id, team_id, or workspace_only to disambiguate.", len(matches)))
 			return
 		}
 		label = matches[0]
 	}
-	setProjectLabelLookupState(&data, label)
+	var result ProjectLabelLookupModel
+	setProjectLabelLookupState(&result, label)
+	data.Id = result.Id
+	data.Name = result.Name
+	data.Description = result.Description
+	data.Color = result.Color
+	data.IsGroup = result.IsGroup
+	data.GroupType = result.GroupType
+	data.TeamId = result.TeamId
+	data.InheritedFromId = result.InheritedFromId
+	data.ParentId = result.ParentId
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
@@ -135,7 +166,7 @@ func (d *ProjectLabelsDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 	data.Id = types.StringValue("project_labels")
 	data.Labels = []ProjectLabelLookupModel{}
-	for _, label := range filterProjectLabels(labels, data.Name, data.ParentId, data.TeamId, data.IsGroup) {
+	for _, label := range filterProjectLabels(labels, data.Name, data.ParentId, data.TeamId, data.IsGroup, data.WorkspaceOnly) {
 		var model ProjectLabelLookupModel
 		setProjectLabelLookupState(&model, label)
 		data.Labels = append(data.Labels, model)
@@ -167,9 +198,12 @@ func allProjectLabels(ctx context.Context, client graphql.Client, includeArchive
 	return labels, nil
 }
 
-func filterProjectLabels(labels []ProjectLabelLookup, name, parent, team types.String, isGroup types.Bool) []ProjectLabelLookup {
+func filterProjectLabels(labels []ProjectLabelLookup, name, parent, team types.String, isGroup, workspaceOnly types.Bool) []ProjectLabelLookup {
 	result := []ProjectLabelLookup{}
 	for _, label := range labels {
+		if workspaceOnly.ValueBool() && label.Team != nil {
+			continue
+		}
 		if !team.IsNull() && (label.Team == nil || label.Team.Id != team.ValueString()) {
 			continue
 		}

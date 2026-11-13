@@ -14,7 +14,8 @@ List project labels and groups with full cursor pagination. Filters match exactl
 
 ```terraform
 data "linear_project_labels" "groups" {
-  is_group = true
+  is_group       = true
+  workspace_only = true
 }
 ```
 
@@ -28,6 +29,7 @@ data "linear_project_labels" "groups" {
 - `name` (String) Exact name filter.
 - `parent_id` (String) Parent group UUID filter.
 - `team_id` (String) Owning team UUID filter.
+- `workspace_only` (Boolean) Restrict results to workspace labels. Cannot be combined with team_id.
 
 ### Read-Only
 
