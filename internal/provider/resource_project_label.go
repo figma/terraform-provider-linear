@@ -30,13 +30,15 @@ type ProjectLabelResource struct {
 }
 
 type ProjectLabelResourceModel struct {
-	Id          types.String `tfsdk:"id"`
-	Name        types.String `tfsdk:"name"`
-	Description types.String `tfsdk:"description"`
-	Color       types.String `tfsdk:"color"`
-	IsGroup     types.Bool   `tfsdk:"is_group"`
-	GroupType   types.String `tfsdk:"group_type"`
-	ParentId    types.String `tfsdk:"parent_id"`
+	Id              types.String `tfsdk:"id"`
+	Name            types.String `tfsdk:"name"`
+	Description     types.String `tfsdk:"description"`
+	Color           types.String `tfsdk:"color"`
+	IsGroup         types.Bool   `tfsdk:"is_group"`
+	GroupType       types.String `tfsdk:"group_type"`
+	ParentId        types.String `tfsdk:"parent_id"`
+	TeamId          types.String `tfsdk:"team_id"`
+	InheritedFromId types.String `tfsdk:"inherited_from_id"`
 }
 
 func (r *ProjectLabelResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -45,7 +47,7 @@ func (r *ProjectLabelResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *ProjectLabelResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Linear project label.",
+		MarkdownDescription: "Workspace or team project label. Manage inherited labels at their source team.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Identifier of the project label.",
@@ -81,6 +83,17 @@ func (r *ProjectLabelResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
+			},
+			"team_id": schema.StringAttribute{
+				MarkdownDescription: "Owning team UUID. Omit for a workspace label. Team scope requires a supported Linear plan. Changing scope replaces the label.",
+				Optional:            true,
+				Validators:          []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")},
+				PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
+			},
+			"inherited_from_id": schema.StringAttribute{
+				Computed:            true,
+				MarkdownDescription: "Source label UUID for an inherited copy, or null for a source label.",
+				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"group_type": schema.StringAttribute{
 				MarkdownDescription: "Group selection behavior: singleSelect or multiSelect. Only valid for groups; Linear defaults new groups to singleSelect.",
@@ -127,6 +140,7 @@ func (r *ProjectLabelResource) Create(ctx context.Context, req resource.CreateRe
 	}
 
 	input := ProjectLabelCreateInput{
+		TeamId:      data.TeamId.ValueStringPointer(),
 		Name:        data.Name.ValueString(),
 		GroupType:   projectLabelGroupType(data.GroupType),
 		Description: data.Description.ValueStringPointer(),
@@ -245,6 +259,14 @@ func setProjectLabelState(data *ProjectLabelResourceModel, projectLabel ProjectL
 	data.Description = types.StringPointerValue(projectLabel.Description)
 	data.Color = types.StringValue(projectLabel.Color)
 	data.IsGroup = types.BoolValue(projectLabel.IsGroup)
+	data.TeamId = types.StringNull()
+	if projectLabel.Team != nil {
+		data.TeamId = types.StringValue(projectLabel.Team.Id)
+	}
+	data.InheritedFromId = types.StringNull()
+	if projectLabel.InheritedFrom != nil {
+		data.InheritedFromId = types.StringValue(projectLabel.InheritedFrom.Id)
+	}
 	data.GroupType = types.StringNull()
 	if projectLabel.GroupType != nil {
 		data.GroupType = types.StringValue(string(*projectLabel.GroupType))
