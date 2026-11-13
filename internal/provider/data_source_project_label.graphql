@@ -1,0 +1,40 @@
+# @genqlient(for: "ProjectLabel.groupType", pointer: true)
+# @genqlient(for: "ProjectLabel.team", pointer: true)
+# @genqlient(for: "ProjectLabel.inheritedFrom", pointer: true)
+# @genqlient(for: "ProjectLabel.description", pointer: true)
+# @genqlient(for: "ProjectLabel.parent", pointer: true)
+fragment ProjectLabelLookup on ProjectLabel {
+  id
+  name
+  description
+  color
+  isGroup
+  groupType
+  team { id }
+  inheritedFrom { id }
+  parent {
+    id
+  }
+}
+
+query lookupProjectLabel($id: String!) {
+  projectLabel(id: $id) {
+    ...ProjectLabelLookup
+  }
+}
+
+
+query listProjectLabels(
+  # @genqlient(pointer: true)
+  $after: String,
+  $includeArchived: Boolean!
+) {
+  projectLabels(first: 100, after: $after, includeArchived: $includeArchived) {
+    nodes { ...ProjectLabelLookup }
+    pageInfo {
+      hasNextPage
+      # @genqlient(pointer: true)
+      endCursor
+    }
+  }
+}

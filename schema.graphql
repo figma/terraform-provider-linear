@@ -24142,6 +24142,9 @@ workspace-level and can be organized into groups with a parent-child hierarchy.
 Only child labels (not group labels) can be directly applied to projects.
 """
 type ProjectLabel implements Node {
+  groupType: LabelGroupType
+  team: Team
+  inheritedFrom: ProjectLabel
   """The unique identifier of the entity."""
   id: ID!
 
@@ -37171,3 +37174,8 @@ input ZendeskSettingsInput {
   hostMappings: [String!]
 }
 
+
+enum LabelGroupType {
+  multiSelect
+  singleSelect
+}
