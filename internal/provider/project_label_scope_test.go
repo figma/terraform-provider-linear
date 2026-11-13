@@ -7,6 +7,8 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -87,4 +89,26 @@ func TestProjectLabelTeamScope(t *testing.T) {
 		t.Fatal("refresh must retain the inherited label's owning team and source label")
 	}
 
+}
+
+func TestProjectLabelInheritedSourcePlan(t *testing.T) {
+	ctx := context.Background()
+	var sr resource.SchemaResponse
+	(&ProjectLabelResource{}).Schema(ctx, resource.SchemaRequest{}, &sr)
+	attribute := sr.Schema.Attributes["inherited_from_id"].(schema.StringAttribute)
+	req := planmodifier.StringRequest{
+		ConfigValue: types.StringNull(),
+		StateValue:  types.StringValue("source-label"),
+		PlanValue:   types.StringUnknown(),
+	}
+	resp := planmodifier.StringResponse{PlanValue: req.PlanValue}
+	for _, modifier := range attribute.PlanModifiers {
+		modifier.PlanModifyString(ctx, req, &resp)
+	}
+	if resp.Diagnostics.HasError() {
+		t.Fatal(resp.Diagnostics)
+	}
+	if !resp.PlanValue.Equal(req.StateValue) {
+		t.Fatalf("an update must preserve the inherited source: %s", resp.PlanValue)
+	}
 }

@@ -1,5 +1,6 @@
 # @genqlient(for: "ProjectLabel.team", pointer: true)
 # @genqlient(for: "ProjectLabel.inheritedFrom", pointer: true)
+# @genqlient(for: "ProjectLabel.groupType", pointer: true)
 # @genqlient(for: "ProjectLabel.description", pointer: true)
 # @genqlient(for: "ProjectLabel.parent", pointer: true)
 fragment ProjectLabel on ProjectLabel {
@@ -10,6 +11,7 @@ fragment ProjectLabel on ProjectLabel {
   isGroup
   team { id }
   inheritedFrom { id }
+  groupType
   parent {
     id
   }
@@ -27,6 +29,7 @@ query getProjectLabel($id: String!) {
 # @genqlient(for: "ProjectLabelCreateInput.parentId", pointer: true)
 # @genqlient(for: "ProjectLabelCreateInput.retiredAt", pointer: true, omitempty: true)
 # @genqlient(for: "ProjectLabelCreateInput.teamId", pointer: true, omitempty: true)
+# @genqlient(for: "ProjectLabelCreateInput.groupType", pointer: true, omitempty: true)
 mutation projectLabelCreate(
   $input: ProjectLabelCreateInput!
 ) {
@@ -42,6 +45,7 @@ mutation projectLabelCreate(
 # @genqlient(for: "ProjectLabelUpdateInput.color", pointer: true, omitempty: true)
 # @genqlient(for: "ProjectLabelUpdateInput.parentId", pointer: true)
 # @genqlient(for: "ProjectLabelUpdateInput.retiredAt", pointer: true, omitempty: true)
+# @genqlient(for: "ProjectLabelUpdateInput.groupType", pointer: true, omitempty: true)
 mutation projectLabelUpdate(
   $input: ProjectLabelUpdateInput!,
   $id: String!

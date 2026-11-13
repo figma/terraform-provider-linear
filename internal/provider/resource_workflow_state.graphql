@@ -11,11 +11,11 @@ fragment WorkflowState on WorkflowState {
   }
 }
 
-query getTeamWorkflowStates($key: String!) {
+query getTeamWorkflowStates($id: ID!) {
   workflowStates(filter: {
     team: {
-      key: {
-        eq: $key
+      id: {
+        eq: $id
       }
     }
   }) {

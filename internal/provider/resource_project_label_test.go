@@ -84,6 +84,7 @@ func TestAccProjectLabelResource(t *testing.T) {
 					resource.TestCheckResourceAttr("linear_project_label.group", "description", "Release tier group"),
 					resource.TestMatchResourceAttr("linear_project_label.group", "color", colorRegex()),
 					resource.TestCheckResourceAttr("linear_project_label.group", "is_group", "true"),
+					resource.TestCheckResourceAttr("linear_project_label.group", "group_type", "multiSelect"),
 					resource.TestCheckNoResourceAttr("linear_project_label.group", "parent_id"),
 					resource.TestMatchResourceAttr("linear_project_label.child", "id", uuidRegex()),
 					resource.TestCheckResourceAttr("linear_project_label.child", "name", "T1"),
@@ -95,6 +96,7 @@ func TestAccProjectLabelResource(t *testing.T) {
 				Config: testAccProjectLabelResourceConfigUpdated(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("linear_project_label.group", "name", "Release Tier Updated"),
+					resource.TestCheckResourceAttr("linear_project_label.group", "group_type", "singleSelect"),
 					resource.TestCheckResourceAttr("linear_project_label.group", "color", "#5e6ad2"),
 					resource.TestCheckResourceAttr("linear_project_label.child", "name", "Tier 1"),
 					resource.TestCheckResourceAttrPair("linear_project_label.child", "parent_id", "linear_project_label.group", "id"),
@@ -115,12 +117,28 @@ func TestAccProjectLabelResource(t *testing.T) {
 			{
 				Config: testAccProjectLabelResourceConfigCleared(),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("linear_project_label.group", "group_type", "singleSelect"),
 					resource.TestCheckNoResourceAttr("linear_project_label.child", "description"),
 					resource.TestCheckNoResourceAttr("linear_project_label.child", "parent_id"),
 				),
 			},
 			{
-				Config: testAccProjectLabelResourceConfigCleared(),
+				Config:   testAccProjectLabelResourceConfigCleared(),
+				PlanOnly: true,
+			},
+			{
+				Config: testAccProjectLabelResourceConfigUngrouped(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("linear_project_label.group", "is_group", "false"),
+					resource.TestCheckNoResourceAttr("linear_project_label.group", "group_type"),
+				),
+			},
+			{
+				Config:   testAccProjectLabelResourceConfigUngrouped(),
+				PlanOnly: true,
+			},
+			{
+				Config:             testAccProjectLabelResourceConfigUngrouped(),
 				Check:              testAccDeleteProjectLabel("linear_project_label.child"),
 				ExpectNonEmptyPlan: true,
 			},
@@ -139,6 +157,7 @@ resource "linear_project_label" "group" {
   name        = "Release Tier"
   description = "Release tier group"
   is_group    = true
+  group_type  = "multiSelect"
 }
 
 resource "linear_project_label" "child" {
@@ -157,6 +176,7 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
+  group_type  = "singleSelect"
 }
 
 resource "linear_project_label" "child" {
@@ -175,6 +195,22 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
+}
+
+resource "linear_project_label" "child" {
+  name  = "Tier 1"
+  color = "#eb5757"
+}
+`
+}
+
+func testAccProjectLabelResourceConfigUngrouped() string {
+	return `
+resource "linear_project_label" "group" {
+  name        = "Release Tier Updated"
+  description = "Release tier group"
+  color       = "#5e6ad2"
+  is_group    = false
 }
 
 resource "linear_project_label" "child" {

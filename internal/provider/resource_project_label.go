@@ -35,6 +35,7 @@ type ProjectLabelResourceModel struct {
 	Description     types.String `tfsdk:"description"`
 	Color           types.String `tfsdk:"color"`
 	IsGroup         types.Bool   `tfsdk:"is_group"`
+	GroupType       types.String `tfsdk:"group_type"`
 	ParentId        types.String `tfsdk:"parent_id"`
 	TeamId          types.String `tfsdk:"team_id"`
 	InheritedFromId types.String `tfsdk:"inherited_from_id"`
@@ -89,7 +90,20 @@ func (r *ProjectLabelResource) Schema(ctx context.Context, req resource.SchemaRe
 				Validators:          []validator.String{stringvalidator.RegexMatches(uuidRegex(), "must be a UUID")},
 				PlanModifiers:       []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
-			"inherited_from_id": schema.StringAttribute{Computed: true, MarkdownDescription: "Source label UUID for an inherited copy, or null for a source label."},
+			"inherited_from_id": schema.StringAttribute{
+				Computed:            true,
+				MarkdownDescription: "Source label UUID for an inherited copy, or null for a source label.",
+				PlanModifiers:       []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
+			},
+			"group_type": schema.StringAttribute{
+				MarkdownDescription: "Group selection behavior: singleSelect or multiSelect. Only valid for groups; Linear defaults new groups to singleSelect.",
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					labelGroupTypePlanModifier{},
+				},
+				Validators: []validator.String{stringvalidator.OneOf("singleSelect", "multiSelect")},
+			},
 			"parent_id": schema.StringAttribute{
 				MarkdownDescription: "Identifier of the parent project label group.",
 				Optional:            true,
@@ -128,6 +142,7 @@ func (r *ProjectLabelResource) Create(ctx context.Context, req resource.CreateRe
 	input := ProjectLabelCreateInput{
 		TeamId:      data.TeamId.ValueStringPointer(),
 		Name:        data.Name.ValueString(),
+		GroupType:   projectLabelGroupType(data.GroupType),
 		Description: data.Description.ValueStringPointer(),
 		IsGroup:     data.IsGroup.ValueBool(),
 		ParentId:    data.ParentId.ValueStringPointer(),
@@ -181,6 +196,7 @@ func (r *ProjectLabelResource) Update(ctx context.Context, req resource.UpdateRe
 
 	input := ProjectLabelUpdateInput{
 		Name:        data.Name.ValueString(),
+		GroupType:   projectLabelGroupType(data.GroupType),
 		Description: data.Description.ValueStringPointer(),
 		IsGroup:     data.IsGroup.ValueBool(),
 		ParentId:    data.ParentId.ValueStringPointer(),
@@ -251,9 +267,35 @@ func setProjectLabelState(data *ProjectLabelResourceModel, projectLabel ProjectL
 	if projectLabel.InheritedFrom != nil {
 		data.InheritedFromId = types.StringValue(projectLabel.InheritedFrom.Id)
 	}
+	data.GroupType = types.StringNull()
+	if projectLabel.GroupType != nil {
+		data.GroupType = types.StringValue(string(*projectLabel.GroupType))
+	}
 	if projectLabel.Parent != nil {
 		data.ParentId = types.StringValue(projectLabel.Parent.Id)
 	} else {
 		data.ParentId = types.StringNull()
 	}
+}
+
+func (r *ProjectLabelResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data ProjectLabelResourceModel
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	if resp.Diagnostics.HasError() || data.IsGroup.IsUnknown() {
+		return
+	}
+	if !data.GroupType.IsNull() && !data.GroupType.IsUnknown() && !data.IsGroup.ValueBool() {
+		resp.Diagnostics.AddAttributeError(path.Root("group_type"), "Invalid label group", "group_type requires is_group = true.")
+	}
+	if data.IsGroup.ValueBool() && !data.ParentId.IsNull() {
+		resp.Diagnostics.AddAttributeError(path.Root("parent_id"), "Nested label group", "Groups cannot be nested inside another group.")
+	}
+}
+
+func projectLabelGroupType(value types.String) *LabelGroupType {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	result := LabelGroupType(value.ValueString())
+	return &result
 }

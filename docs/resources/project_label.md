@@ -14,8 +14,9 @@ Workspace or team project label. Manage inherited labels at their source team.
 
 ```terraform
 resource "linear_project_label" "release_tier" {
-  name     = "Release Tier"
-  is_group = true
+  name       = "Release Tier"
+  group_type = "multiSelect"
+  is_group   = true
 }
 
 resource "linear_project_label" "tier_1" {
@@ -44,6 +45,7 @@ resource "linear_project_label" "team" {
 
 - `color` (String) Color of the project label.
 - `description` (String) Description of the project label.
+- `group_type` (String) Group selection behavior: singleSelect or multiSelect. Only valid for groups; Linear defaults new groups to singleSelect.
 - `is_group` (Boolean) Whether the project label is a group (parent) label. **Default** `false`.
 - `parent_id` (String) Identifier of the parent project label group.
 - `team_id` (String) Owning team UUID. Omit for a workspace label. Team scope requires a supported Linear plan. Changing scope replaces the label.

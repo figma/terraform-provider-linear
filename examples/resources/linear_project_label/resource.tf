@@ -1,6 +1,7 @@
 resource "linear_project_label" "release_tier" {
-  name     = "Release Tier"
-  is_group = true
+  name       = "Release Tier"
+  group_type = "multiSelect"
+  is_group   = true
 }
 
 resource "linear_project_label" "tier_1" {
