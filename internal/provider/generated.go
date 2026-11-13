@@ -2393,6 +2393,150 @@ const (
 	UserRoleTypeApp   UserRoleType = "app"
 )
 
+// WebhookConfig includes the GraphQL fields of Webhook requested by the fragment WebhookConfig.
+// The GraphQL type's documentation follows.
+//
+// A webhook subscription that sends HTTP POST callbacks to an external URL when
+// events occur in Linear. Webhooks can be scoped to a specific team, multiple
+// teams, or all public teams in the organization. They support filtering by
+// resource type (e.g., Issue, Comment, Project) and can be created either manually
+// by users or automatically by OAuth applications. Each webhook has a signing
+// secret for verifying payload authenticity on the recipient side.
+type WebhookConfig struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// A human-readable label for the webhook, used for identification in the UI. Null if no label has been set.
+	Label *string `json:"label"`
+	// The destination URL where webhook payloads will be sent via HTTP POST. Null
+	// for OAuth application webhooks, which use the webhook URL configured on the
+	// OAuth client instead.
+	Url *string `json:"url"`
+	// Whether the webhook is enabled. When disabled, no payloads will be delivered even if matching events occur.
+	Enabled bool `json:"enabled"`
+	// Whether the webhook receives events from all public (non-private) teams in the
+	// organization, including teams created after the webhook was set up. When true,
+	// the webhook automatically covers new public teams without requiring
+	// reconfiguration.
+	AllPublicTeams bool `json:"allPublicTeams"`
+	// The single team that the webhook is scoped to. When null, the webhook either
+	// targets all public teams (if allPublicTeams is true), multiple specific teams
+	// (if teamIds is set), or organization-wide events.
+	Team *WebhookConfigTeam `json:"team"`
+	// The resource types this webhook is subscribed to (e.g., 'Issue', 'Comment',
+	// 'Project', 'Cycle'). The webhook will only receive payloads for events
+	// affecting these resource types.
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+// GetId returns WebhookConfig.Id, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetId() string { return v.Id }
+
+// GetLabel returns WebhookConfig.Label, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetLabel() *string { return v.Label }
+
+// GetUrl returns WebhookConfig.Url, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetUrl() *string { return v.Url }
+
+// GetEnabled returns WebhookConfig.Enabled, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetEnabled() bool { return v.Enabled }
+
+// GetAllPublicTeams returns WebhookConfig.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetAllPublicTeams() bool { return v.AllPublicTeams }
+
+// GetTeam returns WebhookConfig.Team, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetTeam() *WebhookConfigTeam { return v.Team }
+
+// GetResourceTypes returns WebhookConfig.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *WebhookConfig) GetResourceTypes() []string { return v.ResourceTypes }
+
+// WebhookConfigTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type WebhookConfigTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns WebhookConfigTeam.Id, and is useful for accessing the field via an interface.
+func (v *WebhookConfigTeam) GetId() string { return v.Id }
+
+// Input for creating a new webhook.
+type WebhookCreateInput struct {
+	// Label for the webhook.
+	Label *string `json:"label"`
+	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
+	Id *string `json:"id,omitempty"`
+	// Whether this webhook is enabled.
+	Enabled bool `json:"enabled"`
+	// A secret token used to sign the webhook payload.
+	Secret *string `json:"secret,omitempty"`
+	// The URL that will be called on data changes.
+	Url string `json:"url"`
+	// List of resources the webhook should subscribe to.
+	ResourceTypes []string `json:"resourceTypes"`
+	// The identifier or key of the team associated with the Webhook.
+	TeamId *string `json:"teamId,omitempty"`
+	// Whether this webhook is enabled for all public teams.
+	AllPublicTeams bool `json:"allPublicTeams"`
+}
+
+// GetLabel returns WebhookCreateInput.Label, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetLabel() *string { return v.Label }
+
+// GetId returns WebhookCreateInput.Id, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetId() *string { return v.Id }
+
+// GetEnabled returns WebhookCreateInput.Enabled, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetEnabled() bool { return v.Enabled }
+
+// GetSecret returns WebhookCreateInput.Secret, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetSecret() *string { return v.Secret }
+
+// GetUrl returns WebhookCreateInput.Url, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetUrl() string { return v.Url }
+
+// GetResourceTypes returns WebhookCreateInput.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetResourceTypes() []string { return v.ResourceTypes }
+
+// GetTeamId returns WebhookCreateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetTeamId() *string { return v.TeamId }
+
+// GetAllPublicTeams returns WebhookCreateInput.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *WebhookCreateInput) GetAllPublicTeams() bool { return v.AllPublicTeams }
+
+// Input for updating an existing webhook.
+type WebhookUpdateInput struct {
+	// Label for the webhook.
+	Label *string `json:"label"`
+	// A secret token used to sign the webhook payload.
+	Secret *string `json:"secret,omitempty"`
+	// Whether this webhook is enabled.
+	Enabled bool `json:"enabled"`
+	// The URL that will be called on data changes.
+	Url string `json:"url"`
+	// List of resources the webhook should subscribe to.
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+// GetLabel returns WebhookUpdateInput.Label, and is useful for accessing the field via an interface.
+func (v *WebhookUpdateInput) GetLabel() *string { return v.Label }
+
+// GetSecret returns WebhookUpdateInput.Secret, and is useful for accessing the field via an interface.
+func (v *WebhookUpdateInput) GetSecret() *string { return v.Secret }
+
+// GetEnabled returns WebhookUpdateInput.Enabled, and is useful for accessing the field via an interface.
+func (v *WebhookUpdateInput) GetEnabled() bool { return v.Enabled }
+
+// GetUrl returns WebhookUpdateInput.Url, and is useful for accessing the field via an interface.
+func (v *WebhookUpdateInput) GetUrl() string { return v.Url }
+
+// GetResourceTypes returns WebhookUpdateInput.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *WebhookUpdateInput) GetResourceTypes() []string { return v.ResourceTypes }
+
 // WorkflowState includes the GraphQL fields of WorkflowState requested by the fragment WorkflowState.
 // The GraphQL type's documentation follows.
 //
@@ -2565,6 +2709,14 @@ type __createTeamInput struct {
 // GetInput returns __createTeamInput.Input, and is useful for accessing the field via an interface.
 func (v *__createTeamInput) GetInput() TeamCreateInput { return v.Input }
 
+// __createWebhookInput is used internally by genqlient
+type __createWebhookInput struct {
+	Input WebhookCreateInput `json:"input"`
+}
+
+// GetInput returns __createWebhookInput.Input, and is useful for accessing the field via an interface.
+func (v *__createWebhookInput) GetInput() WebhookCreateInput { return v.Input }
+
 // __createWorkflowStateInput is used internally by genqlient
 type __createWorkflowStateInput struct {
 	Input WorkflowStateCreateInput `json:"input"`
@@ -2604,6 +2756,14 @@ type __deleteLabelInput struct {
 
 // GetId returns __deleteLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__deleteLabelInput) GetId() string { return v.Id }
+
+// __deleteWebhookInput is used internally by genqlient
+type __deleteWebhookInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __deleteWebhookInput.Id, and is useful for accessing the field via an interface.
+func (v *__deleteWebhookInput) GetId() string { return v.Id }
 
 // __deleteWorkflowStateInput is used internally by genqlient
 type __deleteWorkflowStateInput struct {
@@ -2717,6 +2877,14 @@ type __getTemplateInput struct {
 // GetId returns __getTemplateInput.Id, and is useful for accessing the field via an interface.
 func (v *__getTemplateInput) GetId() string { return v.Id }
 
+// __getWebhookInput is used internally by genqlient
+type __getWebhookInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getWebhookInput.Id, and is useful for accessing the field via an interface.
+func (v *__getWebhookInput) GetId() string { return v.Id }
+
 // __getWorkflowStateInput is used internally by genqlient
 type __getWorkflowStateInput struct {
 	Id string `json:"id"`
@@ -2752,6 +2920,14 @@ func (v *__initiativeLabelUpdateInput) GetInput() InitiativeLabelUpdateInput { r
 
 // GetId returns __initiativeLabelUpdateInput.Id, and is useful for accessing the field via an interface.
 func (v *__initiativeLabelUpdateInput) GetId() string { return v.Id }
+
+// __listWebhooksInput is used internally by genqlient
+type __listWebhooksInput struct {
+	After *string `json:"after"`
+}
+
+// GetAfter returns __listWebhooksInput.After, and is useful for accessing the field via an interface.
+func (v *__listWebhooksInput) GetAfter() *string { return v.After }
 
 // __makeTeamPrivateInput is used internally by genqlient
 type __makeTeamPrivateInput struct {
@@ -2864,6 +3040,18 @@ func (v *__updateTeamInput) GetInput() TeamUpdateInput { return v.Input }
 
 // GetId returns __updateTeamInput.Id, and is useful for accessing the field via an interface.
 func (v *__updateTeamInput) GetId() string { return v.Id }
+
+// __updateWebhookInput is used internally by genqlient
+type __updateWebhookInput struct {
+	Id    string             `json:"id"`
+	Input WebhookUpdateInput `json:"input"`
+}
+
+// GetId returns __updateWebhookInput.Id, and is useful for accessing the field via an interface.
+func (v *__updateWebhookInput) GetId() string { return v.Id }
+
+// GetInput returns __updateWebhookInput.Input, and is useful for accessing the field via an interface.
+func (v *__updateWebhookInput) GetInput() WebhookUpdateInput { return v.Input }
 
 // __updateWorkflowStateInput is used internally by genqlient
 type __updateWorkflowStateInput struct {
@@ -3472,6 +3660,145 @@ func (v *createTeamTeamCreateTeamPayloadTeam) __premarshalJSON() (*__premarshalc
 	return &retval, nil
 }
 
+// createWebhookResponse is returned by createWebhook on success.
+type createWebhookResponse struct {
+	// Creates a new webhook subscription for the workspace. Requires specifying a
+	// URL, resource types to subscribe to, and either a specific team or all public teams.
+	WebhookCreate createWebhookWebhookCreateWebhookPayload `json:"webhookCreate"`
+}
+
+// GetWebhookCreate returns createWebhookResponse.WebhookCreate, and is useful for accessing the field via an interface.
+func (v *createWebhookResponse) GetWebhookCreate() createWebhookWebhookCreateWebhookPayload {
+	return v.WebhookCreate
+}
+
+// createWebhookWebhookCreateWebhookPayload includes the requested fields of the GraphQL type WebhookPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a webhook mutation.
+type createWebhookWebhookCreateWebhookPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The webhook entity being mutated.
+	Webhook createWebhookWebhookCreateWebhookPayloadWebhook `json:"webhook"`
+}
+
+// GetSuccess returns createWebhookWebhookCreateWebhookPayload.Success, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayload) GetSuccess() bool { return v.Success }
+
+// GetWebhook returns createWebhookWebhookCreateWebhookPayload.Webhook, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayload) GetWebhook() createWebhookWebhookCreateWebhookPayloadWebhook {
+	return v.Webhook
+}
+
+// createWebhookWebhookCreateWebhookPayloadWebhook includes the requested fields of the GraphQL type Webhook.
+// The GraphQL type's documentation follows.
+//
+// A webhook subscription that sends HTTP POST callbacks to an external URL when
+// events occur in Linear. Webhooks can be scoped to a specific team, multiple
+// teams, or all public teams in the organization. They support filtering by
+// resource type (e.g., Issue, Comment, Project) and can be created either manually
+// by users or automatically by OAuth applications. Each webhook has a signing
+// secret for verifying payload authenticity on the recipient side.
+type createWebhookWebhookCreateWebhookPayloadWebhook struct {
+	WebhookConfig `json:"-"`
+}
+
+// GetId returns createWebhookWebhookCreateWebhookPayloadWebhook.Id, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetId() string { return v.WebhookConfig.Id }
+
+// GetLabel returns createWebhookWebhookCreateWebhookPayloadWebhook.Label, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetLabel() *string {
+	return v.WebhookConfig.Label
+}
+
+// GetUrl returns createWebhookWebhookCreateWebhookPayloadWebhook.Url, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetUrl() *string {
+	return v.WebhookConfig.Url
+}
+
+// GetEnabled returns createWebhookWebhookCreateWebhookPayloadWebhook.Enabled, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetEnabled() bool {
+	return v.WebhookConfig.Enabled
+}
+
+// GetAllPublicTeams returns createWebhookWebhookCreateWebhookPayloadWebhook.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetAllPublicTeams() bool {
+	return v.WebhookConfig.AllPublicTeams
+}
+
+// GetTeam returns createWebhookWebhookCreateWebhookPayloadWebhook.Team, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetTeam() *WebhookConfigTeam {
+	return v.WebhookConfig.Team
+}
+
+// GetResourceTypes returns createWebhookWebhookCreateWebhookPayloadWebhook.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) GetResourceTypes() []string {
+	return v.WebhookConfig.ResourceTypes
+}
+
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*createWebhookWebhookCreateWebhookPayloadWebhook
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.createWebhookWebhookCreateWebhookPayloadWebhook = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.WebhookConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalcreateWebhookWebhookCreateWebhookPayloadWebhook struct {
+	Id string `json:"id"`
+
+	Label *string `json:"label"`
+
+	Url *string `json:"url"`
+
+	Enabled bool `json:"enabled"`
+
+	AllPublicTeams bool `json:"allPublicTeams"`
+
+	Team *WebhookConfigTeam `json:"team"`
+
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *createWebhookWebhookCreateWebhookPayloadWebhook) __premarshalJSON() (*__premarshalcreateWebhookWebhookCreateWebhookPayloadWebhook, error) {
+	var retval __premarshalcreateWebhookWebhookCreateWebhookPayloadWebhook
+
+	retval.Id = v.WebhookConfig.Id
+	retval.Label = v.WebhookConfig.Label
+	retval.Url = v.WebhookConfig.Url
+	retval.Enabled = v.WebhookConfig.Enabled
+	retval.AllPublicTeams = v.WebhookConfig.AllPublicTeams
+	retval.Team = v.WebhookConfig.Team
+	retval.ResourceTypes = v.WebhookConfig.ResourceTypes
+	return &retval, nil
+}
+
 // createWorkflowStateResponse is returned by createWorkflowState on success.
 type createWorkflowStateResponse struct {
 	// Creates a new state, adding it to the workflow of a team.
@@ -3703,6 +4030,29 @@ type deleteLabelResponse struct {
 func (v *deleteLabelResponse) GetIssueLabelDelete() deleteLabelIssueLabelDeleteDeletePayload {
 	return v.IssueLabelDelete
 }
+
+// deleteWebhookResponse is returned by deleteWebhook on success.
+type deleteWebhookResponse struct {
+	// Deletes a Webhook.
+	WebhookDelete deleteWebhookWebhookDeleteDeletePayload `json:"webhookDelete"`
+}
+
+// GetWebhookDelete returns deleteWebhookResponse.WebhookDelete, and is useful for accessing the field via an interface.
+func (v *deleteWebhookResponse) GetWebhookDelete() deleteWebhookWebhookDeleteDeletePayload {
+	return v.WebhookDelete
+}
+
+// deleteWebhookWebhookDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
+// The GraphQL type's documentation follows.
+//
+// A generic payload return from entity deletion mutations.
+type deleteWebhookWebhookDeleteDeletePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+}
+
+// GetSuccess returns deleteWebhookWebhookDeleteDeletePayload.Success, and is useful for accessing the field via an interface.
+func (v *deleteWebhookWebhookDeleteDeletePayload) GetSuccess() bool { return v.Success }
 
 // deleteWorkflowStateResponse is returned by deleteWorkflowState on success.
 type deleteWorkflowStateResponse struct {
@@ -5266,6 +5616,111 @@ func (v *getTemplateTemplate) __premarshalJSON() (*__premarshalgetTemplateTempla
 	return &retval, nil
 }
 
+// getWebhookResponse is returned by getWebhook on success.
+type getWebhookResponse struct {
+	// Retrieves a single webhook by its identifier.
+	Webhook getWebhookWebhook `json:"webhook"`
+}
+
+// GetWebhook returns getWebhookResponse.Webhook, and is useful for accessing the field via an interface.
+func (v *getWebhookResponse) GetWebhook() getWebhookWebhook { return v.Webhook }
+
+// getWebhookWebhook includes the requested fields of the GraphQL type Webhook.
+// The GraphQL type's documentation follows.
+//
+// A webhook subscription that sends HTTP POST callbacks to an external URL when
+// events occur in Linear. Webhooks can be scoped to a specific team, multiple
+// teams, or all public teams in the organization. They support filtering by
+// resource type (e.g., Issue, Comment, Project) and can be created either manually
+// by users or automatically by OAuth applications. Each webhook has a signing
+// secret for verifying payload authenticity on the recipient side.
+type getWebhookWebhook struct {
+	WebhookConfig `json:"-"`
+}
+
+// GetId returns getWebhookWebhook.Id, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetId() string { return v.WebhookConfig.Id }
+
+// GetLabel returns getWebhookWebhook.Label, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetLabel() *string { return v.WebhookConfig.Label }
+
+// GetUrl returns getWebhookWebhook.Url, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetUrl() *string { return v.WebhookConfig.Url }
+
+// GetEnabled returns getWebhookWebhook.Enabled, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetEnabled() bool { return v.WebhookConfig.Enabled }
+
+// GetAllPublicTeams returns getWebhookWebhook.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetAllPublicTeams() bool { return v.WebhookConfig.AllPublicTeams }
+
+// GetTeam returns getWebhookWebhook.Team, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetTeam() *WebhookConfigTeam { return v.WebhookConfig.Team }
+
+// GetResourceTypes returns getWebhookWebhook.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *getWebhookWebhook) GetResourceTypes() []string { return v.WebhookConfig.ResourceTypes }
+
+func (v *getWebhookWebhook) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*getWebhookWebhook
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.getWebhookWebhook = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.WebhookConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalgetWebhookWebhook struct {
+	Id string `json:"id"`
+
+	Label *string `json:"label"`
+
+	Url *string `json:"url"`
+
+	Enabled bool `json:"enabled"`
+
+	AllPublicTeams bool `json:"allPublicTeams"`
+
+	Team *WebhookConfigTeam `json:"team"`
+
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+func (v *getWebhookWebhook) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *getWebhookWebhook) __premarshalJSON() (*__premarshalgetWebhookWebhook, error) {
+	var retval __premarshalgetWebhookWebhook
+
+	retval.Id = v.WebhookConfig.Id
+	retval.Label = v.WebhookConfig.Label
+	retval.Url = v.WebhookConfig.Url
+	retval.Enabled = v.WebhookConfig.Enabled
+	retval.AllPublicTeams = v.WebhookConfig.AllPublicTeams
+	retval.Team = v.WebhookConfig.Team
+	retval.ResourceTypes = v.WebhookConfig.ResourceTypes
+	return &retval, nil
+}
+
 // getWorkflowStateResponse is returned by getWorkflowState on success.
 type getWorkflowStateResponse struct {
 	// One specific workflow state (issue status), looked up by its unique identifier.
@@ -5864,6 +6319,153 @@ type initiativeLabelUpdateResponse struct {
 func (v *initiativeLabelUpdateResponse) GetInitiativeLabelUpdate() initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload {
 	return v.InitiativeLabelUpdate
 }
+
+// listWebhooksResponse is returned by listWebhooks on success.
+type listWebhooksResponse struct {
+	// All webhooks for the current workspace.
+	Webhooks listWebhooksWebhooksWebhookConnection `json:"webhooks"`
+}
+
+// GetWebhooks returns listWebhooksResponse.Webhooks, and is useful for accessing the field via an interface.
+func (v *listWebhooksResponse) GetWebhooks() listWebhooksWebhooksWebhookConnection { return v.Webhooks }
+
+// listWebhooksWebhooksWebhookConnection includes the requested fields of the GraphQL type WebhookConnection.
+type listWebhooksWebhooksWebhookConnection struct {
+	Nodes    []listWebhooksWebhooksWebhookConnectionNodesWebhook `json:"nodes"`
+	PageInfo listWebhooksWebhooksWebhookConnectionPageInfo       `json:"pageInfo"`
+}
+
+// GetNodes returns listWebhooksWebhooksWebhookConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnection) GetNodes() []listWebhooksWebhooksWebhookConnectionNodesWebhook {
+	return v.Nodes
+}
+
+// GetPageInfo returns listWebhooksWebhooksWebhookConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnection) GetPageInfo() listWebhooksWebhooksWebhookConnectionPageInfo {
+	return v.PageInfo
+}
+
+// listWebhooksWebhooksWebhookConnectionNodesWebhook includes the requested fields of the GraphQL type Webhook.
+// The GraphQL type's documentation follows.
+//
+// A webhook subscription that sends HTTP POST callbacks to an external URL when
+// events occur in Linear. Webhooks can be scoped to a specific team, multiple
+// teams, or all public teams in the organization. They support filtering by
+// resource type (e.g., Issue, Comment, Project) and can be created either manually
+// by users or automatically by OAuth applications. Each webhook has a signing
+// secret for verifying payload authenticity on the recipient side.
+type listWebhooksWebhooksWebhookConnectionNodesWebhook struct {
+	WebhookConfig `json:"-"`
+}
+
+// GetId returns listWebhooksWebhooksWebhookConnectionNodesWebhook.Id, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetId() string { return v.WebhookConfig.Id }
+
+// GetLabel returns listWebhooksWebhooksWebhookConnectionNodesWebhook.Label, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetLabel() *string {
+	return v.WebhookConfig.Label
+}
+
+// GetUrl returns listWebhooksWebhooksWebhookConnectionNodesWebhook.Url, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetUrl() *string {
+	return v.WebhookConfig.Url
+}
+
+// GetEnabled returns listWebhooksWebhooksWebhookConnectionNodesWebhook.Enabled, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetEnabled() bool {
+	return v.WebhookConfig.Enabled
+}
+
+// GetAllPublicTeams returns listWebhooksWebhooksWebhookConnectionNodesWebhook.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetAllPublicTeams() bool {
+	return v.WebhookConfig.AllPublicTeams
+}
+
+// GetTeam returns listWebhooksWebhooksWebhookConnectionNodesWebhook.Team, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetTeam() *WebhookConfigTeam {
+	return v.WebhookConfig.Team
+}
+
+// GetResourceTypes returns listWebhooksWebhooksWebhookConnectionNodesWebhook.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) GetResourceTypes() []string {
+	return v.WebhookConfig.ResourceTypes
+}
+
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*listWebhooksWebhooksWebhookConnectionNodesWebhook
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.listWebhooksWebhooksWebhookConnectionNodesWebhook = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.WebhookConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshallistWebhooksWebhooksWebhookConnectionNodesWebhook struct {
+	Id string `json:"id"`
+
+	Label *string `json:"label"`
+
+	Url *string `json:"url"`
+
+	Enabled bool `json:"enabled"`
+
+	AllPublicTeams bool `json:"allPublicTeams"`
+
+	Team *WebhookConfigTeam `json:"team"`
+
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *listWebhooksWebhooksWebhookConnectionNodesWebhook) __premarshalJSON() (*__premarshallistWebhooksWebhooksWebhookConnectionNodesWebhook, error) {
+	var retval __premarshallistWebhooksWebhooksWebhookConnectionNodesWebhook
+
+	retval.Id = v.WebhookConfig.Id
+	retval.Label = v.WebhookConfig.Label
+	retval.Url = v.WebhookConfig.Url
+	retval.Enabled = v.WebhookConfig.Enabled
+	retval.AllPublicTeams = v.WebhookConfig.AllPublicTeams
+	retval.Team = v.WebhookConfig.Team
+	retval.ResourceTypes = v.WebhookConfig.ResourceTypes
+	return &retval, nil
+}
+
+// listWebhooksWebhooksWebhookConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type listWebhooksWebhooksWebhookConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns listWebhooksWebhooksWebhookConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionPageInfo) GetHasNextPage() bool { return v.HasNextPage }
+
+// GetEndCursor returns listWebhooksWebhooksWebhookConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *listWebhooksWebhooksWebhookConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
 
 // makeTeamPrivateResponse is returned by makeTeamPrivate on success.
 type makeTeamPrivateResponse struct {
@@ -7110,6 +7712,144 @@ func (v *updateTeamTeamUpdateTeamPayloadTeam) __premarshalJSON() (*__premarshalu
 	return &retval, nil
 }
 
+// updateWebhookResponse is returned by updateWebhook on success.
+type updateWebhookResponse struct {
+	// Updates an existing Webhook.
+	WebhookUpdate updateWebhookWebhookUpdateWebhookPayload `json:"webhookUpdate"`
+}
+
+// GetWebhookUpdate returns updateWebhookResponse.WebhookUpdate, and is useful for accessing the field via an interface.
+func (v *updateWebhookResponse) GetWebhookUpdate() updateWebhookWebhookUpdateWebhookPayload {
+	return v.WebhookUpdate
+}
+
+// updateWebhookWebhookUpdateWebhookPayload includes the requested fields of the GraphQL type WebhookPayload.
+// The GraphQL type's documentation follows.
+//
+// The result of a webhook mutation.
+type updateWebhookWebhookUpdateWebhookPayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The webhook entity being mutated.
+	Webhook updateWebhookWebhookUpdateWebhookPayloadWebhook `json:"webhook"`
+}
+
+// GetSuccess returns updateWebhookWebhookUpdateWebhookPayload.Success, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayload) GetSuccess() bool { return v.Success }
+
+// GetWebhook returns updateWebhookWebhookUpdateWebhookPayload.Webhook, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayload) GetWebhook() updateWebhookWebhookUpdateWebhookPayloadWebhook {
+	return v.Webhook
+}
+
+// updateWebhookWebhookUpdateWebhookPayloadWebhook includes the requested fields of the GraphQL type Webhook.
+// The GraphQL type's documentation follows.
+//
+// A webhook subscription that sends HTTP POST callbacks to an external URL when
+// events occur in Linear. Webhooks can be scoped to a specific team, multiple
+// teams, or all public teams in the organization. They support filtering by
+// resource type (e.g., Issue, Comment, Project) and can be created either manually
+// by users or automatically by OAuth applications. Each webhook has a signing
+// secret for verifying payload authenticity on the recipient side.
+type updateWebhookWebhookUpdateWebhookPayloadWebhook struct {
+	WebhookConfig `json:"-"`
+}
+
+// GetId returns updateWebhookWebhookUpdateWebhookPayloadWebhook.Id, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetId() string { return v.WebhookConfig.Id }
+
+// GetLabel returns updateWebhookWebhookUpdateWebhookPayloadWebhook.Label, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetLabel() *string {
+	return v.WebhookConfig.Label
+}
+
+// GetUrl returns updateWebhookWebhookUpdateWebhookPayloadWebhook.Url, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetUrl() *string {
+	return v.WebhookConfig.Url
+}
+
+// GetEnabled returns updateWebhookWebhookUpdateWebhookPayloadWebhook.Enabled, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetEnabled() bool {
+	return v.WebhookConfig.Enabled
+}
+
+// GetAllPublicTeams returns updateWebhookWebhookUpdateWebhookPayloadWebhook.AllPublicTeams, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetAllPublicTeams() bool {
+	return v.WebhookConfig.AllPublicTeams
+}
+
+// GetTeam returns updateWebhookWebhookUpdateWebhookPayloadWebhook.Team, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetTeam() *WebhookConfigTeam {
+	return v.WebhookConfig.Team
+}
+
+// GetResourceTypes returns updateWebhookWebhookUpdateWebhookPayloadWebhook.ResourceTypes, and is useful for accessing the field via an interface.
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) GetResourceTypes() []string {
+	return v.WebhookConfig.ResourceTypes
+}
+
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*updateWebhookWebhookUpdateWebhookPayloadWebhook
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.updateWebhookWebhookUpdateWebhookPayloadWebhook = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.WebhookConfig)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalupdateWebhookWebhookUpdateWebhookPayloadWebhook struct {
+	Id string `json:"id"`
+
+	Label *string `json:"label"`
+
+	Url *string `json:"url"`
+
+	Enabled bool `json:"enabled"`
+
+	AllPublicTeams bool `json:"allPublicTeams"`
+
+	Team *WebhookConfigTeam `json:"team"`
+
+	ResourceTypes []string `json:"resourceTypes"`
+}
+
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *updateWebhookWebhookUpdateWebhookPayloadWebhook) __premarshalJSON() (*__premarshalupdateWebhookWebhookUpdateWebhookPayloadWebhook, error) {
+	var retval __premarshalupdateWebhookWebhookUpdateWebhookPayloadWebhook
+
+	retval.Id = v.WebhookConfig.Id
+	retval.Label = v.WebhookConfig.Label
+	retval.Url = v.WebhookConfig.Url
+	retval.Enabled = v.WebhookConfig.Enabled
+	retval.AllPublicTeams = v.WebhookConfig.AllPublicTeams
+	retval.Team = v.WebhookConfig.Team
+	retval.ResourceTypes = v.WebhookConfig.ResourceTypes
+	return &retval, nil
+}
+
 // updateWorkflowStateResponse is returned by updateWorkflowState on success.
 type updateWorkflowStateResponse struct {
 	// Updates a state.
@@ -7666,6 +8406,52 @@ fragment Team on Team {
 	return &data, err
 }
 
+func createWebhook(
+	ctx context.Context,
+	client graphql.Client,
+	input WebhookCreateInput,
+) (*createWebhookResponse, error) {
+	req := &graphql.Request{
+		OpName: "createWebhook",
+		Query: `
+mutation createWebhook ($input: WebhookCreateInput!) {
+	webhookCreate(input: $input) {
+		success
+		webhook {
+			... WebhookConfig
+		}
+	}
+}
+fragment WebhookConfig on Webhook {
+	id
+	label
+	url
+	enabled
+	allPublicTeams
+	team {
+		id
+	}
+	resourceTypes
+}
+`,
+		Variables: &__createWebhookInput{
+			Input: input,
+		},
+	}
+	var err error
+
+	var data createWebhookResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func createWorkflowState(
 	ctx context.Context,
 	client graphql.Client,
@@ -7828,6 +8614,38 @@ mutation deleteLabel ($id: String!) {
 	var err error
 
 	var data deleteLabelResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func deleteWebhook(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*deleteWebhookResponse, error) {
+	req := &graphql.Request{
+		OpName: "deleteWebhook",
+		Query: `
+mutation deleteWebhook ($id: String!) {
+	webhookDelete(id: $id) {
+		success
+	}
+}
+`,
+		Variables: &__deleteWebhookInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data deleteWebhookResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -8437,6 +9255,49 @@ fragment Template on Template {
 	return &data, err
 }
 
+func getWebhook(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getWebhookResponse, error) {
+	req := &graphql.Request{
+		OpName: "getWebhook",
+		Query: `
+query getWebhook ($id: String!) {
+	webhook(id: $id) {
+		... WebhookConfig
+	}
+}
+fragment WebhookConfig on Webhook {
+	id
+	label
+	url
+	enabled
+	allPublicTeams
+	team {
+		id
+	}
+	resourceTypes
+}
+`,
+		Variables: &__getWebhookInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getWebhookResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func getWorkflowState(
 	ctx context.Context,
 	client graphql.Client,
@@ -8670,6 +9531,55 @@ fragment InitiativeLabel on InitiativeLabel {
 	var err error
 
 	var data initiativeLabelUpdateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func listWebhooks(
+	ctx context.Context,
+	client graphql.Client,
+	after *string,
+) (*listWebhooksResponse, error) {
+	req := &graphql.Request{
+		OpName: "listWebhooks",
+		Query: `
+query listWebhooks ($after: String) {
+	webhooks(first: 100, after: $after) {
+		nodes {
+			... WebhookConfig
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+fragment WebhookConfig on Webhook {
+	id
+	label
+	url
+	enabled
+	allPublicTeams
+	team {
+		id
+	}
+	resourceTypes
+}
+`,
+		Variables: &__listWebhooksInput{
+			After: after,
+		},
+	}
+	var err error
+
+	var data listWebhooksResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
@@ -9163,6 +10073,54 @@ fragment Team on Team {
 	var err error
 
 	var data updateTeamResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func updateWebhook(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+	input WebhookUpdateInput,
+) (*updateWebhookResponse, error) {
+	req := &graphql.Request{
+		OpName: "updateWebhook",
+		Query: `
+mutation updateWebhook ($id: String!, $input: WebhookUpdateInput!) {
+	webhookUpdate(id: $id, input: $input) {
+		success
+		webhook {
+			... WebhookConfig
+		}
+	}
+}
+fragment WebhookConfig on Webhook {
+	id
+	label
+	url
+	enabled
+	allPublicTeams
+	team {
+		id
+	}
+	resourceTypes
+}
+`,
+		Variables: &__updateWebhookInput{
+			Id:    id,
+			Input: input,
+		},
+	}
+	var err error
+
+	var data updateWebhookResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
