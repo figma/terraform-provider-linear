@@ -1,26 +1,98 @@
 package provider
 
 import (
+	"context"
+	"crypto/rand"
 	"fmt"
+	"net/http"
+	"os"
 	"regexp"
+	"sort"
 	"testing"
 
+	"github.com/Khan/genqlient/graphql"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
 
+func randomAcceptanceTeamKey() (string, error) {
+	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var random [5]byte
+	if _, err := rand.Read(random[:]); err != nil {
+		return "", err
+	}
+	key := make([]byte, len(random))
+	key[0] = alphabet[int(random[0])%26]
+	for i := 1; i < len(key); i++ {
+		key[i] = alphabet[int(random[i])%len(alphabet)]
+	}
+	return string(key), nil
+}
+
+func testAccTeamKey(t *testing.T) string {
+	t.Helper()
+	key, err := randomAcceptanceTeamKey()
+	if err != nil {
+		t.Fatal(err)
+	}
+	return key
+}
+
+func testAccCleanupTeams(s *terraform.State) error {
+	client := graphql.NewClient("https://api.linear.app/graphql", &http.Client{
+		Transport: &authedTransport{token: os.Getenv("LINEAR_TOKEN"), wrapped: http.DefaultTransport},
+	})
+	var teams []*terraform.ResourceState
+	for _, team := range s.RootModule().Resources {
+		if team.Type == "linear_team" {
+			teams = append(teams, team)
+		}
+	}
+	sort.Slice(teams, func(i, j int) bool {
+		return teams[i].Primary.Attributes["parent_id"] != "" && teams[j].Primary.Attributes["parent_id"] == ""
+	})
+	for _, team := range teams {
+		var result struct {
+			TeamDelete struct {
+				Success bool `json:"success"`
+			} `json:"teamDelete"`
+		}
+		err := client.MakeRequest(context.Background(), &graphql.Request{
+			OpName:    "cleanupAcceptanceTeam",
+			Query:     `mutation cleanupAcceptanceTeam($id: String!) { teamDelete(id: $id) { success } }`,
+			Variables: map[string]string{"id": team.Primary.ID},
+		}, &graphql.Response{Data: &result})
+		if err != nil {
+			return fmt.Errorf("remove acceptance test team %s: %w", team.Primary.ID, err)
+		}
+		if !result.TeamDelete.Success {
+			return fmt.Errorf("Linear did not remove acceptance test team %s", team.Primary.ID)
+		}
+	}
+	return nil
+}
+
 func TestAccTeamResourceDefault(t *testing.T) {
+	initialKey := testAccTeamKey(t)
+	updatedKey := testAccTeamKey(t)
+	for updatedKey == initialKey {
+		updatedKey = testAccTeamKey(t)
+	}
+	initialName := "Acc Tests " + initialKey
+	updatedName := "Acceptance " + initialKey
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCleanupTeams,
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamResourceConfigDefault("ACC", "Acc Tests"),
+				Config: testAccTeamResourceConfigDefault(initialKey, initialName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "ACC"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "Acc Tests"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", initialKey),
+					resource.TestCheckResourceAttr("linear_team.test", "name", initialName),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "false"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "parent_id"),
 					resource.TestCheckResourceAttr("linear_team.test", "inherit_issue_estimation", "false"),
@@ -85,16 +157,16 @@ func TestAccTeamResourceDefault(t *testing.T) {
 			{
 				ResourceName:      "linear_team.test",
 				ImportState:       true,
-				ImportStateId:     "ACC",
+				ImportStateId:     initialKey,
 				ImportStateVerify: true,
 			},
 			// Update with default values
 			{
-				Config: testAccTeamResourceConfigDefault("ACC", "Acc Tests"),
+				Config: testAccTeamResourceConfigDefault(initialKey, initialName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "ACC"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "Acc Tests"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", initialKey),
+					resource.TestCheckResourceAttr("linear_team.test", "name", initialName),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "false"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "parent_id"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "description"),
@@ -155,11 +227,11 @@ func TestAccTeamResourceDefault(t *testing.T) {
 			},
 			// Update and Read testing
 			{
-				Config: testAccTeamResourceConfigNonDefault("AC", "Acceptance"),
+				Config: testAccTeamResourceConfigNonDefault(updatedKey, updatedName),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "AC"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "Acceptance"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", updatedKey),
+					resource.TestCheckResourceAttr("linear_team.test", "name", updatedName),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
@@ -222,7 +294,7 @@ func TestAccTeamResourceDefault(t *testing.T) {
 			{
 				ResourceName:      "linear_team.test",
 				ImportState:       true,
-				ImportStateId:     "AC",
+				ImportStateId:     updatedKey,
 				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
@@ -362,17 +434,20 @@ resource "linear_team" "test" {
 }
 
 func TestAccTeamResourceNonDefault(t *testing.T) {
+	key := testAccTeamKey(t)
+	name := "DevOps " + key
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCleanupTeams,
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
-				Config: testAccTeamResourceConfigNonDefault("DEV", "DevOps"),
+				Config: testAccTeamResourceConfigNonDefault(key, name),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "DEV"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "DevOps"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", key),
+					resource.TestCheckResourceAttr("linear_team.test", "name", name),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
@@ -435,16 +510,16 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 			{
 				ResourceName:      "linear_team.test",
 				ImportState:       true,
-				ImportStateId:     "DEV",
+				ImportStateId:     key,
 				ImportStateVerify: true,
 			},
 			// Update with same values
 			{
-				Config: testAccTeamResourceConfigNonDefault("DEV", "DevOps"),
+				Config: testAccTeamResourceConfigNonDefault(key, name),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "DEV"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "DevOps"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", key),
+					resource.TestCheckResourceAttr("linear_team.test", "name", name),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "true"),
 					resource.TestCheckResourceAttr("linear_team.test", "parent_id", "ab69b823-f187-444d-8848-782045b86656"),
 					resource.TestCheckResourceAttr("linear_team.test", "description", "nice team"),
@@ -505,11 +580,11 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 			},
 			// Update with null values
 			{
-				Config: testAccTeamResourceConfigDefault("DEV", "DevOps"),
+				Config: testAccTeamResourceConfigDefault(key, name),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestMatchResourceAttr("linear_team.test", "id", uuidRegex()),
-					resource.TestCheckResourceAttr("linear_team.test", "key", "DEV"),
-					resource.TestCheckResourceAttr("linear_team.test", "name", "DevOps"),
+					resource.TestCheckResourceAttr("linear_team.test", "key", key),
+					resource.TestCheckResourceAttr("linear_team.test", "name", name),
 					resource.TestCheckResourceAttr("linear_team.test", "private", "false"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "parent_id"),
 					resource.TestCheckNoResourceAttr("linear_team.test", "description"),
@@ -572,7 +647,7 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 			{
 				ResourceName:      "linear_team.test",
 				ImportState:       true,
-				ImportStateId:     "DEV",
+				ImportStateId:     key,
 				ImportStateVerify: true,
 			},
 			// Delete testing automatically occurs in TestCase
@@ -581,12 +656,20 @@ func TestAccTeamResourceNonDefault(t *testing.T) {
 }
 
 func TestAccTeamResourceInheritance(t *testing.T) {
+	keys := [3]string{testAccTeamKey(t), testAccTeamKey(t), testAccTeamKey(t)}
+	for keys[1] == keys[0] {
+		keys[1] = testAccTeamKey(t)
+	}
+	for keys[2] == keys[0] || keys[2] == keys[1] {
+		keys[2] = testAccTeamKey(t)
+	}
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		CheckDestroy:             testAccCleanupTeams,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTeamResourceConfigInheritance(true, "parent"),
+				Config: testAccTeamResourceConfigInheritance(true, "parent", keys),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair("linear_team.child", "parent_id", "linear_team.parent", "id"),
 					resource.TestCheckResourceAttr("linear_team.child", "inherit_issue_estimation", "true"),
@@ -603,7 +686,7 @@ func TestAccTeamResourceInheritance(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTeamResourceConfigInheritance(true, "alternate_parent"),
+				Config: testAccTeamResourceConfigInheritance(true, "alternate_parent", keys),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrPair("linear_team.child", "parent_id", "linear_team.alternate_parent", "id"),
 					resource.TestCheckResourceAttr("linear_team.child", "estimation.type", "exponential"),
@@ -615,7 +698,7 @@ func TestAccTeamResourceInheritance(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTeamResourceConfigInheritance(false, "alternate_parent"),
+				Config: testAccTeamResourceConfigInheritance(false, "alternate_parent", keys),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("linear_team.child", "inherit_issue_estimation", "false"),
 					resource.TestCheckResourceAttr("linear_team.child", "inherit_workflow_statuses", "false"),
@@ -628,7 +711,7 @@ func TestAccTeamResourceInheritance(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTeamResourceConfigInheritance(true, "parent"),
+				Config: testAccTeamResourceConfigInheritance(true, "parent", keys),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("linear_team.child", "inherit_issue_estimation", "true"),
 					resource.TestCheckResourceAttr("linear_team.child", "inherit_workflow_statuses", "true"),
@@ -643,11 +726,11 @@ func TestAccTeamResourceInheritance(t *testing.T) {
 			{
 				ResourceName:      "linear_team.child",
 				ImportState:       true,
-				ImportStateId:     "ACHI",
+				ImportStateId:     keys[2],
 				ImportStateVerify: true,
 			},
 			{
-				Config:   testAccTeamResourceConfigInheritance(true, "parent"),
+				Config:   testAccTeamResourceConfigInheritance(true, "parent", keys),
 				PlanOnly: true,
 			},
 		},
@@ -743,7 +826,7 @@ resource "linear_team" "test" {
 `, key, name)
 }
 
-func testAccTeamResourceConfigInheritance(inherit bool, parentResource string) string {
+func testAccTeamResourceConfigInheritance(inherit bool, parentResource string, keys [3]string) string {
 	childSettings := `
   inherit_issue_estimation  = true
   inherit_workflow_statuses = true`
@@ -779,8 +862,8 @@ func testAccTeamResourceConfigInheritance(inherit bool, parentResource string) s
 
 	return fmt.Sprintf(`
 resource "linear_team" "parent" {
-  key  = "APAR"
-  name = "Acceptance Parent"
+  key  = "%s"
+  name = "Acceptance Parent %s"
 
   estimation = {
     type       = "linear"
@@ -811,8 +894,8 @@ resource "linear_team" "parent" {
 }
 
 resource "linear_team" "alternate_parent" {
-  key  = "AALT"
-  name = "Acceptance Alternate Parent"
+  key  = "%s"
+  name = "Acceptance Alternate Parent %s"
 
   estimation = {
     type = "exponential"
@@ -840,10 +923,10 @@ resource "linear_team" "alternate_parent" {
 }
 
 resource "linear_team" "child" {
-  key       = "ACHI"
-  name      = "Acceptance Child"
+  key       = "%s"
+  name      = "Acceptance Child %s"
   parent_id = linear_team.%s.id
 %s
 }
-`, parentResource, childSettings)
+`, keys[0], keys[0], keys[1], keys[1], keys[2], keys[2], parentResource, childSettings)
 }

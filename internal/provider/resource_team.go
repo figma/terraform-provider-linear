@@ -170,7 +170,7 @@ func (r *TeamResource) Metadata(ctx context.Context, req resource.MetadataReques
 
 func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "Linear team.",
+		MarkdownDescription: "Linear team.\n\nThe resource uses the team's UUID as its identity. Changing a team key does not change which team Terraform manages. Import by UUID; legacy key imports remain supported.\n\nRemoving the resource makes the team private in Linear, then Terraform removes it from state. The team, its issues, and its workflows remain in Linear. Its parent is unchanged.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Identifier of the team.",
@@ -975,6 +975,7 @@ func (r *TeamResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	state.Key = types.StringValue(team.Key)
 	state.Name = types.StringValue(team.Name)
+	state.Id = types.StringValue(team.Id)
 
 	resp.Diagnostics.Append(update(ctx, r.client, state, data)...)
 
@@ -984,7 +985,7 @@ func (r *TeamResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	// Read the workflow states so that we can update them
 
-	workflowStatesResponse, workflowStatesErr := getTeamWorkflowStates(ctx, *r.client, team.Key)
+	workflowStatesResponse, workflowStatesErr := getTeamWorkflowStates(ctx, *r.client, team.Id)
 
 	if workflowStatesErr != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to get team workflow states, got error: %s", workflowStatesErr))
@@ -1040,28 +1041,43 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	response, err := getTeam(ctx, *r.client, data.Key.ValueString())
+	var team Team
+	id := data.Id.ValueString()
+	if id != "" {
+		response, err := getTeamByID(ctx, *r.client, id)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read team by ID: %s", err))
+			return
+		}
+		if len(response.AdministrableTeams.Nodes) == 0 {
+			resp.Diagnostics.AddError("Team Not Found", fmt.Sprintf("Team %s is no longer administrable or no longer exists", id))
+			return
+		}
+		team = response.AdministrableTeams.Nodes[0].Team
+	} else {
+		response, err := getTeam(ctx, *r.client, data.Key.ValueString())
 
-	if err != nil {
-		// Linear's GraphQL API returns 'Entity not found: Team' when the
-		// team key doesn't match any existing team. This is distinct from
-		// connection errors which would not contain this specific message.
-		if strings.Contains(err.Error(), "Entity not found: Team") {
+		if err != nil {
+			// Linear's GraphQL API returns 'Entity not found: Team' when the
+			// team key doesn't match any existing team. This is distinct from
+			// connection errors which would not contain this specific message.
+			if strings.Contains(err.Error(), "Entity not found: Team") {
+				resp.State.RemoveResource(ctx)
+				return
+			}
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read team, got error: %s", err))
+			return
+		}
+
+		if len(response.AdministrableTeams.Nodes) == 0 {
 			resp.State.RemoveResource(ctx)
 			return
 		}
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read team, got error: %s", err))
-		return
+		team = response.AdministrableTeams.Nodes[0].Team
 	}
-
-	if len(response.AdministrableTeams.Nodes) == 0 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-
-	team := response.AdministrableTeams.Nodes[0]
 
 	data.Id = types.StringValue(team.Id)
+	data.Key = types.StringValue(team.Key)
 	data.Name = types.StringValue(team.Name)
 	data.Private = types.BoolValue(team.Private)
 	data.InheritIssueEstimation = types.BoolValue(team.InheritIssueEstimation)
@@ -1128,7 +1144,7 @@ func (r *TeamResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		},
 	)
 
-	workflowStatesResponse, workflowStatesErr := getTeamWorkflowStates(ctx, *r.client, team.Key)
+	workflowStatesResponse, workflowStatesErr := getTeamWorkflowStates(ctx, *r.client, team.Id)
 
 	if workflowStatesErr != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to get team workflow states, got error: %s", workflowStatesErr))
@@ -1187,7 +1203,7 @@ func (r *TeamResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		canceledID := state.CanceledWorkflowState.Attributes()["id"].(types.String).ValueString()
 
 		if state.InheritWorkflowStatuses.ValueBool() {
-			workflowStatesResponse, err := getTeamWorkflowStates(ctx, *r.client, data.Key.ValueString())
+			workflowStatesResponse, err := getTeamWorkflowStates(ctx, *r.client, data.Id.ValueString())
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to get local workflow states after disabling inheritance, got error: %s", err))
 				return
@@ -1232,7 +1248,7 @@ func (r *TeamResource) Update(ctx context.Context, req resource.UpdateRequest, r
 		data.CompletedWorkflowState = *completed
 		data.CanceledWorkflowState = *canceled
 	} else {
-		workflowStatesResponse, err := getTeamWorkflowStates(ctx, *r.client, data.Key.ValueString())
+		workflowStatesResponse, err := getTeamWorkflowStates(ctx, *r.client, data.Id.ValueString())
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to get inherited workflow states, got error: %s", err))
 			return
@@ -1267,18 +1283,29 @@ func (r *TeamResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 		return
 	}
 
-	_, err := deleteTeam(ctx, *r.client, data.Key.ValueString())
-
+	if data.Id.ValueString() == "" {
+		resp.Diagnostics.AddError("Missing Team ID", "Cannot delete a team without its stable ID")
+		return
+	}
+	result, err := makeTeamPrivate(ctx, *r.client, data.Id.ValueString())
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete team, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to make team private before removing it from Terraform, got error: %s", err))
+		return
+	}
+	if result.TeamUpdate.Team.Id != data.Id.ValueString() || !result.TeamUpdate.Team.Private {
+		resp.Diagnostics.AddError("Unexpected Team Update", "Linear did not confirm that the requested team is private; keeping it in Terraform state")
 		return
 	}
 
-	tflog.Trace(ctx, "deleted a team")
+	tflog.Trace(ctx, "made a team private and removed it from Terraform management")
 }
 
 func (r *TeamResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("key"), req, resp)
+	if uuidRegex().MatchString(req.ID) {
+		resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	} else {
+		resource.ImportStatePassthroughID(ctx, path.Root("key"), req, resp)
+	}
 }
 
 func update(ctx context.Context, client *graphql.Client, state TeamResourceModel, data *TeamResourceModel) diag.Diagnostics {
@@ -1397,7 +1424,7 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 		input.DefaultIssueEstimate = estimationData.Default.ValueFloat64()
 	}
 
-	response, err := updateTeam(ctx, *client, input, state.Key.ValueString())
+	response, err := updateTeam(ctx, *client, input, state.Id.ValueString())
 
 	if err != nil {
 		diags = diag.Diagnostics{}

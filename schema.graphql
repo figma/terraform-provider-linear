@@ -15891,6 +15891,10 @@ input MilestoneSort {
 }
 
 type Mutation {
+  initiativeLabelCreate(input: InitiativeLabelCreateInput!): InitiativeLabelPayload!
+  initiativeLabelUpdate(id: String!, input: InitiativeLabelUpdateInput!): InitiativeLabelPayload!
+  initiativeLabelDelete(id: String!): DeletePayload!
+
   """
   XHR request payload to upload an images, video and other attachments directly to Linear's cloud storage.
   """
@@ -27094,6 +27098,7 @@ enum PushSubscriptionType {
 }
 
 type Query {
+  initiativeLabel(id: String!): InitiativeLabel!
   """
   All issue workflow states (issue statuses). Returns a paginated list of
   workflow states visible to the authenticated user, across all teams they have access to.
@@ -37175,7 +37180,44 @@ input ZendeskSettingsInput {
 }
 
 
+type InitiativeLabel implements Node {
+  id: ID!
+  name: String!
+  description: String
+  color: String!
+  isGroup: Boolean!
+  groupType: LabelGroupType
+  parent: InitiativeLabel
+}
+
 enum LabelGroupType {
   multiSelect
   singleSelect
+}
+
+input InitiativeLabelCreateInput {
+  color: String
+  description: String
+  groupType: LabelGroupType
+  id: String
+  isGroup: Boolean
+  name: String!
+  parentId: String
+  retiredAt: DateTime
+}
+
+input InitiativeLabelUpdateInput {
+  color: String
+  description: String
+  groupType: LabelGroupType
+  isGroup: Boolean
+  name: String
+  parentId: String
+  retiredAt: DateTime
+}
+
+type InitiativeLabelPayload {
+  initiativeLabel: InitiativeLabel!
+  lastSyncId: Float!
+  success: Boolean!
 }
