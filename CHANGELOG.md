@@ -4,6 +4,7 @@
 
 ### Enhancements
 * Add workspace-level project and initiative labels, including label groups and group selection behavior.
+* Add `team_id` to `linear_project_label` for team-scoped labels and groups, and expose `inherited_from_id` for inherited copies. Changing team scope replaces the label.
 * Add `linear_initiative_label` and `linear_initiative_labels` data sources for exact label lookups and filtered, paginated lists.
 * Add `linear_project_label` and `linear_project_labels` data sources for exact label and group lookups and filtered, paginated lists, with team and workspace scope filters and inheritance metadata.
 

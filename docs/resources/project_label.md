@@ -3,12 +3,12 @@
 page_title: "linear_project_label Resource - terraform-provider-linear"
 subcategory: ""
 description: |-
-  Linear project label.
+  Workspace or team project label. Manage inherited labels at their source team.
 ---
 
 # linear_project_label (Resource)
 
-Linear project label.
+Workspace or team project label. Manage inherited labels at their source team.
 
 ## Example Usage
 
@@ -22,6 +22,15 @@ resource "linear_project_label" "release_tier" {
 resource "linear_project_label" "tier_1" {
   name      = "T1"
   parent_id = linear_project_label.release_tier.id
+}
+
+variable "team_id" {
+  type = string
+}
+
+resource "linear_project_label" "team" {
+  name    = "Team release"
+  team_id = var.team_id
 }
 ```
 
@@ -39,10 +48,12 @@ resource "linear_project_label" "tier_1" {
 - `group_type` (String) Group selection behavior: singleSelect or multiSelect. Only valid for groups; Linear defaults new groups to singleSelect.
 - `is_group` (Boolean) Whether the project label is a group (parent) label. **Default** `false`.
 - `parent_id` (String) Identifier of the parent project label group.
+- `team_id` (String) Owning team UUID. Omit for a workspace label. Team scope requires a supported Linear plan. Changing scope replaces the label.
 
 ### Read-Only
 
 - `id` (String) Identifier of the project label.
+- `inherited_from_id` (String) Source label UUID for an inherited copy, or null for a source label.
 
 ## Import
 
