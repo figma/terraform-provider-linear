@@ -514,6 +514,13 @@ func (v *IssueLabelUpdateInput) GetIsGroup() bool { return v.IsGroup }
 // GetRetiredAt returns IssueLabelUpdateInput.RetiredAt, and is useful for accessing the field via an interface.
 func (v *IssueLabelUpdateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
+type LabelGroupType string
+
+const (
+	LabelGroupTypeMultiselect  LabelGroupType = "multiSelect"
+	LabelGroupTypeSingleselect LabelGroupType = "singleSelect"
+)
+
 // Organization includes the GraphQL fields of Organization requested by the fragment Organization.
 // The GraphQL type's documentation follows.
 //
@@ -1098,7 +1105,8 @@ type ProjectLabel struct {
 	// Whether the label is a group. When true, this label acts as a container for
 	// child labels and cannot be directly applied to issues or projects. When false,
 	// the label can be directly applied.
-	IsGroup bool `json:"isGroup"`
+	IsGroup   bool            `json:"isGroup"`
+	GroupType *LabelGroupType `json:"groupType"`
 	// The parent label group. If set, this label is a child within a group. Only one
 	// child label from each group can be applied to a project at a time.
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
@@ -1119,12 +1127,16 @@ func (v *ProjectLabel) GetColor() string { return v.Color }
 // GetIsGroup returns ProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetIsGroup() bool { return v.IsGroup }
 
+// GetGroupType returns ProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetGroupType() *LabelGroupType { return v.GroupType }
+
 // GetParent returns ProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetParent() *ProjectLabelParentProjectLabel { return v.Parent }
 
 // Input for creating a new project label. A name is required. The label is created
 // as a workspace-level label available to all projects.
 type ProjectLabelCreateInput struct {
+	GroupType *LabelGroupType `json:"groupType,omitempty"`
 	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
 	Id *string `json:"id,omitempty"`
 	// The name of the label.
@@ -1140,6 +1152,9 @@ type ProjectLabelCreateInput struct {
 	// The time at which the label was retired. Set to null to restore a retired label.
 	RetiredAt *time.Time `json:"retiredAt,omitempty"`
 }
+
+// GetGroupType returns ProjectLabelCreateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetGroupType() *LabelGroupType { return v.GroupType }
 
 // GetId returns ProjectLabelCreateInput.Id, and is useful for accessing the field via an interface.
 func (v *ProjectLabelCreateInput) GetId() *string { return v.Id }
@@ -1178,6 +1193,7 @@ func (v *ProjectLabelParentProjectLabel) GetId() string { return v.Id }
 
 // Input for updating an existing project label. All fields are optional; only provided fields will be updated.
 type ProjectLabelUpdateInput struct {
+	GroupType *LabelGroupType `json:"groupType,omitempty"`
 	// The name of the label.
 	Name string `json:"name"`
 	// The description of the label.
@@ -1191,6 +1207,9 @@ type ProjectLabelUpdateInput struct {
 	// The time at which the label was retired. Set to null to restore a retired label.
 	RetiredAt *time.Time `json:"retiredAt,omitempty"`
 }
+
+// GetGroupType returns ProjectLabelUpdateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetGroupType() *LabelGroupType { return v.GroupType }
 
 // GetName returns ProjectLabelUpdateInput.Name, and is useful for accessing the field via an interface.
 func (v *ProjectLabelUpdateInput) GetName() string { return v.Name }
@@ -3952,6 +3971,9 @@ func (v *getProjectLabelProjectLabel) GetColor() string { return v.ProjectLabel.
 // GetIsGroup returns getProjectLabelProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetIsGroup() bool { return v.ProjectLabel.IsGroup }
 
+// GetGroupType returns getProjectLabelProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetGroupType() *LabelGroupType { return v.ProjectLabel.GroupType }
+
 // GetParent returns getProjectLabelProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -3993,6 +4015,8 @@ type __premarshalgetProjectLabelProjectLabel struct {
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -4012,6 +4036,7 @@ func (v *getProjectLabelProjectLabel) __premarshalJSON() (*__premarshalgetProjec
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -5052,6 +5077,11 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetGroupType returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabel.GroupType
+}
+
 // GetParent returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5093,6 +5123,8 @@ type __premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5112,6 +5144,7 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -5204,6 +5237,11 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetGroupType returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabel.GroupType
+}
+
 // GetParent returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5245,6 +5283,8 @@ type __premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5264,6 +5304,7 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -7192,6 +7233,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}
@@ -7565,6 +7607,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}
@@ -7643,6 +7686,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}
