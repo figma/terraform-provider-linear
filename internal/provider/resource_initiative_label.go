@@ -84,7 +84,11 @@ func (r *InitiativeLabelResource) Schema(ctx context.Context, req resource.Schem
 			},
 			"group_type": schema.StringAttribute{
 				MarkdownDescription: "Group selection behavior: singleSelect or multiSelect. Only valid for groups; Linear defaults new groups to singleSelect.",
-				Optional:            true, Computed: true,
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 				Validators: []validator.String{stringvalidator.OneOf("singleSelect", "multiSelect")},
 			},
 			"parent_id": schema.StringAttribute{
