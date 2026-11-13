@@ -1,0 +1,61 @@
+# @genqlient(for: "InitiativeLabel.groupType", pointer: true)
+# @genqlient(for: "InitiativeLabel.description", pointer: true)
+# @genqlient(for: "InitiativeLabel.parent", pointer: true)
+fragment InitiativeLabel on InitiativeLabel {
+  id
+  name
+  description
+  color
+  isGroup
+  groupType
+  parent {
+    id
+  }
+}
+
+query getInitiativeLabel($id: String!) {
+  initiativeLabel(id: $id) {
+    ...InitiativeLabel
+  }
+}
+
+# @genqlient(for: "InitiativeLabelCreateInput.id", pointer: true, omitempty: true)
+# @genqlient(for: "InitiativeLabelCreateInput.description", pointer: true)
+# @genqlient(for: "InitiativeLabelCreateInput.color", pointer: true, omitempty: true)
+# @genqlient(for: "InitiativeLabelCreateInput.parentId", pointer: true)
+# @genqlient(for: "InitiativeLabelCreateInput.retiredAt", pointer: true, omitempty: true)
+# @genqlient(for: "InitiativeLabelCreateInput.groupType", pointer: true, omitempty: true)
+mutation initiativeLabelCreate(
+  $input: InitiativeLabelCreateInput!
+) {
+  initiativeLabelCreate(input: $input) {
+    success
+    initiativeLabel {
+      ...InitiativeLabel
+    }
+  }
+}
+
+# @genqlient(for: "InitiativeLabelUpdateInput.description", pointer: true)
+# @genqlient(for: "InitiativeLabelUpdateInput.color", pointer: true, omitempty: true)
+# @genqlient(for: "InitiativeLabelUpdateInput.parentId", pointer: true)
+# @genqlient(for: "InitiativeLabelUpdateInput.retiredAt", pointer: true, omitempty: true)
+# @genqlient(for: "InitiativeLabelUpdateInput.groupType", pointer: true, omitempty: true)
+mutation initiativeLabelUpdate(
+  $input: InitiativeLabelUpdateInput!,
+  $id: String!
+) {
+  initiativeLabelUpdate(input: $input, id: $id) {
+    success
+    initiativeLabel {
+      ...InitiativeLabel
+    }
+  }
+}
+
+mutation initiativeLabelDelete($id: String!) {
+  initiativeLabelDelete(id: $id) {
+    success
+  }
+}
+
