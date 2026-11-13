@@ -49,6 +49,14 @@ query getTeam($key: String!) {
   }
 }
 
+query getTeamByID($id: ID!) {
+  administrableTeams(filter: {id: {eq: $id}}, first: 1, includeArchived: true) {
+    nodes {
+      ...Team
+    }
+  }
+}
+
 # @genqlient(for: "TeamCreateInput.id", omitempty: true)
 # @genqlient(for: "TeamCreateInput.description", pointer: true)
 # @genqlient(for: "TeamCreateInput.icon", omitempty: true, pointer: true)
@@ -126,8 +134,11 @@ mutation updateTeam(
   }
 }
 
-mutation deleteTeam($key: String!) {
-  teamDelete(id: $key) {
-    success
+mutation makeTeamPrivate($id: String!) {
+  teamUpdate(id: $id, input: {private: true}) {
+    team {
+      id
+      private
+    }
   }
 }
