@@ -1353,6 +1353,105 @@ type ProjectLabelInheritedFromProjectLabel struct {
 // GetId returns ProjectLabelInheritedFromProjectLabel.Id, and is useful for accessing the field via an interface.
 func (v *ProjectLabelInheritedFromProjectLabel) GetId() string { return v.Id }
 
+// ProjectLabelLookup includes the GraphQL fields of ProjectLabel requested by the fragment ProjectLabelLookup.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabelLookup struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The label's name.
+	Name string `json:"name"`
+	// The label's description.
+	Description *string `json:"description"`
+	// The label's color as a HEX string (e.g., '#EB5757'). Used for visual identification of the label in the UI.
+	Color string `json:"color"`
+	// Whether the label is a group. When true, this label acts as a container for
+	// child labels and cannot be directly applied to issues or projects. When false,
+	// the label can be directly applied.
+	IsGroup       bool                                         `json:"isGroup"`
+	GroupType     *LabelGroupType                              `json:"groupType"`
+	Team          *ProjectLabelLookupTeam                      `json:"team"`
+	InheritedFrom *ProjectLabelLookupInheritedFromProjectLabel `json:"inheritedFrom"`
+	// The parent label group. If set, this label is a child within a group. Only one
+	// child label from each group can be applied to a project at a time.
+	Parent *ProjectLabelLookupParentProjectLabel `json:"parent"`
+}
+
+// GetId returns ProjectLabelLookup.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetId() string { return v.Id }
+
+// GetName returns ProjectLabelLookup.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetName() string { return v.Name }
+
+// GetDescription returns ProjectLabelLookup.Description, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetDescription() *string { return v.Description }
+
+// GetColor returns ProjectLabelLookup.Color, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetColor() string { return v.Color }
+
+// GetIsGroup returns ProjectLabelLookup.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetIsGroup() bool { return v.IsGroup }
+
+// GetGroupType returns ProjectLabelLookup.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetGroupType() *LabelGroupType { return v.GroupType }
+
+// GetTeam returns ProjectLabelLookup.Team, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetTeam() *ProjectLabelLookupTeam { return v.Team }
+
+// GetInheritedFrom returns ProjectLabelLookup.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetInheritedFrom() *ProjectLabelLookupInheritedFromProjectLabel {
+	return v.InheritedFrom
+}
+
+// GetParent returns ProjectLabelLookup.Parent, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookup) GetParent() *ProjectLabelLookupParentProjectLabel { return v.Parent }
+
+// ProjectLabelLookupInheritedFromProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabelLookupInheritedFromProjectLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelLookupInheritedFromProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookupInheritedFromProjectLabel) GetId() string { return v.Id }
+
+// ProjectLabelLookupParentProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabelLookupParentProjectLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelLookupParentProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookupParentProjectLabel) GetId() string { return v.Id }
+
+// ProjectLabelLookupTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type ProjectLabelLookupTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelLookupTeam.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelLookupTeam) GetId() string { return v.Id }
+
 // ProjectLabelParentProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
 // The GraphQL type's documentation follows.
 //
@@ -2850,6 +2949,18 @@ func (v *__listInitiativeLabelsInput) GetAfter() *string { return v.After }
 // GetIncludeArchived returns __listInitiativeLabelsInput.IncludeArchived, and is useful for accessing the field via an interface.
 func (v *__listInitiativeLabelsInput) GetIncludeArchived() bool { return v.IncludeArchived }
 
+// __listProjectLabelsInput is used internally by genqlient
+type __listProjectLabelsInput struct {
+	After           *string `json:"after"`
+	IncludeArchived bool    `json:"includeArchived"`
+}
+
+// GetAfter returns __listProjectLabelsInput.After, and is useful for accessing the field via an interface.
+func (v *__listProjectLabelsInput) GetAfter() *string { return v.After }
+
+// GetIncludeArchived returns __listProjectLabelsInput.IncludeArchived, and is useful for accessing the field via an interface.
+func (v *__listProjectLabelsInput) GetIncludeArchived() bool { return v.IncludeArchived }
+
 // __lookupInitiativeLabelInput is used internally by genqlient
 type __lookupInitiativeLabelInput struct {
 	Id string `json:"id"`
@@ -2857,6 +2968,14 @@ type __lookupInitiativeLabelInput struct {
 
 // GetId returns __lookupInitiativeLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__lookupInitiativeLabelInput) GetId() string { return v.Id }
+
+// __lookupProjectLabelInput is used internally by genqlient
+type __lookupProjectLabelInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __lookupProjectLabelInput.Id, and is useful for accessing the field via an interface.
+func (v *__lookupProjectLabelInput) GetId() string { return v.Id }
 
 // __makeTeamPrivateInput is used internally by genqlient
 type __makeTeamPrivateInput struct {
@@ -6130,6 +6249,174 @@ func (v *listInitiativeLabelsResponse) GetInitiativeLabels() listInitiativeLabel
 	return v.InitiativeLabels
 }
 
+// listProjectLabelsProjectLabelsProjectLabelConnection includes the requested fields of the GraphQL type ProjectLabelConnection.
+type listProjectLabelsProjectLabelsProjectLabelConnection struct {
+	Nodes    []listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel `json:"nodes"`
+	PageInfo listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo            `json:"pageInfo"`
+}
+
+// GetNodes returns listProjectLabelsProjectLabelsProjectLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnection) GetNodes() []listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel {
+	return v.Nodes
+}
+
+// GetPageInfo returns listProjectLabelsProjectLabelsProjectLabelConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnection) GetPageInfo() listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo {
+	return v.PageInfo
+}
+
+// listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel struct {
+	ProjectLabelLookup `json:"-"`
+}
+
+// GetId returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetId() string {
+	return v.ProjectLabelLookup.Id
+}
+
+// GetName returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetName() string {
+	return v.ProjectLabelLookup.Name
+}
+
+// GetDescription returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetDescription() *string {
+	return v.ProjectLabelLookup.Description
+}
+
+// GetColor returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetColor() string {
+	return v.ProjectLabelLookup.Color
+}
+
+// GetIsGroup returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetIsGroup() bool {
+	return v.ProjectLabelLookup.IsGroup
+}
+
+// GetGroupType returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabelLookup.GroupType
+}
+
+// GetTeam returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetTeam() *ProjectLabelLookupTeam {
+	return v.ProjectLabelLookup.Team
+}
+
+// GetInheritedFrom returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetInheritedFrom() *ProjectLabelLookupInheritedFromProjectLabel {
+	return v.ProjectLabelLookup.InheritedFrom
+}
+
+// GetParent returns listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) GetParent() *ProjectLabelLookupParentProjectLabel {
+	return v.ProjectLabelLookup.Parent
+}
+
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.ProjectLabelLookup)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshallistProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Team *ProjectLabelLookupTeam `json:"team"`
+
+	InheritedFrom *ProjectLabelLookupInheritedFromProjectLabel `json:"inheritedFrom"`
+
+	Parent *ProjectLabelLookupParentProjectLabel `json:"parent"`
+}
+
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel) __premarshalJSON() (*__premarshallistProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel, error) {
+	var retval __premarshallistProjectLabelsProjectLabelsProjectLabelConnectionNodesProjectLabel
+
+	retval.Id = v.ProjectLabelLookup.Id
+	retval.Name = v.ProjectLabelLookup.Name
+	retval.Description = v.ProjectLabelLookup.Description
+	retval.Color = v.ProjectLabelLookup.Color
+	retval.IsGroup = v.ProjectLabelLookup.IsGroup
+	retval.GroupType = v.ProjectLabelLookup.GroupType
+	retval.Team = v.ProjectLabelLookup.Team
+	retval.InheritedFrom = v.ProjectLabelLookup.InheritedFrom
+	retval.Parent = v.ProjectLabelLookup.Parent
+	return &retval, nil
+}
+
+// listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsProjectLabelsProjectLabelConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
+
+// listProjectLabelsResponse is returned by listProjectLabels on success.
+type listProjectLabelsResponse struct {
+	// Returns all project labels in the workspace, with optional filtering.
+	ProjectLabels listProjectLabelsProjectLabelsProjectLabelConnection `json:"projectLabels"`
+}
+
+// GetProjectLabels returns listProjectLabelsResponse.ProjectLabels, and is useful for accessing the field via an interface.
+func (v *listProjectLabelsResponse) GetProjectLabels() listProjectLabelsProjectLabelsProjectLabelConnection {
+	return v.ProjectLabels
+}
+
 // lookupInitiativeLabelInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
 type lookupInitiativeLabelInitiativeLabel struct {
 	InitiativeLabelLookup `json:"-"`
@@ -6236,6 +6523,132 @@ type lookupInitiativeLabelResponse struct {
 // GetInitiativeLabel returns lookupInitiativeLabelResponse.InitiativeLabel, and is useful for accessing the field via an interface.
 func (v *lookupInitiativeLabelResponse) GetInitiativeLabel() lookupInitiativeLabelInitiativeLabel {
 	return v.InitiativeLabel
+}
+
+// lookupProjectLabelProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type lookupProjectLabelProjectLabel struct {
+	ProjectLabelLookup `json:"-"`
+}
+
+// GetId returns lookupProjectLabelProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetId() string { return v.ProjectLabelLookup.Id }
+
+// GetName returns lookupProjectLabelProjectLabel.Name, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetName() string { return v.ProjectLabelLookup.Name }
+
+// GetDescription returns lookupProjectLabelProjectLabel.Description, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetDescription() *string {
+	return v.ProjectLabelLookup.Description
+}
+
+// GetColor returns lookupProjectLabelProjectLabel.Color, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetColor() string { return v.ProjectLabelLookup.Color }
+
+// GetIsGroup returns lookupProjectLabelProjectLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetIsGroup() bool { return v.ProjectLabelLookup.IsGroup }
+
+// GetGroupType returns lookupProjectLabelProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabelLookup.GroupType
+}
+
+// GetTeam returns lookupProjectLabelProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetTeam() *ProjectLabelLookupTeam {
+	return v.ProjectLabelLookup.Team
+}
+
+// GetInheritedFrom returns lookupProjectLabelProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetInheritedFrom() *ProjectLabelLookupInheritedFromProjectLabel {
+	return v.ProjectLabelLookup.InheritedFrom
+}
+
+// GetParent returns lookupProjectLabelProjectLabel.Parent, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelProjectLabel) GetParent() *ProjectLabelLookupParentProjectLabel {
+	return v.ProjectLabelLookup.Parent
+}
+
+func (v *lookupProjectLabelProjectLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*lookupProjectLabelProjectLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.lookupProjectLabelProjectLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.ProjectLabelLookup)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshallookupProjectLabelProjectLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Team *ProjectLabelLookupTeam `json:"team"`
+
+	InheritedFrom *ProjectLabelLookupInheritedFromProjectLabel `json:"inheritedFrom"`
+
+	Parent *ProjectLabelLookupParentProjectLabel `json:"parent"`
+}
+
+func (v *lookupProjectLabelProjectLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *lookupProjectLabelProjectLabel) __premarshalJSON() (*__premarshallookupProjectLabelProjectLabel, error) {
+	var retval __premarshallookupProjectLabelProjectLabel
+
+	retval.Id = v.ProjectLabelLookup.Id
+	retval.Name = v.ProjectLabelLookup.Name
+	retval.Description = v.ProjectLabelLookup.Description
+	retval.Color = v.ProjectLabelLookup.Color
+	retval.IsGroup = v.ProjectLabelLookup.IsGroup
+	retval.GroupType = v.ProjectLabelLookup.GroupType
+	retval.Team = v.ProjectLabelLookup.Team
+	retval.InheritedFrom = v.ProjectLabelLookup.InheritedFrom
+	retval.Parent = v.ProjectLabelLookup.Parent
+	return &retval, nil
+}
+
+// lookupProjectLabelResponse is returned by lookupProjectLabel on success.
+type lookupProjectLabelResponse struct {
+	// Returns a single project label by its identifier.
+	ProjectLabel lookupProjectLabelProjectLabel `json:"projectLabel"`
+}
+
+// GetProjectLabel returns lookupProjectLabelResponse.ProjectLabel, and is useful for accessing the field via an interface.
+func (v *lookupProjectLabelResponse) GetProjectLabel() lookupProjectLabelProjectLabel {
+	return v.ProjectLabel
 }
 
 // makeTeamPrivateResponse is returned by makeTeamPrivate on success.
@@ -9143,6 +9556,63 @@ fragment InitiativeLabelLookup on InitiativeLabel {
 	return &data, err
 }
 
+func listProjectLabels(
+	ctx context.Context,
+	client graphql.Client,
+	after *string,
+	includeArchived bool,
+) (*listProjectLabelsResponse, error) {
+	req := &graphql.Request{
+		OpName: "listProjectLabels",
+		Query: `
+query listProjectLabels ($after: String, $includeArchived: Boolean!) {
+	projectLabels(first: 100, after: $after, includeArchived: $includeArchived) {
+		nodes {
+			... ProjectLabelLookup
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+fragment ProjectLabelLookup on ProjectLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	team {
+		id
+	}
+	inheritedFrom {
+		id
+	}
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__listProjectLabelsInput{
+			After:           after,
+			IncludeArchived: includeArchived,
+		},
+	}
+	var err error
+
+	var data listProjectLabelsResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func lookupInitiativeLabel(
 	ctx context.Context,
 	client graphql.Client,
@@ -9175,6 +9645,55 @@ fragment InitiativeLabelLookup on InitiativeLabel {
 	var err error
 
 	var data lookupInitiativeLabelResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func lookupProjectLabel(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*lookupProjectLabelResponse, error) {
+	req := &graphql.Request{
+		OpName: "lookupProjectLabel",
+		Query: `
+query lookupProjectLabel ($id: String!) {
+	projectLabel(id: $id) {
+		... ProjectLabelLookup
+	}
+}
+fragment ProjectLabelLookup on ProjectLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	team {
+		id
+	}
+	inheritedFrom {
+		id
+	}
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__lookupProjectLabelInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data lookupProjectLabelResponse
 	resp := &graphql.Response{Data: &data}
 
 	err = client.MakeRequest(
