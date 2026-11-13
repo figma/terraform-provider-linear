@@ -355,6 +355,73 @@ func (v *GitAutomationTargetBranchCreateInput) GetBranchPattern() string { retur
 // GetIsRegex returns GitAutomationTargetBranchCreateInput.IsRegex, and is useful for accessing the field via an interface.
 func (v *GitAutomationTargetBranchCreateInput) GetIsRegex() bool { return v.IsRegex }
 
+// InitiativeLabel includes the GraphQL fields of InitiativeLabel requested by the fragment InitiativeLabel.
+type InitiativeLabel struct {
+	Id          string                                `json:"id"`
+	Name        string                                `json:"name"`
+	Description *string                               `json:"description"`
+	Color       string                                `json:"color"`
+	IsGroup     bool                                  `json:"isGroup"`
+	GroupType   *LabelGroupType                       `json:"groupType"`
+	Parent      *InitiativeLabelParentInitiativeLabel `json:"parent"`
+}
+
+// GetId returns InitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetId() string { return v.Id }
+
+// GetName returns InitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetName() string { return v.Name }
+
+// GetDescription returns InitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetDescription() *string { return v.Description }
+
+// GetColor returns InitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetColor() string { return v.Color }
+
+// GetIsGroup returns InitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetIsGroup() bool { return v.IsGroup }
+
+// GetGroupType returns InitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetGroupType() *LabelGroupType { return v.GroupType }
+
+// GetParent returns InitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *InitiativeLabel) GetParent() *InitiativeLabelParentInitiativeLabel { return v.Parent }
+
+type InitiativeLabelCreateInput struct {
+	Color       *string         `json:"color,omitempty"`
+	Description *string         `json:"description"`
+	GroupType   *LabelGroupType `json:"groupType,omitempty"`
+	Id          *string         `json:"id,omitempty"`
+	IsGroup     bool            `json:"isGroup"`
+	Name        string          `json:"name"`
+	ParentId    *string         `json:"parentId"`
+	RetiredAt   *time.Time      `json:"retiredAt,omitempty"`
+}
+
+// GetColor returns InitiativeLabelCreateInput.Color, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetColor() *string { return v.Color }
+
+// GetDescription returns InitiativeLabelCreateInput.Description, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetDescription() *string { return v.Description }
+
+// GetGroupType returns InitiativeLabelCreateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetGroupType() *LabelGroupType { return v.GroupType }
+
+// GetId returns InitiativeLabelCreateInput.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetId() *string { return v.Id }
+
+// GetIsGroup returns InitiativeLabelCreateInput.IsGroup, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetIsGroup() bool { return v.IsGroup }
+
+// GetName returns InitiativeLabelCreateInput.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetName() string { return v.Name }
+
+// GetParentId returns InitiativeLabelCreateInput.ParentId, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetParentId() *string { return v.ParentId }
+
+// GetRetiredAt returns InitiativeLabelCreateInput.RetiredAt, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelCreateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
+
 // InitiativeLabelLookup includes the GraphQL fields of InitiativeLabel requested by the fragment InitiativeLabelLookup.
 type InitiativeLabelLookup struct {
 	Id          string                                      `json:"id"`
@@ -396,6 +463,45 @@ type InitiativeLabelLookupParentInitiativeLabel struct {
 
 // GetId returns InitiativeLabelLookupParentInitiativeLabel.Id, and is useful for accessing the field via an interface.
 func (v *InitiativeLabelLookupParentInitiativeLabel) GetId() string { return v.Id }
+
+// InitiativeLabelParentInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type InitiativeLabelParentInitiativeLabel struct {
+	Id string `json:"id"`
+}
+
+// GetId returns InitiativeLabelParentInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelParentInitiativeLabel) GetId() string { return v.Id }
+
+type InitiativeLabelUpdateInput struct {
+	Color       *string         `json:"color,omitempty"`
+	Description *string         `json:"description"`
+	GroupType   *LabelGroupType `json:"groupType,omitempty"`
+	IsGroup     bool            `json:"isGroup"`
+	Name        string          `json:"name"`
+	ParentId    *string         `json:"parentId"`
+	RetiredAt   *time.Time      `json:"retiredAt,omitempty"`
+}
+
+// GetColor returns InitiativeLabelUpdateInput.Color, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetColor() *string { return v.Color }
+
+// GetDescription returns InitiativeLabelUpdateInput.Description, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetDescription() *string { return v.Description }
+
+// GetGroupType returns InitiativeLabelUpdateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetGroupType() *LabelGroupType { return v.GroupType }
+
+// GetIsGroup returns InitiativeLabelUpdateInput.IsGroup, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetIsGroup() bool { return v.IsGroup }
+
+// GetName returns InitiativeLabelUpdateInput.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetName() string { return v.Name }
+
+// GetParentId returns InitiativeLabelUpdateInput.ParentId, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetParentId() *string { return v.ParentId }
+
+// GetRetiredAt returns InitiativeLabelUpdateInput.RetiredAt, and is useful for accessing the field via an interface.
+func (v *InitiativeLabelUpdateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
 // IssueLabel includes the GraphQL fields of IssueLabel requested by the fragment IssueLabel.
 // The GraphQL type's documentation follows.
@@ -1147,7 +1253,8 @@ type ProjectLabel struct {
 	// Whether the label is a group. When true, this label acts as a container for
 	// child labels and cannot be directly applied to issues or projects. When false,
 	// the label can be directly applied.
-	IsGroup bool `json:"isGroup"`
+	IsGroup   bool            `json:"isGroup"`
+	GroupType *LabelGroupType `json:"groupType"`
 	// The parent label group. If set, this label is a child within a group. Only one
 	// child label from each group can be applied to a project at a time.
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
@@ -1168,12 +1275,16 @@ func (v *ProjectLabel) GetColor() string { return v.Color }
 // GetIsGroup returns ProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetIsGroup() bool { return v.IsGroup }
 
+// GetGroupType returns ProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetGroupType() *LabelGroupType { return v.GroupType }
+
 // GetParent returns ProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetParent() *ProjectLabelParentProjectLabel { return v.Parent }
 
 // Input for creating a new project label. A name is required. The label is created
 // as a workspace-level label available to all projects.
 type ProjectLabelCreateInput struct {
+	GroupType *LabelGroupType `json:"groupType,omitempty"`
 	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
 	Id *string `json:"id,omitempty"`
 	// The name of the label.
@@ -1189,6 +1300,9 @@ type ProjectLabelCreateInput struct {
 	// The time at which the label was retired. Set to null to restore a retired label.
 	RetiredAt *time.Time `json:"retiredAt,omitempty"`
 }
+
+// GetGroupType returns ProjectLabelCreateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetGroupType() *LabelGroupType { return v.GroupType }
 
 // GetId returns ProjectLabelCreateInput.Id, and is useful for accessing the field via an interface.
 func (v *ProjectLabelCreateInput) GetId() *string { return v.Id }
@@ -1227,6 +1341,7 @@ func (v *ProjectLabelParentProjectLabel) GetId() string { return v.Id }
 
 // Input for updating an existing project label. All fields are optional; only provided fields will be updated.
 type ProjectLabelUpdateInput struct {
+	GroupType *LabelGroupType `json:"groupType,omitempty"`
 	// The name of the label.
 	Name string `json:"name"`
 	// The description of the label.
@@ -1240,6 +1355,9 @@ type ProjectLabelUpdateInput struct {
 	// The time at which the label was retired. Set to null to restore a retired label.
 	RetiredAt *time.Time `json:"retiredAt,omitempty"`
 }
+
+// GetGroupType returns ProjectLabelUpdateInput.GroupType, and is useful for accessing the field via an interface.
+func (v *ProjectLabelUpdateInput) GetGroupType() *LabelGroupType { return v.GroupType }
 
 // GetName returns ProjectLabelUpdateInput.Name, and is useful for accessing the field via an interface.
 func (v *ProjectLabelUpdateInput) GetName() string { return v.Name }
@@ -2529,14 +2647,6 @@ type __deleteLabelInput struct {
 // GetId returns __deleteLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__deleteLabelInput) GetId() string { return v.Id }
 
-// __deleteTeamInput is used internally by genqlient
-type __deleteTeamInput struct {
-	Key string `json:"key"`
-}
-
-// GetKey returns __deleteTeamInput.Key, and is useful for accessing the field via an interface.
-func (v *__deleteTeamInput) GetKey() string { return v.Key }
-
 // __deleteWorkflowStateInput is used internally by genqlient
 type __deleteWorkflowStateInput struct {
 	Id string `json:"id"`
@@ -2585,6 +2695,14 @@ type __getDocumentInput struct {
 // GetId returns __getDocumentInput.Id, and is useful for accessing the field via an interface.
 func (v *__getDocumentInput) GetId() string { return v.Id }
 
+// __getInitiativeLabelInput is used internally by genqlient
+type __getInitiativeLabelInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getInitiativeLabelInput.Id, and is useful for accessing the field via an interface.
+func (v *__getInitiativeLabelInput) GetId() string { return v.Id }
+
 // __getLabelInput is used internally by genqlient
 type __getLabelInput struct {
 	Id string `json:"id"`
@@ -2600,6 +2718,14 @@ type __getProjectLabelInput struct {
 
 // GetId returns __getProjectLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__getProjectLabelInput) GetId() string { return v.Id }
+
+// __getTeamByIDInput is used internally by genqlient
+type __getTeamByIDInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __getTeamByIDInput.Id, and is useful for accessing the field via an interface.
+func (v *__getTeamByIDInput) GetId() string { return v.Id }
 
 // __getTeamInput is used internally by genqlient
 type __getTeamInput struct {
@@ -2619,11 +2745,11 @@ func (v *__getTeamWorkflowInput) GetKey() string { return v.Key }
 
 // __getTeamWorkflowStatesInput is used internally by genqlient
 type __getTeamWorkflowStatesInput struct {
-	Key string `json:"key"`
+	Id string `json:"id"`
 }
 
-// GetKey returns __getTeamWorkflowStatesInput.Key, and is useful for accessing the field via an interface.
-func (v *__getTeamWorkflowStatesInput) GetKey() string { return v.Key }
+// GetId returns __getTeamWorkflowStatesInput.Id, and is useful for accessing the field via an interface.
+func (v *__getTeamWorkflowStatesInput) GetId() string { return v.Id }
 
 // __getTemplateInput is used internally by genqlient
 type __getTemplateInput struct {
@@ -2640,6 +2766,34 @@ type __getWorkflowStateInput struct {
 
 // GetId returns __getWorkflowStateInput.Id, and is useful for accessing the field via an interface.
 func (v *__getWorkflowStateInput) GetId() string { return v.Id }
+
+// __initiativeLabelCreateInput is used internally by genqlient
+type __initiativeLabelCreateInput struct {
+	Input InitiativeLabelCreateInput `json:"input"`
+}
+
+// GetInput returns __initiativeLabelCreateInput.Input, and is useful for accessing the field via an interface.
+func (v *__initiativeLabelCreateInput) GetInput() InitiativeLabelCreateInput { return v.Input }
+
+// __initiativeLabelDeleteInput is used internally by genqlient
+type __initiativeLabelDeleteInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __initiativeLabelDeleteInput.Id, and is useful for accessing the field via an interface.
+func (v *__initiativeLabelDeleteInput) GetId() string { return v.Id }
+
+// __initiativeLabelUpdateInput is used internally by genqlient
+type __initiativeLabelUpdateInput struct {
+	Input InitiativeLabelUpdateInput `json:"input"`
+	Id    string                     `json:"id"`
+}
+
+// GetInput returns __initiativeLabelUpdateInput.Input, and is useful for accessing the field via an interface.
+func (v *__initiativeLabelUpdateInput) GetInput() InitiativeLabelUpdateInput { return v.Input }
+
+// GetId returns __initiativeLabelUpdateInput.Id, and is useful for accessing the field via an interface.
+func (v *__initiativeLabelUpdateInput) GetId() string { return v.Id }
 
 // __listInitiativeLabelsInput is used internally by genqlient
 type __listInitiativeLabelsInput struct {
@@ -2660,6 +2814,14 @@ type __lookupInitiativeLabelInput struct {
 
 // GetId returns __lookupInitiativeLabelInput.Id, and is useful for accessing the field via an interface.
 func (v *__lookupInitiativeLabelInput) GetId() string { return v.Id }
+
+// __makeTeamPrivateInput is used internally by genqlient
+type __makeTeamPrivateInput struct {
+	Id string `json:"id"`
+}
+
+// GetId returns __makeTeamPrivateInput.Id, and is useful for accessing the field via an interface.
+func (v *__makeTeamPrivateInput) GetId() string { return v.Id }
 
 // __projectLabelCreateInput is used internally by genqlient
 type __projectLabelCreateInput struct {
@@ -3604,27 +3766,6 @@ func (v *deleteLabelResponse) GetIssueLabelDelete() deleteLabelIssueLabelDeleteD
 	return v.IssueLabelDelete
 }
 
-// deleteTeamResponse is returned by deleteTeam on success.
-type deleteTeamResponse struct {
-	// Archives a team and schedules its data for deletion. Requires team owner or workspace admin permissions.
-	TeamDelete deleteTeamTeamDeleteDeletePayload `json:"teamDelete"`
-}
-
-// GetTeamDelete returns deleteTeamResponse.TeamDelete, and is useful for accessing the field via an interface.
-func (v *deleteTeamResponse) GetTeamDelete() deleteTeamTeamDeleteDeletePayload { return v.TeamDelete }
-
-// deleteTeamTeamDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
-// The GraphQL type's documentation follows.
-//
-// A generic payload return from entity deletion mutations.
-type deleteTeamTeamDeleteDeletePayload struct {
-	// Whether the operation was successful.
-	Success bool `json:"success"`
-}
-
-// GetSuccess returns deleteTeamTeamDeleteDeletePayload.Success, and is useful for accessing the field via an interface.
-func (v *deleteTeamTeamDeleteDeletePayload) GetSuccess() bool { return v.Success }
-
 // deleteWorkflowStateResponse is returned by deleteWorkflowState on success.
 type deleteWorkflowStateResponse struct {
 	// Archives a state. Only states with issues that have all been archived can be archived.
@@ -3892,6 +4033,110 @@ type getDocumentResponse struct {
 // GetDocument returns getDocumentResponse.Document, and is useful for accessing the field via an interface.
 func (v *getDocumentResponse) GetDocument() getDocumentDocument { return v.Document }
 
+// getInitiativeLabelInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type getInitiativeLabelInitiativeLabel struct {
+	InitiativeLabel `json:"-"`
+}
+
+// GetId returns getInitiativeLabelInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetId() string { return v.InitiativeLabel.Id }
+
+// GetName returns getInitiativeLabelInitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetName() string { return v.InitiativeLabel.Name }
+
+// GetDescription returns getInitiativeLabelInitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetDescription() *string {
+	return v.InitiativeLabel.Description
+}
+
+// GetColor returns getInitiativeLabelInitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetColor() string { return v.InitiativeLabel.Color }
+
+// GetIsGroup returns getInitiativeLabelInitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetIsGroup() bool { return v.InitiativeLabel.IsGroup }
+
+// GetGroupType returns getInitiativeLabelInitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetGroupType() *LabelGroupType {
+	return v.InitiativeLabel.GroupType
+}
+
+// GetParent returns getInitiativeLabelInitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelInitiativeLabel) GetParent() *InitiativeLabelParentInitiativeLabel {
+	return v.InitiativeLabel.Parent
+}
+
+func (v *getInitiativeLabelInitiativeLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*getInitiativeLabelInitiativeLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.getInitiativeLabelInitiativeLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.InitiativeLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalgetInitiativeLabelInitiativeLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Parent *InitiativeLabelParentInitiativeLabel `json:"parent"`
+}
+
+func (v *getInitiativeLabelInitiativeLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *getInitiativeLabelInitiativeLabel) __premarshalJSON() (*__premarshalgetInitiativeLabelInitiativeLabel, error) {
+	var retval __premarshalgetInitiativeLabelInitiativeLabel
+
+	retval.Id = v.InitiativeLabel.Id
+	retval.Name = v.InitiativeLabel.Name
+	retval.Description = v.InitiativeLabel.Description
+	retval.Color = v.InitiativeLabel.Color
+	retval.IsGroup = v.InitiativeLabel.IsGroup
+	retval.GroupType = v.InitiativeLabel.GroupType
+	retval.Parent = v.InitiativeLabel.Parent
+	return &retval, nil
+}
+
+// getInitiativeLabelResponse is returned by getInitiativeLabel on success.
+type getInitiativeLabelResponse struct {
+	InitiativeLabel getInitiativeLabelInitiativeLabel `json:"initiativeLabel"`
+}
+
+// GetInitiativeLabel returns getInitiativeLabelResponse.InitiativeLabel, and is useful for accessing the field via an interface.
+func (v *getInitiativeLabelResponse) GetInitiativeLabel() getInitiativeLabelInitiativeLabel {
+	return v.InitiativeLabel
+}
+
 // getLabelIssueLabel includes the requested fields of the GraphQL type IssueLabel.
 // The GraphQL type's documentation follows.
 //
@@ -4021,6 +4266,9 @@ func (v *getProjectLabelProjectLabel) GetColor() string { return v.ProjectLabel.
 // GetIsGroup returns getProjectLabelProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetIsGroup() bool { return v.ProjectLabel.IsGroup }
 
+// GetGroupType returns getProjectLabelProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetGroupType() *LabelGroupType { return v.ProjectLabel.GroupType }
+
 // GetParent returns getProjectLabelProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -4062,6 +4310,8 @@ type __premarshalgetProjectLabelProjectLabel struct {
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -4081,6 +4331,7 @@ func (v *getProjectLabelProjectLabel) __premarshalJSON() (*__premarshalgetProjec
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -4408,6 +4659,337 @@ func (v *getTeamAdministrableTeamsTeamConnectionNodesTeam) __premarshalJSON() (*
 	retval.DefaultIssueEstimate = v.Team.DefaultIssueEstimate
 	retval.SecuritySettings = v.Team.SecuritySettings
 	return &retval, nil
+}
+
+// getTeamByIDAdministrableTeamsTeamConnection includes the requested fields of the GraphQL type TeamConnection.
+type getTeamByIDAdministrableTeamsTeamConnection struct {
+	Nodes []getTeamByIDAdministrableTeamsTeamConnectionNodesTeam `json:"nodes"`
+}
+
+// GetNodes returns getTeamByIDAdministrableTeamsTeamConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnection) GetNodes() []getTeamByIDAdministrableTeamsTeamConnectionNodesTeam {
+	return v.Nodes
+}
+
+// getTeamByIDAdministrableTeamsTeamConnectionNodesTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type getTeamByIDAdministrableTeamsTeamConnectionNodesTeam struct {
+	Team `json:"-"`
+}
+
+// GetId returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Id, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetId() string { return v.Team.Id }
+
+// GetName returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Name, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetName() string { return v.Team.Name }
+
+// GetKey returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Key, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetKey() string { return v.Team.Key }
+
+// GetPrivate returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Private, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetPrivate() bool {
+	return v.Team.Private
+}
+
+// GetDescription returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Description, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetDescription() *string {
+	return v.Team.Description
+}
+
+// GetIcon returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Icon, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetIcon() *string { return v.Team.Icon }
+
+// GetColor returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Color, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetColor() *string {
+	return v.Team.Color
+}
+
+// GetParent returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Parent, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetParent() *TeamParentTeam {
+	return v.Team.Parent
+}
+
+// GetInheritIssueEstimation returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.InheritIssueEstimation, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetInheritIssueEstimation() bool {
+	return v.Team.InheritIssueEstimation
+}
+
+// GetInheritWorkflowStatuses returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.InheritWorkflowStatuses, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetInheritWorkflowStatuses() bool {
+	return v.Team.InheritWorkflowStatuses
+}
+
+// GetTimezone returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.Timezone, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetTimezone() string {
+	return v.Team.Timezone
+}
+
+// GetGroupIssueHistory returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.GroupIssueHistory, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetGroupIssueHistory() bool {
+	return v.Team.GroupIssueHistory
+}
+
+// GetSetIssueSortOrderOnStateChange returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.SetIssueSortOrderOnStateChange, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetSetIssueSortOrderOnStateChange() string {
+	return v.Team.SetIssueSortOrderOnStateChange
+}
+
+// GetAiThreadSummariesEnabled returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.AiThreadSummariesEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetAiThreadSummariesEnabled() bool {
+	return v.Team.AiThreadSummariesEnabled
+}
+
+// GetAutoArchivePeriod returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.AutoArchivePeriod, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetAutoArchivePeriod() float64 {
+	return v.Team.AutoArchivePeriod
+}
+
+// GetAutoClosePeriod returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.AutoClosePeriod, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetAutoClosePeriod() *float64 {
+	return v.Team.AutoClosePeriod
+}
+
+// GetAutoCloseParentIssues returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.AutoCloseParentIssues, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetAutoCloseParentIssues() bool {
+	return v.Team.AutoCloseParentIssues
+}
+
+// GetAutoCloseChildIssues returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.AutoCloseChildIssues, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetAutoCloseChildIssues() bool {
+	return v.Team.AutoCloseChildIssues
+}
+
+// GetTriageEnabled returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.TriageEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetTriageEnabled() bool {
+	return v.Team.TriageEnabled
+}
+
+// GetRequirePriorityToLeaveTriage returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.RequirePriorityToLeaveTriage, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetRequirePriorityToLeaveTriage() bool {
+	return v.Team.RequirePriorityToLeaveTriage
+}
+
+// GetCyclesEnabled returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CyclesEnabled, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCyclesEnabled() bool {
+	return v.Team.CyclesEnabled
+}
+
+// GetCycleStartDay returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleStartDay, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleStartDay() float64 {
+	return v.Team.CycleStartDay
+}
+
+// GetCycleDuration returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleDuration, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleDuration() float64 {
+	return v.Team.CycleDuration
+}
+
+// GetCycleCooldownTime returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleCooldownTime, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleCooldownTime() float64 {
+	return v.Team.CycleCooldownTime
+}
+
+// GetUpcomingCycleCount returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.UpcomingCycleCount, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetUpcomingCycleCount() float64 {
+	return v.Team.UpcomingCycleCount
+}
+
+// GetCycleIssueAutoAssignStarted returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleIssueAutoAssignStarted, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleIssueAutoAssignStarted() bool {
+	return v.Team.CycleIssueAutoAssignStarted
+}
+
+// GetCycleIssueAutoAssignCompleted returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleIssueAutoAssignCompleted, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleIssueAutoAssignCompleted() bool {
+	return v.Team.CycleIssueAutoAssignCompleted
+}
+
+// GetCycleLockToActive returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.CycleLockToActive, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetCycleLockToActive() bool {
+	return v.Team.CycleLockToActive
+}
+
+// GetIssueEstimationType returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationType, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationType() string {
+	return v.Team.IssueEstimationType
+}
+
+// GetIssueEstimationAllowZero returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationAllowZero, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationAllowZero() bool {
+	return v.Team.IssueEstimationAllowZero
+}
+
+// GetIssueEstimationExtended returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.IssueEstimationExtended, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetIssueEstimationExtended() bool {
+	return v.Team.IssueEstimationExtended
+}
+
+// GetDefaultIssueEstimate returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.DefaultIssueEstimate, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetDefaultIssueEstimate() float64 {
+	return v.Team.DefaultIssueEstimate
+}
+
+// GetSecuritySettings returns getTeamByIDAdministrableTeamsTeamConnectionNodesTeam.SecuritySettings, and is useful for accessing the field via an interface.
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) GetSecuritySettings() map[string]interface{} {
+	return v.Team.SecuritySettings
+}
+
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*getTeamByIDAdministrableTeamsTeamConnectionNodesTeam
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.getTeamByIDAdministrableTeamsTeamConnectionNodesTeam = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.Team)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalgetTeamByIDAdministrableTeamsTeamConnectionNodesTeam struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Key string `json:"key"`
+
+	Private bool `json:"private"`
+
+	Description *string `json:"description"`
+
+	Icon *string `json:"icon"`
+
+	Color *string `json:"color"`
+
+	Parent *TeamParentTeam `json:"parent"`
+
+	InheritIssueEstimation bool `json:"inheritIssueEstimation"`
+
+	InheritWorkflowStatuses bool `json:"inheritWorkflowStatuses"`
+
+	Timezone string `json:"timezone"`
+
+	GroupIssueHistory bool `json:"groupIssueHistory"`
+
+	SetIssueSortOrderOnStateChange string `json:"setIssueSortOrderOnStateChange"`
+
+	AiThreadSummariesEnabled bool `json:"aiThreadSummariesEnabled"`
+
+	AutoArchivePeriod float64 `json:"autoArchivePeriod"`
+
+	AutoClosePeriod *float64 `json:"autoClosePeriod"`
+
+	AutoCloseParentIssues bool `json:"autoCloseParentIssues"`
+
+	AutoCloseChildIssues bool `json:"autoCloseChildIssues"`
+
+	TriageEnabled bool `json:"triageEnabled"`
+
+	RequirePriorityToLeaveTriage bool `json:"requirePriorityToLeaveTriage"`
+
+	CyclesEnabled bool `json:"cyclesEnabled"`
+
+	CycleStartDay float64 `json:"cycleStartDay"`
+
+	CycleDuration float64 `json:"cycleDuration"`
+
+	CycleCooldownTime float64 `json:"cycleCooldownTime"`
+
+	UpcomingCycleCount float64 `json:"upcomingCycleCount"`
+
+	CycleIssueAutoAssignStarted bool `json:"cycleIssueAutoAssignStarted"`
+
+	CycleIssueAutoAssignCompleted bool `json:"cycleIssueAutoAssignCompleted"`
+
+	CycleLockToActive bool `json:"cycleLockToActive"`
+
+	IssueEstimationType string `json:"issueEstimationType"`
+
+	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
+
+	IssueEstimationExtended bool `json:"issueEstimationExtended"`
+
+	DefaultIssueEstimate float64 `json:"defaultIssueEstimate"`
+
+	SecuritySettings map[string]interface{} `json:"securitySettings"`
+}
+
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *getTeamByIDAdministrableTeamsTeamConnectionNodesTeam) __premarshalJSON() (*__premarshalgetTeamByIDAdministrableTeamsTeamConnectionNodesTeam, error) {
+	var retval __premarshalgetTeamByIDAdministrableTeamsTeamConnectionNodesTeam
+
+	retval.Id = v.Team.Id
+	retval.Name = v.Team.Name
+	retval.Key = v.Team.Key
+	retval.Private = v.Team.Private
+	retval.Description = v.Team.Description
+	retval.Icon = v.Team.Icon
+	retval.Color = v.Team.Color
+	retval.Parent = v.Team.Parent
+	retval.InheritIssueEstimation = v.Team.InheritIssueEstimation
+	retval.InheritWorkflowStatuses = v.Team.InheritWorkflowStatuses
+	retval.Timezone = v.Team.Timezone
+	retval.GroupIssueHistory = v.Team.GroupIssueHistory
+	retval.SetIssueSortOrderOnStateChange = v.Team.SetIssueSortOrderOnStateChange
+	retval.AiThreadSummariesEnabled = v.Team.AiThreadSummariesEnabled
+	retval.AutoArchivePeriod = v.Team.AutoArchivePeriod
+	retval.AutoClosePeriod = v.Team.AutoClosePeriod
+	retval.AutoCloseParentIssues = v.Team.AutoCloseParentIssues
+	retval.AutoCloseChildIssues = v.Team.AutoCloseChildIssues
+	retval.TriageEnabled = v.Team.TriageEnabled
+	retval.RequirePriorityToLeaveTriage = v.Team.RequirePriorityToLeaveTriage
+	retval.CyclesEnabled = v.Team.CyclesEnabled
+	retval.CycleStartDay = v.Team.CycleStartDay
+	retval.CycleDuration = v.Team.CycleDuration
+	retval.CycleCooldownTime = v.Team.CycleCooldownTime
+	retval.UpcomingCycleCount = v.Team.UpcomingCycleCount
+	retval.CycleIssueAutoAssignStarted = v.Team.CycleIssueAutoAssignStarted
+	retval.CycleIssueAutoAssignCompleted = v.Team.CycleIssueAutoAssignCompleted
+	retval.CycleLockToActive = v.Team.CycleLockToActive
+	retval.IssueEstimationType = v.Team.IssueEstimationType
+	retval.IssueEstimationAllowZero = v.Team.IssueEstimationAllowZero
+	retval.IssueEstimationExtended = v.Team.IssueEstimationExtended
+	retval.DefaultIssueEstimate = v.Team.DefaultIssueEstimate
+	retval.SecuritySettings = v.Team.SecuritySettings
+	return &retval, nil
+}
+
+// getTeamByIDResponse is returned by getTeamByID on success.
+type getTeamByIDResponse struct {
+	// All teams whose settings the user can administer. This includes teams the user
+	// can change settings for, but whose issues they may not have direct access to.
+	// This differs from the `teams` query which returns teams based on issue access.
+	AdministrableTeams getTeamByIDAdministrableTeamsTeamConnection `json:"administrableTeams"`
+}
+
+// GetAdministrableTeams returns getTeamByIDResponse.AdministrableTeams, and is useful for accessing the field via an interface.
+func (v *getTeamByIDResponse) GetAdministrableTeams() getTeamByIDAdministrableTeamsTeamConnection {
+	return v.AdministrableTeams
 }
 
 // getTeamResponse is returned by getTeam on success.
@@ -5067,6 +5649,284 @@ func (v *getWorkspaceSettingsResponse) GetOrganization() getWorkspaceSettingsOrg
 	return v.Organization
 }
 
+// initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload includes the requested fields of the GraphQL type InitiativeLabelPayload.
+type initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload struct {
+	Success         bool                                                                            `json:"success"`
+	InitiativeLabel initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel `json:"initiativeLabel"`
+}
+
+// GetSuccess returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload.Success, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload) GetSuccess() bool {
+	return v.Success
+}
+
+// GetInitiativeLabel returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload.InitiativeLabel, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload) GetInitiativeLabel() initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel {
+	return v.InitiativeLabel
+}
+
+// initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel struct {
+	InitiativeLabel `json:"-"`
+}
+
+// GetId returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetId() string {
+	return v.InitiativeLabel.Id
+}
+
+// GetName returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetName() string {
+	return v.InitiativeLabel.Name
+}
+
+// GetDescription returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetDescription() *string {
+	return v.InitiativeLabel.Description
+}
+
+// GetColor returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetColor() string {
+	return v.InitiativeLabel.Color
+}
+
+// GetIsGroup returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetIsGroup() bool {
+	return v.InitiativeLabel.IsGroup
+}
+
+// GetGroupType returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetGroupType() *LabelGroupType {
+	return v.InitiativeLabel.GroupType
+}
+
+// GetParent returns initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) GetParent() *InitiativeLabelParentInitiativeLabel {
+	return v.InitiativeLabel.Parent
+}
+
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.InitiativeLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalinitiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Parent *InitiativeLabelParentInitiativeLabel `json:"parent"`
+}
+
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel) __premarshalJSON() (*__premarshalinitiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel, error) {
+	var retval __premarshalinitiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayloadInitiativeLabel
+
+	retval.Id = v.InitiativeLabel.Id
+	retval.Name = v.InitiativeLabel.Name
+	retval.Description = v.InitiativeLabel.Description
+	retval.Color = v.InitiativeLabel.Color
+	retval.IsGroup = v.InitiativeLabel.IsGroup
+	retval.GroupType = v.InitiativeLabel.GroupType
+	retval.Parent = v.InitiativeLabel.Parent
+	return &retval, nil
+}
+
+// initiativeLabelCreateResponse is returned by initiativeLabelCreate on success.
+type initiativeLabelCreateResponse struct {
+	InitiativeLabelCreate initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload `json:"initiativeLabelCreate"`
+}
+
+// GetInitiativeLabelCreate returns initiativeLabelCreateResponse.InitiativeLabelCreate, and is useful for accessing the field via an interface.
+func (v *initiativeLabelCreateResponse) GetInitiativeLabelCreate() initiativeLabelCreateInitiativeLabelCreateInitiativeLabelPayload {
+	return v.InitiativeLabelCreate
+}
+
+// initiativeLabelDeleteInitiativeLabelDeleteDeletePayload includes the requested fields of the GraphQL type DeletePayload.
+// The GraphQL type's documentation follows.
+//
+// A generic payload return from entity deletion mutations.
+type initiativeLabelDeleteInitiativeLabelDeleteDeletePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+}
+
+// GetSuccess returns initiativeLabelDeleteInitiativeLabelDeleteDeletePayload.Success, and is useful for accessing the field via an interface.
+func (v *initiativeLabelDeleteInitiativeLabelDeleteDeletePayload) GetSuccess() bool { return v.Success }
+
+// initiativeLabelDeleteResponse is returned by initiativeLabelDelete on success.
+type initiativeLabelDeleteResponse struct {
+	InitiativeLabelDelete initiativeLabelDeleteInitiativeLabelDeleteDeletePayload `json:"initiativeLabelDelete"`
+}
+
+// GetInitiativeLabelDelete returns initiativeLabelDeleteResponse.InitiativeLabelDelete, and is useful for accessing the field via an interface.
+func (v *initiativeLabelDeleteResponse) GetInitiativeLabelDelete() initiativeLabelDeleteInitiativeLabelDeleteDeletePayload {
+	return v.InitiativeLabelDelete
+}
+
+// initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload includes the requested fields of the GraphQL type InitiativeLabelPayload.
+type initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload struct {
+	Success         bool                                                                            `json:"success"`
+	InitiativeLabel initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel `json:"initiativeLabel"`
+}
+
+// GetSuccess returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload.Success, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload) GetSuccess() bool {
+	return v.Success
+}
+
+// GetInitiativeLabel returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload.InitiativeLabel, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload) GetInitiativeLabel() initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel {
+	return v.InitiativeLabel
+}
+
+// initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel includes the requested fields of the GraphQL type InitiativeLabel.
+type initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel struct {
+	InitiativeLabel `json:"-"`
+}
+
+// GetId returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.Id, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetId() string {
+	return v.InitiativeLabel.Id
+}
+
+// GetName returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.Name, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetName() string {
+	return v.InitiativeLabel.Name
+}
+
+// GetDescription returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.Description, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetDescription() *string {
+	return v.InitiativeLabel.Description
+}
+
+// GetColor returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.Color, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetColor() string {
+	return v.InitiativeLabel.Color
+}
+
+// GetIsGroup returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.IsGroup, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetIsGroup() bool {
+	return v.InitiativeLabel.IsGroup
+}
+
+// GetGroupType returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetGroupType() *LabelGroupType {
+	return v.InitiativeLabel.GroupType
+}
+
+// GetParent returns initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel.Parent, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) GetParent() *InitiativeLabelParentInitiativeLabel {
+	return v.InitiativeLabel.Parent
+}
+
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) UnmarshalJSON(b []byte) error {
+
+	if string(b) == "null" {
+		return nil
+	}
+
+	var firstPass struct {
+		*initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel
+		graphql.NoUnmarshalJSON
+	}
+	firstPass.initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel = v
+
+	err := json.Unmarshal(b, &firstPass)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(
+		b, &v.InitiativeLabel)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type __premarshalinitiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel struct {
+	Id string `json:"id"`
+
+	Name string `json:"name"`
+
+	Description *string `json:"description"`
+
+	Color string `json:"color"`
+
+	IsGroup bool `json:"isGroup"`
+
+	GroupType *LabelGroupType `json:"groupType"`
+
+	Parent *InitiativeLabelParentInitiativeLabel `json:"parent"`
+}
+
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) MarshalJSON() ([]byte, error) {
+	premarshaled, err := v.__premarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return json.Marshal(premarshaled)
+}
+
+func (v *initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel) __premarshalJSON() (*__premarshalinitiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel, error) {
+	var retval __premarshalinitiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayloadInitiativeLabel
+
+	retval.Id = v.InitiativeLabel.Id
+	retval.Name = v.InitiativeLabel.Name
+	retval.Description = v.InitiativeLabel.Description
+	retval.Color = v.InitiativeLabel.Color
+	retval.IsGroup = v.InitiativeLabel.IsGroup
+	retval.GroupType = v.InitiativeLabel.GroupType
+	retval.Parent = v.InitiativeLabel.Parent
+	return &retval, nil
+}
+
+// initiativeLabelUpdateResponse is returned by initiativeLabelUpdate on success.
+type initiativeLabelUpdateResponse struct {
+	InitiativeLabelUpdate initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload `json:"initiativeLabelUpdate"`
+}
+
+// GetInitiativeLabelUpdate returns initiativeLabelUpdateResponse.InitiativeLabelUpdate, and is useful for accessing the field via an interface.
+func (v *initiativeLabelUpdateResponse) GetInitiativeLabelUpdate() initiativeLabelUpdateInitiativeLabelUpdateInitiativeLabelPayload {
+	return v.InitiativeLabelUpdate
+}
+
 // listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection includes the requested fields of the GraphQL type InitiativeLabelConnection.
 type listInitiativeLabelsInitiativeLabelsInitiativeLabelConnection struct {
 	Nodes    []listInitiativeLabelsInitiativeLabelsInitiativeLabelConnectionNodesInitiativeLabel `json:"nodes"`
@@ -5321,6 +6181,52 @@ func (v *lookupInitiativeLabelResponse) GetInitiativeLabel() lookupInitiativeLab
 	return v.InitiativeLabel
 }
 
+// makeTeamPrivateResponse is returned by makeTeamPrivate on success.
+type makeTeamPrivateResponse struct {
+	// Updates a team's settings, properties, or configuration. Requires team owner
+	// or workspace admin permissions for most changes.
+	TeamUpdate makeTeamPrivateTeamUpdateTeamPayload `json:"teamUpdate"`
+}
+
+// GetTeamUpdate returns makeTeamPrivateResponse.TeamUpdate, and is useful for accessing the field via an interface.
+func (v *makeTeamPrivateResponse) GetTeamUpdate() makeTeamPrivateTeamUpdateTeamPayload {
+	return v.TeamUpdate
+}
+
+// makeTeamPrivateTeamUpdateTeamPayload includes the requested fields of the GraphQL type TeamPayload.
+// The GraphQL type's documentation follows.
+//
+// Team operation response.
+type makeTeamPrivateTeamUpdateTeamPayload struct {
+	// The team that was created or updated.
+	Team makeTeamPrivateTeamUpdateTeamPayloadTeam `json:"team"`
+}
+
+// GetTeam returns makeTeamPrivateTeamUpdateTeamPayload.Team, and is useful for accessing the field via an interface.
+func (v *makeTeamPrivateTeamUpdateTeamPayload) GetTeam() makeTeamPrivateTeamUpdateTeamPayloadTeam {
+	return v.Team
+}
+
+// makeTeamPrivateTeamUpdateTeamPayloadTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type makeTeamPrivateTeamUpdateTeamPayloadTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Whether the team is private. Private teams are only visible to their members and require an explicit invitation to join.
+	Private bool `json:"private"`
+}
+
+// GetId returns makeTeamPrivateTeamUpdateTeamPayloadTeam.Id, and is useful for accessing the field via an interface.
+func (v *makeTeamPrivateTeamUpdateTeamPayloadTeam) GetId() string { return v.Id }
+
+// GetPrivate returns makeTeamPrivateTeamUpdateTeamPayloadTeam.Private, and is useful for accessing the field via an interface.
+func (v *makeTeamPrivateTeamUpdateTeamPayloadTeam) GetPrivate() bool { return v.Private }
+
 // projectLabelCreateProjectLabelCreateProjectLabelPayload includes the requested fields of the GraphQL type ProjectLabelPayload.
 // The GraphQL type's documentation follows.
 //
@@ -5375,6 +6281,11 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetGroupType returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabel.GroupType
+}
+
 // GetParent returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5416,6 +6327,8 @@ type __premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5435,6 +6348,7 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -5527,6 +6441,11 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetGroupType returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.GroupType, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetGroupType() *LabelGroupType {
+	return v.ProjectLabel.GroupType
+}
+
 // GetParent returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5568,6 +6487,8 @@ type __premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	GroupType *LabelGroupType `json:"groupType"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5587,6 +6508,7 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.GroupType = v.ProjectLabel.GroupType
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -7233,38 +8155,6 @@ mutation deleteLabel ($id: String!) {
 	return &data, err
 }
 
-func deleteTeam(
-	ctx context.Context,
-	client graphql.Client,
-	key string,
-) (*deleteTeamResponse, error) {
-	req := &graphql.Request{
-		OpName: "deleteTeam",
-		Query: `
-mutation deleteTeam ($key: String!) {
-	teamDelete(id: $key) {
-		success
-	}
-}
-`,
-		Variables: &__deleteTeamInput{
-			Key: key,
-		},
-	}
-	var err error
-
-	var data deleteTeamResponse
-	resp := &graphql.Response{Data: &data}
-
-	err = client.MakeRequest(
-		ctx,
-		req,
-		resp,
-	)
-
-	return &data, err
-}
-
 func deleteWorkflowState(
 	ctx context.Context,
 	client graphql.Client,
@@ -7451,6 +8341,49 @@ fragment Document on Document {
 	return &data, err
 }
 
+func getInitiativeLabel(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getInitiativeLabelResponse, error) {
+	req := &graphql.Request{
+		OpName: "getInitiativeLabel",
+		Query: `
+query getInitiativeLabel ($id: String!) {
+	initiativeLabel(id: $id) {
+		... InitiativeLabel
+	}
+}
+fragment InitiativeLabel on InitiativeLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__getInitiativeLabelInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getInitiativeLabelResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func getLabel(
 	ctx context.Context,
 	client graphql.Client,
@@ -7515,6 +8448,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}
@@ -7609,6 +8543,77 @@ fragment Team on Team {
 	return &data, err
 }
 
+func getTeamByID(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*getTeamByIDResponse, error) {
+	req := &graphql.Request{
+		OpName: "getTeamByID",
+		Query: `
+query getTeamByID ($id: ID!) {
+	administrableTeams(filter: {id:{eq:$id}}, first: 1, includeArchived: true) {
+		nodes {
+			... Team
+		}
+	}
+}
+fragment Team on Team {
+	id
+	name
+	key
+	private
+	description
+	icon
+	color
+	parent {
+		id
+	}
+	inheritIssueEstimation
+	inheritWorkflowStatuses
+	timezone
+	groupIssueHistory
+	setIssueSortOrderOnStateChange
+	aiThreadSummariesEnabled
+	autoArchivePeriod
+	autoClosePeriod
+	autoCloseParentIssues
+	autoCloseChildIssues
+	triageEnabled
+	requirePriorityToLeaveTriage
+	cyclesEnabled
+	cycleStartDay
+	cycleDuration
+	cycleCooldownTime
+	upcomingCycleCount
+	cycleIssueAutoAssignStarted
+	cycleIssueAutoAssignCompleted
+	cycleLockToActive
+	issueEstimationType
+	issueEstimationAllowZero
+	issueEstimationExtended
+	defaultIssueEstimate
+	securitySettings
+}
+`,
+		Variables: &__getTeamByIDInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data getTeamByIDResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func getTeamWorkflow(
 	ctx context.Context,
 	client graphql.Client,
@@ -7662,13 +8667,13 @@ fragment TeamWorkflow on Team {
 func getTeamWorkflowStates(
 	ctx context.Context,
 	client graphql.Client,
-	key string,
+	id string,
 ) (*getTeamWorkflowStatesResponse, error) {
 	req := &graphql.Request{
 		OpName: "getTeamWorkflowStates",
 		Query: `
-query getTeamWorkflowStates ($key: String!) {
-	workflowStates(filter: {team:{key:{eq:$key}}}) {
+query getTeamWorkflowStates ($id: ID!) {
+	workflowStates(filter: {team:{id:{eq:$id}}}) {
 		nodes {
 			... WorkflowState
 		}
@@ -7687,7 +8692,7 @@ fragment WorkflowState on WorkflowState {
 }
 `,
 		Variables: &__getTeamWorkflowStatesInput{
-			Key: key,
+			Id: id,
 		},
 	}
 	var err error
@@ -7866,6 +8871,132 @@ fragment Organization on Organization {
 	return &data, err
 }
 
+func initiativeLabelCreate(
+	ctx context.Context,
+	client graphql.Client,
+	input InitiativeLabelCreateInput,
+) (*initiativeLabelCreateResponse, error) {
+	req := &graphql.Request{
+		OpName: "initiativeLabelCreate",
+		Query: `
+mutation initiativeLabelCreate ($input: InitiativeLabelCreateInput!) {
+	initiativeLabelCreate(input: $input) {
+		success
+		initiativeLabel {
+			... InitiativeLabel
+		}
+	}
+}
+fragment InitiativeLabel on InitiativeLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__initiativeLabelCreateInput{
+			Input: input,
+		},
+	}
+	var err error
+
+	var data initiativeLabelCreateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func initiativeLabelDelete(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*initiativeLabelDeleteResponse, error) {
+	req := &graphql.Request{
+		OpName: "initiativeLabelDelete",
+		Query: `
+mutation initiativeLabelDelete ($id: String!) {
+	initiativeLabelDelete(id: $id) {
+		success
+	}
+}
+`,
+		Variables: &__initiativeLabelDeleteInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data initiativeLabelDeleteResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
+func initiativeLabelUpdate(
+	ctx context.Context,
+	client graphql.Client,
+	input InitiativeLabelUpdateInput,
+	id string,
+) (*initiativeLabelUpdateResponse, error) {
+	req := &graphql.Request{
+		OpName: "initiativeLabelUpdate",
+		Query: `
+mutation initiativeLabelUpdate ($input: InitiativeLabelUpdateInput!, $id: String!) {
+	initiativeLabelUpdate(input: $input, id: $id) {
+		success
+		initiativeLabel {
+			... InitiativeLabel
+		}
+	}
+}
+fragment InitiativeLabel on InitiativeLabel {
+	id
+	name
+	description
+	color
+	isGroup
+	groupType
+	parent {
+		id
+	}
+}
+`,
+		Variables: &__initiativeLabelUpdateInput{
+			Input: input,
+			Id:    id,
+		},
+	}
+	var err error
+
+	var data initiativeLabelUpdateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func listInitiativeLabels(
 	ctx context.Context,
 	client graphql.Client,
@@ -7960,6 +9091,41 @@ fragment InitiativeLabelLookup on InitiativeLabel {
 	return &data, err
 }
 
+func makeTeamPrivate(
+	ctx context.Context,
+	client graphql.Client,
+	id string,
+) (*makeTeamPrivateResponse, error) {
+	req := &graphql.Request{
+		OpName: "makeTeamPrivate",
+		Query: `
+mutation makeTeamPrivate ($id: String!) {
+	teamUpdate(id: $id, input: {private:true}) {
+		team {
+			id
+			private
+		}
+	}
+}
+`,
+		Variables: &__makeTeamPrivateInput{
+			Id: id,
+		},
+	}
+	var err error
+
+	var data makeTeamPrivateResponse
+	resp := &graphql.Response{Data: &data}
+
+	err = client.MakeRequest(
+		ctx,
+		req,
+		resp,
+	)
+
+	return &data, err
+}
+
 func projectLabelCreate(
 	ctx context.Context,
 	client graphql.Client,
@@ -7982,6 +9148,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}
@@ -8060,6 +9227,7 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	groupType
 	parent {
 		id
 	}

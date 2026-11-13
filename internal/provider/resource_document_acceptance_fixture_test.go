@@ -16,13 +16,19 @@ import (
 )
 
 const (
-	documentAcceptanceTeamQuery = `query getDocumentAcceptanceTeam {
-  viewer {
-    teams(first: 1) {
-      nodes {
-        id
-      }
+	documentAcceptanceTeamCreateMutation = `mutation createDocumentAcceptanceTeam($input: TeamCreateInput!) {
+  teamCreate(input: $input) {
+    success
+    team {
+      id
     }
+  }
+}
+`
+
+	documentAcceptanceTeamDeleteMutation = `mutation deleteDocumentAcceptanceTeam($id: String!) {
+  teamDelete(id: $id) {
+    success
   }
 }
 `
@@ -74,11 +80,10 @@ func TestDocumentAcceptanceFixtureSetup(t *testing.T) {
 
 	client := &documentAcceptanceFixtureClient{
 		responses: map[string]string{
-			"getDocumentAcceptanceTeam": `{
-				"viewer": {
-					"teams": {
-						"nodes": [{"id": "team-id"}]
-					}
+			"createDocumentAcceptanceTeam": `{
+				"teamCreate": {
+					"success": true,
+					"team": {"id": "team-id"}
 				}
 			}`,
 			"createDocumentAcceptanceProject": `{
@@ -113,7 +118,7 @@ func TestDocumentAcceptanceFixtureSetup(t *testing.T) {
 	}
 
 	expectedOperations := []string{
-		"getDocumentAcceptanceTeam",
+		"createDocumentAcceptanceTeam",
 		"createDocumentAcceptanceProject",
 		"createDocumentAcceptanceIssue",
 	}
@@ -121,8 +126,18 @@ func TestDocumentAcceptanceFixtureSetup(t *testing.T) {
 		t.Fatalf("expected operations %v, got %v", expectedOperations, client.operations)
 	}
 
+	teamInput, ok := client.variables["createDocumentAcceptanceTeam"]["input"].(map[string]any)
+	if !ok {
+		t.Fatalf("expected team creation input, got %#v", client.variables["createDocumentAcceptanceTeam"])
+	}
+	teamKey, ok := teamInput["key"].(string)
+	if !ok || len(teamKey) != 5 {
+		t.Fatalf("expected a generated five-character team key, got %q", teamKey)
+	}
+	if teamInput["name"] != "Acc doc "+teamKey || teamInput["timezone"] != "Etc/GMT" {
+		t.Fatalf("unexpected team creation input: %#v", teamInput)
+	}
 	expectedVariables := map[string]map[string]any{
-		"getDocumentAcceptanceTeam": nil,
 		"createDocumentAcceptanceProject": {
 			"name":   "unique fixture project",
 			"teamId": "team-id",
@@ -133,18 +148,19 @@ func TestDocumentAcceptanceFixtureSetup(t *testing.T) {
 			"projectId": "project-id",
 		},
 	}
+	delete(client.variables, "createDocumentAcceptanceTeam")
 	if !reflect.DeepEqual(client.variables, expectedVariables) {
 		t.Fatalf("expected variables %#v, got %#v", expectedVariables, client.variables)
 	}
 }
 
-func TestDocumentAcceptanceFixtureSetupRequiresTeam(t *testing.T) {
+func TestDocumentAcceptanceFixtureSetupRequiresCreatedTeam(t *testing.T) {
 	t.Parallel()
 
 	client := &documentAcceptanceFixtureClient{
 		responses: map[string]string{
-			"getDocumentAcceptanceTeam": `{
-				"viewer": {"teams": {"nodes": []}}
+			"createDocumentAcceptanceTeam": `{
+				"teamCreate": {"success": true}
 			}`,
 		},
 	}
@@ -152,10 +168,10 @@ func TestDocumentAcceptanceFixtureSetupRequiresTeam(t *testing.T) {
 
 	err := fixture.setup(context.Background(), client, "unique fixture")
 	if err == nil || !strings.Contains(err.Error(), "team") {
-		t.Fatalf("expected missing-team error, got %v", err)
+		t.Fatalf("expected missing-created-team error, got %v", err)
 	}
 
-	expectedOperations := []string{"getDocumentAcceptanceTeam"}
+	expectedOperations := []string{"createDocumentAcceptanceTeam"}
 	if !reflect.DeepEqual(client.operations, expectedOperations) {
 		t.Fatalf("expected operations %v, got %v", expectedOperations, client.operations)
 	}
@@ -172,8 +188,8 @@ func TestDocumentAcceptanceFixtureSetupRetainsReturnedIDsOnFailure(t *testing.T)
 	}{
 		"project mutation reports failure": {
 			responses: map[string]string{
-				"getDocumentAcceptanceTeam": `{
-					"viewer": {"teams": {"nodes": [{"id": "team-id"}]}}
+				"createDocumentAcceptanceTeam": `{
+					"teamCreate": {"success": true, "team": {"id": "team-id"}}
 				}`,
 				"createDocumentAcceptanceProject": `{
 					"projectCreate": {
@@ -187,8 +203,8 @@ func TestDocumentAcceptanceFixtureSetupRetainsReturnedIDsOnFailure(t *testing.T)
 		},
 		"issue mutation reports failure": {
 			responses: map[string]string{
-				"getDocumentAcceptanceTeam": `{
-					"viewer": {"teams": {"nodes": [{"id": "team-id"}]}}
+				"createDocumentAcceptanceTeam": `{
+					"teamCreate": {"success": true, "team": {"id": "team-id"}}
 				}`,
 				"createDocumentAcceptanceProject": `{
 					"projectCreate": {
@@ -209,8 +225,8 @@ func TestDocumentAcceptanceFixtureSetupRetainsReturnedIDsOnFailure(t *testing.T)
 		},
 		"project response omits entity": {
 			responses: map[string]string{
-				"getDocumentAcceptanceTeam": `{
-					"viewer": {"teams": {"nodes": [{"id": "team-id"}]}}
+				"createDocumentAcceptanceTeam": `{
+					"teamCreate": {"success": true, "team": {"id": "team-id"}}
 				}`,
 				"createDocumentAcceptanceProject": `{
 					"projectCreate": {"success": true}
@@ -220,8 +236,8 @@ func TestDocumentAcceptanceFixtureSetupRetainsReturnedIDsOnFailure(t *testing.T)
 		},
 		"issue response omits entity": {
 			responses: map[string]string{
-				"getDocumentAcceptanceTeam": `{
-					"viewer": {"teams": {"nodes": [{"id": "team-id"}]}}
+				"createDocumentAcceptanceTeam": `{
+					"teamCreate": {"success": true, "team": {"id": "team-id"}}
 				}`,
 				"createDocumentAcceptanceProject": `{
 					"projectCreate": {
@@ -257,11 +273,14 @@ func TestDocumentAcceptanceFixtureSetupRetainsReturnedIDsOnFailure(t *testing.T)
 			if fixture.issueID != testCase.expectedIssueID {
 				t.Errorf("expected issue ID %q, got %q", testCase.expectedIssueID, fixture.issueID)
 			}
+			if fixture.teamID != "team-id" {
+				t.Errorf("expected retained team ID team-id, got %q", fixture.teamID)
+			}
 		})
 	}
 }
 
-func TestDocumentAcceptanceFixtureCleanupAttemptsIssueThenProject(t *testing.T) {
+func TestDocumentAcceptanceFixtureCleanupAttemptsIssueThenProjectThenTeam(t *testing.T) {
 	t.Parallel()
 
 	client := &documentAcceptanceFixtureClient{
@@ -269,12 +288,16 @@ func TestDocumentAcceptanceFixtureCleanupAttemptsIssueThenProject(t *testing.T) 
 			"deleteDocumentAcceptanceProject": `{
 				"projectDelete": {"success": true}
 			}`,
+			"deleteDocumentAcceptanceTeam": `{
+				"teamDelete": {"success": true}
+			}`,
 		},
 		errors: map[string]error{
 			"deleteDocumentAcceptanceIssue": errors.New("issue cleanup failed"),
 		},
 	}
 	fixture := &documentAcceptanceFixture{
+		teamID:    "team-id",
 		projectID: "project-id",
 		issueID:   "issue-id",
 	}
@@ -287,6 +310,7 @@ func TestDocumentAcceptanceFixtureCleanupAttemptsIssueThenProject(t *testing.T) 
 	expectedOperations := []string{
 		"deleteDocumentAcceptanceIssue",
 		"deleteDocumentAcceptanceProject",
+		"deleteDocumentAcceptanceTeam",
 	}
 	if !reflect.DeepEqual(client.operations, expectedOperations) {
 		t.Fatalf("expected cleanup operations %v, got %v", expectedOperations, client.operations)
@@ -321,36 +345,55 @@ type documentAcceptanceFixture struct {
 	issueID   string
 }
 
-// setup creates the project and issue parents used by the document acceptance test.
+// setup creates a disposable team and the project and issue parents used by the document acceptance test.
 func (f *documentAcceptanceFixture) setup(
 	ctx context.Context,
 	client graphql.Client,
 	name string,
 ) error {
-	var teamResponse struct {
-		Viewer struct {
-			Teams struct {
-				Nodes []struct {
-					ID string `json:"id"`
-				} `json:"nodes"`
-			} `json:"teams"`
-		} `json:"viewer"`
+	key, err := randomAcceptanceTeamKey()
+	if err != nil {
+		return fmt.Errorf("generate a document acceptance test team key: %w", err)
 	}
-	err := makeDocumentAcceptanceRequest(
+	var teamResponse struct {
+		TeamCreate struct {
+			Success bool `json:"success"`
+			Team    struct {
+				ID string `json:"id"`
+			} `json:"team"`
+		} `json:"teamCreate"`
+	}
+	autoClosePeriod := float64(6)
+	input := TeamCreateInput{
+		Name:                           "Acc doc " + key,
+		Key:                            key,
+		Timezone:                       "Etc/GMT",
+		GroupIssueHistory:              true,
+		SetIssueSortOrderOnStateChange: "first",
+		AutoArchivePeriod:              6,
+		AutoClosePeriod:                &autoClosePeriod,
+		CycleDuration:                  1,
+		UpcomingCycleCount:             2,
+		CycleIssueAutoAssignStarted:    true,
+		CycleIssueAutoAssignCompleted:  true,
+		IssueEstimationType:            "notUsed",
+		DefaultIssueEstimate:           1,
+	}
+	err = makeDocumentAcceptanceRequest(
 		ctx,
 		client,
-		"getDocumentAcceptanceTeam",
-		documentAcceptanceTeamQuery,
-		nil,
+		"createDocumentAcceptanceTeam",
+		documentAcceptanceTeamCreateMutation,
+		map[string]any{"input": input},
 		&teamResponse,
 	)
+	f.teamID = teamResponse.TeamCreate.Team.ID
 	if err != nil {
-		return fmt.Errorf("find a team for the document acceptance test: %w", err)
+		return fmt.Errorf("create the document acceptance test team: %w", err)
 	}
-	if len(teamResponse.Viewer.Teams.Nodes) == 0 {
-		return errors.New("the Linear token owner must belong to a team for the document acceptance test")
+	if !teamResponse.TeamCreate.Success || f.teamID == "" {
+		return errors.New("Linear reported that it was unable to create the document acceptance test team")
 	}
-	f.teamID = teamResponse.Viewer.Teams.Nodes[0].ID
 
 	var projectResponse struct {
 		ProjectCreate struct {
@@ -457,6 +500,29 @@ func (f *documentAcceptanceFixture) cleanup(ctx context.Context, client graphql.
 			cleanupErrors = append(cleanupErrors, "Linear reported that it was unable to delete the document acceptance test project")
 		} else {
 			f.projectID = ""
+		}
+	}
+
+	if f.teamID != "" {
+		var response struct {
+			TeamDelete struct {
+				Success bool `json:"success"`
+			} `json:"teamDelete"`
+		}
+		err := makeDocumentAcceptanceRequest(
+			ctx,
+			client,
+			"deleteDocumentAcceptanceTeam",
+			documentAcceptanceTeamDeleteMutation,
+			map[string]any{"id": f.teamID},
+			&response,
+		)
+		if err != nil {
+			cleanupErrors = append(cleanupErrors, fmt.Sprintf("delete document acceptance test team: %v", err))
+		} else if !response.TeamDelete.Success {
+			cleanupErrors = append(cleanupErrors, "Linear reported that it was unable to delete the document acceptance test team")
+		} else {
+			f.teamID = ""
 		}
 	}
 
