@@ -1098,7 +1098,9 @@ type ProjectLabel struct {
 	// Whether the label is a group. When true, this label acts as a container for
 	// child labels and cannot be directly applied to issues or projects. When false,
 	// the label can be directly applied.
-	IsGroup bool `json:"isGroup"`
+	IsGroup       bool                                   `json:"isGroup"`
+	Team          *ProjectLabelTeam                      `json:"team"`
+	InheritedFrom *ProjectLabelInheritedFromProjectLabel `json:"inheritedFrom"`
 	// The parent label group. If set, this label is a child within a group. Only one
 	// child label from each group can be applied to a project at a time.
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
@@ -1119,12 +1121,21 @@ func (v *ProjectLabel) GetColor() string { return v.Color }
 // GetIsGroup returns ProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetIsGroup() bool { return v.IsGroup }
 
+// GetTeam returns ProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetTeam() *ProjectLabelTeam { return v.Team }
+
+// GetInheritedFrom returns ProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *ProjectLabel) GetInheritedFrom() *ProjectLabelInheritedFromProjectLabel {
+	return v.InheritedFrom
+}
+
 // GetParent returns ProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *ProjectLabel) GetParent() *ProjectLabelParentProjectLabel { return v.Parent }
 
 // Input for creating a new project label. A name is required. The label is created
 // as a workspace-level label available to all projects.
 type ProjectLabelCreateInput struct {
+	TeamId *string `json:"teamId,omitempty"`
 	// The identifier in UUID v4 format. If none is provided, the backend will generate one.
 	Id *string `json:"id,omitempty"`
 	// The name of the label.
@@ -1140,6 +1151,9 @@ type ProjectLabelCreateInput struct {
 	// The time at which the label was retired. Set to null to restore a retired label.
 	RetiredAt *time.Time `json:"retiredAt,omitempty"`
 }
+
+// GetTeamId returns ProjectLabelCreateInput.TeamId, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCreateInput) GetTeamId() *string { return v.TeamId }
 
 // GetId returns ProjectLabelCreateInput.Id, and is useful for accessing the field via an interface.
 func (v *ProjectLabelCreateInput) GetId() *string { return v.Id }
@@ -1162,6 +1176,20 @@ func (v *ProjectLabelCreateInput) GetIsGroup() bool { return v.IsGroup }
 // GetRetiredAt returns ProjectLabelCreateInput.RetiredAt, and is useful for accessing the field via an interface.
 func (v *ProjectLabelCreateInput) GetRetiredAt() *time.Time { return v.RetiredAt }
 
+// ProjectLabelInheritedFromProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
+// The GraphQL type's documentation follows.
+//
+// A label that can be applied to projects for categorization. Project labels are
+// workspace-level and can be organized into groups with a parent-child hierarchy.
+// Only child labels (not group labels) can be directly applied to projects.
+type ProjectLabelInheritedFromProjectLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelInheritedFromProjectLabel.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelInheritedFromProjectLabel) GetId() string { return v.Id }
+
 // ProjectLabelParentProjectLabel includes the requested fields of the GraphQL type ProjectLabel.
 // The GraphQL type's documentation follows.
 //
@@ -1175,6 +1203,21 @@ type ProjectLabelParentProjectLabel struct {
 
 // GetId returns ProjectLabelParentProjectLabel.Id, and is useful for accessing the field via an interface.
 func (v *ProjectLabelParentProjectLabel) GetId() string { return v.Id }
+
+// ProjectLabelTeam includes the requested fields of the GraphQL type Team.
+// The GraphQL type's documentation follows.
+//
+// A team is the primary organizational unit in Linear. Issues belong to teams, and
+// each team has its own workflow states, cycles, labels, and settings. Teams can
+// be public (visible to all workspace members) or private (visible only to team
+// members). Teams can also have sub-teams that inherit settings from their parent.
+type ProjectLabelTeam struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+}
+
+// GetId returns ProjectLabelTeam.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelTeam) GetId() string { return v.Id }
 
 // Input for updating an existing project label. All fields are optional; only provided fields will be updated.
 type ProjectLabelUpdateInput struct {
@@ -3952,6 +3995,14 @@ func (v *getProjectLabelProjectLabel) GetColor() string { return v.ProjectLabel.
 // GetIsGroup returns getProjectLabelProjectLabel.IsGroup, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetIsGroup() bool { return v.ProjectLabel.IsGroup }
 
+// GetTeam returns getProjectLabelProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetTeam() *ProjectLabelTeam { return v.ProjectLabel.Team }
+
+// GetInheritedFrom returns getProjectLabelProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *getProjectLabelProjectLabel) GetInheritedFrom() *ProjectLabelInheritedFromProjectLabel {
+	return v.ProjectLabel.InheritedFrom
+}
+
 // GetParent returns getProjectLabelProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *getProjectLabelProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -3993,6 +4044,10 @@ type __premarshalgetProjectLabelProjectLabel struct {
 
 	IsGroup bool `json:"isGroup"`
 
+	Team *ProjectLabelTeam `json:"team"`
+
+	InheritedFrom *ProjectLabelInheritedFromProjectLabel `json:"inheritedFrom"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -4012,6 +4067,8 @@ func (v *getProjectLabelProjectLabel) __premarshalJSON() (*__premarshalgetProjec
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Team = v.ProjectLabel.Team
+	retval.InheritedFrom = v.ProjectLabel.InheritedFrom
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -5052,6 +5109,16 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetTeam returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetTeam() *ProjectLabelTeam {
+	return v.ProjectLabel.Team
+}
+
+// GetInheritedFrom returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetInheritedFrom() *ProjectLabelInheritedFromProjectLabel {
+	return v.ProjectLabel.InheritedFrom
+}
+
 // GetParent returns projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5093,6 +5160,10 @@ type __premarshalprojectLabelCreateProjectLabelCreateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	Team *ProjectLabelTeam `json:"team"`
+
+	InheritedFrom *ProjectLabelInheritedFromProjectLabel `json:"inheritedFrom"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5112,6 +5183,8 @@ func (v *projectLabelCreateProjectLabelCreateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Team = v.ProjectLabel.Team
+	retval.InheritedFrom = v.ProjectLabel.InheritedFrom
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -5204,6 +5277,16 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) Ge
 	return v.ProjectLabel.IsGroup
 }
 
+// GetTeam returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Team, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetTeam() *ProjectLabelTeam {
+	return v.ProjectLabel.Team
+}
+
+// GetInheritedFrom returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.InheritedFrom, and is useful for accessing the field via an interface.
+func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetInheritedFrom() *ProjectLabelInheritedFromProjectLabel {
+	return v.ProjectLabel.InheritedFrom
+}
+
 // GetParent returns projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel.Parent, and is useful for accessing the field via an interface.
 func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) GetParent() *ProjectLabelParentProjectLabel {
 	return v.ProjectLabel.Parent
@@ -5245,6 +5328,10 @@ type __premarshalprojectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectL
 
 	IsGroup bool `json:"isGroup"`
 
+	Team *ProjectLabelTeam `json:"team"`
+
+	InheritedFrom *ProjectLabelInheritedFromProjectLabel `json:"inheritedFrom"`
+
 	Parent *ProjectLabelParentProjectLabel `json:"parent"`
 }
 
@@ -5264,6 +5351,8 @@ func (v *projectLabelUpdateProjectLabelUpdateProjectLabelPayloadProjectLabel) __
 	retval.Description = v.ProjectLabel.Description
 	retval.Color = v.ProjectLabel.Color
 	retval.IsGroup = v.ProjectLabel.IsGroup
+	retval.Team = v.ProjectLabel.Team
+	retval.InheritedFrom = v.ProjectLabel.InheritedFrom
 	retval.Parent = v.ProjectLabel.Parent
 	return &retval, nil
 }
@@ -7192,6 +7281,12 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	team {
+		id
+	}
+	inheritedFrom {
+		id
+	}
 	parent {
 		id
 	}
@@ -7565,6 +7660,12 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	team {
+		id
+	}
+	inheritedFrom {
+		id
+	}
 	parent {
 		id
 	}
@@ -7643,6 +7744,12 @@ fragment ProjectLabel on ProjectLabel {
 	description
 	color
 	isGroup
+	team {
+		id
+	}
+	inheritedFrom {
+		id
+	}
 	parent {
 		id
 	}
