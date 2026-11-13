@@ -87,7 +87,7 @@ func (r *ProjectLabelResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
+					labelGroupTypePlanModifier{},
 				},
 				Validators: []validator.String{stringvalidator.OneOf("singleSelect", "multiSelect")},
 			},

@@ -87,7 +87,7 @@ func (r *InitiativeLabelResource) Schema(ctx context.Context, req resource.Schem
 				Optional:            true,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
+					labelGroupTypePlanModifier{},
 				},
 				Validators: []validator.String{stringvalidator.OneOf("singleSelect", "multiSelect")},
 			},

@@ -127,7 +127,18 @@ func TestAccProjectLabelResource(t *testing.T) {
 				PlanOnly: true,
 			},
 			{
-				Config:             testAccProjectLabelResourceConfigCleared(),
+				Config: testAccProjectLabelResourceConfigUngrouped(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("linear_project_label.group", "is_group", "false"),
+					resource.TestCheckNoResourceAttr("linear_project_label.group", "group_type"),
+				),
+			},
+			{
+				Config:   testAccProjectLabelResourceConfigUngrouped(),
+				PlanOnly: true,
+			},
+			{
+				Config:             testAccProjectLabelResourceConfigUngrouped(),
 				Check:              testAccDeleteProjectLabel("linear_project_label.child"),
 				ExpectNonEmptyPlan: true,
 			},
@@ -184,6 +195,22 @@ resource "linear_project_label" "group" {
   description = "Release tier group"
   color       = "#5e6ad2"
   is_group    = true
+}
+
+resource "linear_project_label" "child" {
+  name  = "Tier 1"
+  color = "#eb5757"
+}
+`
+}
+
+func testAccProjectLabelResourceConfigUngrouped() string {
+	return `
+resource "linear_project_label" "group" {
+  name        = "Release Tier Updated"
+  description = "Release tier group"
+  color       = "#5e6ad2"
+  is_group    = false
 }
 
 resource "linear_project_label" "child" {
