@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Enhancements
+* Add workspace-level project and initiative labels, including label groups and group selection behavior.
+
+### Bug Fixes
+* Preserve the existing `linear_project_label.group_type` when omitted from configuration so plans stay stable.
+
 ## 0.5.0
 
 ### Enhancements

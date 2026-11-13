@@ -24146,6 +24146,7 @@ workspace-level and can be organized into groups with a parent-child hierarchy.
 Only child labels (not group labels) can be directly applied to projects.
 """
 type ProjectLabel implements Node {
+  groupType: LabelGroupType
   """The unique identifier of the entity."""
   id: ID!
 
@@ -24324,6 +24325,7 @@ Input for creating a new project label. A name is required. The label is created
 as a workspace-level label available to all projects.
 """
 input ProjectLabelCreateInput {
+  groupType: LabelGroupType
   """
   The identifier in UUID v4 format. If none is provided, the backend will generate one.
   """
@@ -24403,6 +24405,7 @@ type ProjectLabelPayload {
 Input for updating an existing project label. All fields are optional; only provided fields will be updated.
 """
 input ProjectLabelUpdateInput {
+  groupType: LabelGroupType
   """The name of the label."""
   name: String
 
