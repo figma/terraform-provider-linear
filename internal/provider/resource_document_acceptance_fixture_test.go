@@ -364,6 +364,10 @@ func (f *documentAcceptanceFixture) setup(
 		} `json:"teamCreate"`
 	}
 	autoClosePeriod := float64(6)
+	cycleDuration := 1
+	upcomingCycleCount := float64(2)
+	cycleAutoAssign := true
+	defaultIssueEstimate := float64(1)
 	input := TeamCreateInput{
 		Name:                           "Acc doc " + key,
 		Key:                            key,
@@ -372,12 +376,12 @@ func (f *documentAcceptanceFixture) setup(
 		SetIssueSortOrderOnStateChange: "first",
 		AutoArchivePeriod:              6,
 		AutoClosePeriod:                &autoClosePeriod,
-		CycleDuration:                  1,
-		UpcomingCycleCount:             2,
-		CycleIssueAutoAssignStarted:    true,
-		CycleIssueAutoAssignCompleted:  true,
+		CycleDuration:                  &cycleDuration,
+		UpcomingCycleCount:             &upcomingCycleCount,
+		CycleIssueAutoAssignStarted:    &cycleAutoAssign,
+		CycleIssueAutoAssignCompleted:  &cycleAutoAssign,
 		IssueEstimationType:            "notUsed",
-		DefaultIssueEstimate:           1,
+		DefaultIssueEstimate:           &defaultIssueEstimate,
 	}
 	err = makeDocumentAcceptanceRequest(
 		ctx,

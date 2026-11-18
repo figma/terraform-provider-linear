@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/float64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/float64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -44,6 +45,8 @@ func boolPointerIfKnown(value types.Bool) *bool {
 
 	return value.ValueBoolPointer()
 }
+
+func intPointer(value int) *int { return &value }
 
 type securitySettingModifier struct{}
 
@@ -370,21 +373,9 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				MarkdownDescription: "Cycle settings of the team.",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						cyclesAttrTypes,
-						map[string]attr.Value{
-							"enabled":            types.BoolValue(false),
-							"start_day":          types.Float64Value(0),
-							"duration":           types.Float64Value(1),
-							"cooldown":           types.Float64Value(0),
-							"upcoming":           types.Float64Value(2),
-							"auto_add_started":   types.BoolValue(true),
-							"auto_add_completed": types.BoolValue(true),
-							"need_for_active":    types.BoolValue(false),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"enabled": schema.BoolAttribute{
 						MarkdownDescription: "Enable cycles for the team. **Default** `false`.",
@@ -452,17 +443,9 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				MarkdownDescription: "Issue estimation settings of the team.",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						estimationAttrTypes,
-						map[string]attr.Value{
-							"type":       types.StringValue("notUsed"),
-							"extended":   types.BoolValue(false),
-							"allow_zero": types.BoolValue(false),
-							"default":    types.Float64Value(1),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"type": schema.StringAttribute{
 						MarkdownDescription: "Issue estimation type for the team. **Default** `notUsed`.",
@@ -497,21 +480,12 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"backlog_workflow_state": schema.SingleNestedAttribute{
-				MarkdownDescription: "Settings for the `backlog` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.*",
+				MarkdownDescription: "Settings for the `backlog` workflow state that is created by default for the team. *This can not be deleted.*",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						workflowStateAttrTypes,
-						map[string]attr.Value{
-							"id":          types.StringUnknown(),
-							"position":    types.Float64Unknown(),
-							"name":        types.StringValue("Backlog"),
-							"color":       types.StringValue("#bec2c8"),
-							"description": types.StringNull(),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						MarkdownDescription: "Identifier of the workflow state.",
@@ -549,21 +523,12 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"unstarted_workflow_state": schema.SingleNestedAttribute{
-				MarkdownDescription: "Settings for the `unstarted` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.*",
+				MarkdownDescription: "Settings for the `unstarted` workflow state that is created by default for the team. *This can not be deleted.*",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						workflowStateAttrTypes,
-						map[string]attr.Value{
-							"id":          types.StringUnknown(),
-							"position":    types.Float64Unknown(),
-							"name":        types.StringValue("Todo"),
-							"color":       types.StringValue("#e2e2e2"),
-							"description": types.StringNull(),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						MarkdownDescription: "Identifier of the workflow state.",
@@ -601,21 +566,12 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"started_workflow_state": schema.SingleNestedAttribute{
-				MarkdownDescription: "Settings for the `started` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.*",
+				MarkdownDescription: "Settings for the `started` workflow state that is created by default for the team. *This can not be deleted.*",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						workflowStateAttrTypes,
-						map[string]attr.Value{
-							"id":          types.StringUnknown(),
-							"position":    types.Float64Unknown(),
-							"name":        types.StringValue("In Progress"),
-							"color":       types.StringValue("#f2c94c"),
-							"description": types.StringNull(),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						MarkdownDescription: "Identifier of the workflow state.",
@@ -653,21 +609,12 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"completed_workflow_state": schema.SingleNestedAttribute{
-				MarkdownDescription: "Settings for the `completed` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.*",
+				MarkdownDescription: "Settings for the `completed` workflow state that is created by default for the team. *This can not be deleted.*",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						workflowStateAttrTypes,
-						map[string]attr.Value{
-							"id":          types.StringUnknown(),
-							"position":    types.Float64Unknown(),
-							"name":        types.StringValue("Done"),
-							"color":       types.StringValue("#5e6ad2"),
-							"description": types.StringNull(),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						MarkdownDescription: "Identifier of the workflow state.",
@@ -705,21 +652,12 @@ func (r *TeamResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"canceled_workflow_state": schema.SingleNestedAttribute{
-				MarkdownDescription: "Settings for the `canceled` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.*",
+				MarkdownDescription: "Settings for the `canceled` workflow state that is created by default for the team. *This can not be deleted.*",
 				Optional:            true,
 				Computed:            true,
-				Default: objectdefault.StaticValue(
-					types.ObjectValueMust(
-						workflowStateAttrTypes,
-						map[string]attr.Value{
-							"id":          types.StringUnknown(),
-							"position":    types.Float64Unknown(),
-							"name":        types.StringValue("Canceled"),
-							"color":       types.StringValue("#95a2b3"),
-							"description": types.StringNull(),
-						},
-					),
-				),
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.UseStateForUnknown(),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						MarkdownDescription: "Identifier of the workflow state.",
@@ -800,7 +738,7 @@ func (r *TeamResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 				"inherit_issue_estimation can only be enabled when parent_id is configured.",
 			)
 		}
-		if !config.Estimation.IsNull() {
+		if !config.Estimation.IsNull() && (req.State.Raw.IsNull() || !config.Estimation.Equal(state.Estimation) || !state.InheritIssueEstimation.ValueBool() || !plan.ParentId.Equal(state.ParentId)) {
 			resp.Diagnostics.AddAttributeError(
 				path.Root("estimation"),
 				"Conflicting Estimation Settings",
@@ -812,6 +750,8 @@ func (r *TeamResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 		} else {
 			plan.Estimation = state.Estimation
 		}
+	} else if !req.State.Raw.IsNull() && state.InheritIssueEstimation.ValueBool() && (config.Estimation.IsNull() || config.Estimation.IsUnknown() || config.Estimation.Equal(state.Estimation)) {
+		plan.Estimation = types.ObjectUnknown(estimationAttrTypes)
 	}
 
 	if plan.InheritWorkflowStatuses.ValueBool() {
@@ -835,7 +775,7 @@ func (r *TeamResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 			{"canceled_workflow_state", config.CanceledWorkflowState, &plan.CanceledWorkflowState, state.CanceledWorkflowState},
 		}
 		for _, workflowState := range workflowStates {
-			if !workflowState.config.IsNull() {
+			if !workflowState.config.IsNull() && (req.State.Raw.IsNull() || !workflowState.config.Equal(workflowState.state) || !state.InheritWorkflowStatuses.ValueBool() || !plan.ParentId.Equal(state.ParentId)) {
 				resp.Diagnostics.AddAttributeError(
 					path.Root(workflowState.name),
 					"Conflicting Workflow Settings",
@@ -846,6 +786,44 @@ func (r *TeamResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRe
 				*workflowState.plan = types.ObjectUnknown(workflowStateAttrTypes)
 			} else {
 				*workflowState.plan = workflowState.state
+			}
+		}
+	}
+
+	if !req.State.Raw.IsNull() && !plan.InheritWorkflowStatuses.ValueBool() {
+		workflowStates := []struct {
+			config types.Object
+			plan   *types.Object
+			state  types.Object
+		}{
+			{config.BacklogWorkflowState, &plan.BacklogWorkflowState, state.BacklogWorkflowState},
+			{config.UnstartedWorkflowState, &plan.UnstartedWorkflowState, state.UnstartedWorkflowState},
+			{config.StartedWorkflowState, &plan.StartedWorkflowState, state.StartedWorkflowState},
+			{config.CompletedWorkflowState, &plan.CompletedWorkflowState, state.CompletedWorkflowState},
+			{config.CanceledWorkflowState, &plan.CanceledWorkflowState, state.CanceledWorkflowState},
+		}
+		for _, workflowState := range workflowStates {
+			if state.InheritWorkflowStatuses.ValueBool() {
+				if workflowState.config.IsNull() || workflowState.config.IsUnknown() || workflowState.config.Equal(workflowState.state) {
+					*workflowState.plan = types.ObjectUnknown(workflowStateAttrTypes)
+					continue
+				}
+				if !workflowState.plan.IsUnknown() && !workflowState.plan.IsNull() {
+					planned := workflowState.plan.Attributes()
+					planned["id"] = types.StringUnknown()
+					planned["position"] = types.Float64Unknown()
+					*workflowState.plan = types.ObjectValueMust(workflowStateAttrTypes, planned)
+				}
+				continue
+			}
+			if workflowState.plan.IsUnknown() || workflowState.plan.IsNull() || workflowState.state.IsUnknown() || workflowState.state.IsNull() {
+				continue
+			}
+			planned := workflowState.plan.Attributes()
+			previous := workflowState.state.Attributes()
+			if !planned["name"].Equal(previous["name"]) || !planned["color"].Equal(previous["color"]) || !planned["description"].Equal(previous["description"]) {
+				planned["position"] = types.Float64Unknown()
+				*workflowState.plan = types.ObjectValueMust(workflowStateAttrTypes, planned)
 			}
 		}
 	}
@@ -931,22 +909,22 @@ func (r *TeamResource) Create(ctx context.Context, req resource.CreateRequest, r
 	input.TriageEnabled = triageData.Enabled.ValueBool()
 	input.RequirePriorityToLeaveTriage = triageData.RequirePriority.ValueBool()
 
-	resp.Diagnostics.Append(data.Cycles.As(ctx, &cyclesData, basetypes.ObjectAsOptions{})...)
-
-	if resp.Diagnostics.HasError() {
-		return
+	if !data.Cycles.IsUnknown() && !data.Cycles.IsNull() {
+		resp.Diagnostics.Append(data.Cycles.As(ctx, &cyclesData, basetypes.ObjectAsOptions{})...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		input.CyclesEnabled = cyclesData.Enabled.ValueBoolPointer()
+		input.CycleStartDay = cyclesData.StartDay.ValueFloat64Pointer()
+		input.CycleDuration = intPointer(int(cyclesData.Duration.ValueFloat64()))
+		input.CycleCooldownTime = intPointer(int(cyclesData.Cooldown.ValueFloat64()))
+		input.UpcomingCycleCount = cyclesData.Upcoming.ValueFloat64Pointer()
+		input.CycleIssueAutoAssignStarted = cyclesData.AutoAddStarted.ValueBoolPointer()
+		input.CycleIssueAutoAssignCompleted = cyclesData.AutoAddCompleted.ValueBoolPointer()
+		input.CycleLockToActive = cyclesData.NeedForActive.ValueBoolPointer()
 	}
 
-	input.CyclesEnabled = cyclesData.Enabled.ValueBool()
-	input.CycleStartDay = cyclesData.StartDay.ValueFloat64()
-	input.CycleDuration = int(cyclesData.Duration.ValueFloat64())
-	input.CycleCooldownTime = int(cyclesData.Cooldown.ValueFloat64())
-	input.UpcomingCycleCount = cyclesData.Upcoming.ValueFloat64()
-	input.CycleIssueAutoAssignStarted = cyclesData.AutoAddStarted.ValueBool()
-	input.CycleIssueAutoAssignCompleted = cyclesData.AutoAddCompleted.ValueBool()
-	input.CycleLockToActive = cyclesData.NeedForActive.ValueBool()
-
-	if !data.InheritIssueEstimation.ValueBool() {
+	if !data.InheritIssueEstimation.ValueBool() && !data.Estimation.IsUnknown() && !data.Estimation.IsNull() {
 		resp.Diagnostics.Append(data.Estimation.As(ctx, &estimationData, basetypes.ObjectAsOptions{})...)
 
 		if resp.Diagnostics.HasError() {
@@ -954,9 +932,9 @@ func (r *TeamResource) Create(ctx context.Context, req resource.CreateRequest, r
 		}
 
 		input.IssueEstimationType = estimationData.Type.ValueString()
-		input.IssueEstimationExtended = estimationData.Extended.ValueBool()
-		input.IssueEstimationAllowZero = estimationData.AllowZero.ValueBool()
-		input.DefaultIssueEstimate = estimationData.Default.ValueFloat64()
+		input.IssueEstimationExtended = estimationData.Extended.ValueBoolPointer()
+		input.IssueEstimationAllowZero = estimationData.AllowZero.ValueBoolPointer()
+		input.DefaultIssueEstimate = estimationData.Default.ValueFloat64Pointer()
 	}
 
 	response, err := createTeam(ctx, *r.client, input)
@@ -1012,11 +990,18 @@ func (r *TeamResource) Create(ctx context.Context, req resource.CreateRequest, r
 		data.CompletedWorkflowState = readWorkflowStateToObject(*completedWorkflowState)
 		data.CanceledWorkflowState = readWorkflowStateToObject(*canceledWorkflowState)
 	} else {
-		backlog := updateTeamWorkflowStateInCreate(ctx, r, data.BacklogWorkflowState, resp, backlogWorkflowState.Id)
-		unstarted := updateTeamWorkflowStateInCreate(ctx, r, data.UnstartedWorkflowState, resp, unstartedWorkflowState.Id)
-		started := updateTeamWorkflowStateInCreate(ctx, r, data.StartedWorkflowState, resp, startedWorkflowState.Id)
-		completed := updateTeamWorkflowStateInCreate(ctx, r, data.CompletedWorkflowState, resp, completedWorkflowState.Id)
-		canceled := updateTeamWorkflowStateInCreate(ctx, r, data.CanceledWorkflowState, resp, canceledWorkflowState.Id)
+		apply := func(config types.Object, current getTeamWorkflowStatesWorkflowStatesWorkflowStateConnectionNodesWorkflowState) *types.Object {
+			if config.IsUnknown() || config.IsNull() {
+				value := readWorkflowStateToObject(current)
+				return &value
+			}
+			return updateTeamWorkflowStateInCreate(ctx, r, config, resp, current.Id)
+		}
+		backlog := apply(data.BacklogWorkflowState, *backlogWorkflowState)
+		unstarted := apply(data.UnstartedWorkflowState, *unstartedWorkflowState)
+		started := apply(data.StartedWorkflowState, *startedWorkflowState)
+		completed := apply(data.CompletedWorkflowState, *completedWorkflowState)
+		canceled := apply(data.CanceledWorkflowState, *canceledWorkflowState)
 
 		if backlog == nil || unstarted == nil || started == nil || completed == nil || canceled == nil {
 			return
@@ -1196,6 +1181,11 @@ func (r *TeamResource) Update(ctx context.Context, req resource.UpdateRequest, r
 	}
 
 	if !data.InheritWorkflowStatuses.ValueBool() {
+		updateBacklog := !data.BacklogWorkflowState.IsUnknown() && !data.BacklogWorkflowState.Equal(state.BacklogWorkflowState)
+		updateUnstarted := !data.UnstartedWorkflowState.IsUnknown() && !data.UnstartedWorkflowState.Equal(state.UnstartedWorkflowState)
+		updateStarted := !data.StartedWorkflowState.IsUnknown() && !data.StartedWorkflowState.Equal(state.StartedWorkflowState)
+		updateCompleted := !data.CompletedWorkflowState.IsUnknown() && !data.CompletedWorkflowState.Equal(state.CompletedWorkflowState)
+		updateCanceled := !data.CanceledWorkflowState.IsUnknown() && !data.CanceledWorkflowState.Equal(state.CanceledWorkflowState)
 		backlogID := state.BacklogWorkflowState.Attributes()["id"].(types.String).ValueString()
 		unstartedID := state.UnstartedWorkflowState.Attributes()["id"].(types.String).ValueString()
 		startedID := state.StartedWorkflowState.Attributes()["id"].(types.String).ValueString()
@@ -1230,23 +1220,58 @@ func (r *TeamResource) Update(ctx context.Context, req resource.UpdateRequest, r
 			startedID = started.Id
 			completedID = completed.Id
 			canceledID = canceled.Id
+			if !updateBacklog {
+				data.BacklogWorkflowState = readWorkflowStateToObject(*backlog)
+			}
+			if !updateUnstarted {
+				data.UnstartedWorkflowState = readWorkflowStateToObject(*unstarted)
+			}
+			if !updateStarted {
+				data.StartedWorkflowState = readWorkflowStateToObject(*started)
+			}
+			if !updateCompleted {
+				data.CompletedWorkflowState = readWorkflowStateToObject(*completed)
+			}
+			if !updateCanceled {
+				data.CanceledWorkflowState = readWorkflowStateToObject(*canceled)
+			}
 		}
 
-		backlog := updateTeamWorkflowStateInUpdate(ctx, r, data.BacklogWorkflowState, resp, backlogID)
-		unstarted := updateTeamWorkflowStateInUpdate(ctx, r, data.UnstartedWorkflowState, resp, unstartedID)
-		started := updateTeamWorkflowStateInUpdate(ctx, r, data.StartedWorkflowState, resp, startedID)
-		completed := updateTeamWorkflowStateInUpdate(ctx, r, data.CompletedWorkflowState, resp, completedID)
-		canceled := updateTeamWorkflowStateInUpdate(ctx, r, data.CanceledWorkflowState, resp, canceledID)
-
-		if backlog == nil || unstarted == nil || started == nil || completed == nil || canceled == nil {
-			return
+		if updateBacklog {
+			updated := updateTeamWorkflowStateInUpdate(ctx, r, data.BacklogWorkflowState, resp, backlogID)
+			if updated == nil {
+				return
+			}
+			data.BacklogWorkflowState = *updated
 		}
-
-		data.BacklogWorkflowState = *backlog
-		data.UnstartedWorkflowState = *unstarted
-		data.StartedWorkflowState = *started
-		data.CompletedWorkflowState = *completed
-		data.CanceledWorkflowState = *canceled
+		if updateUnstarted {
+			updated := updateTeamWorkflowStateInUpdate(ctx, r, data.UnstartedWorkflowState, resp, unstartedID)
+			if updated == nil {
+				return
+			}
+			data.UnstartedWorkflowState = *updated
+		}
+		if updateStarted {
+			updated := updateTeamWorkflowStateInUpdate(ctx, r, data.StartedWorkflowState, resp, startedID)
+			if updated == nil {
+				return
+			}
+			data.StartedWorkflowState = *updated
+		}
+		if updateCompleted {
+			updated := updateTeamWorkflowStateInUpdate(ctx, r, data.CompletedWorkflowState, resp, completedID)
+			if updated == nil {
+				return
+			}
+			data.CompletedWorkflowState = *updated
+		}
+		if updateCanceled {
+			updated := updateTeamWorkflowStateInUpdate(ctx, r, data.CanceledWorkflowState, resp, canceledID)
+			if updated == nil {
+				return
+			}
+			data.CanceledWorkflowState = *updated
+		}
 	} else {
 		workflowStatesResponse, err := getTeamWorkflowStates(ctx, *r.client, data.Id.ValueString())
 		if err != nil {
@@ -1323,19 +1348,39 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 	}
 
 	input := TeamUpdateInput{
-		Private:                        data.Private.ValueBool(),
-		ParentId:                       data.ParentId.ValueStringPointer(),
-		Description:                    data.Description.ValueStringPointer(),
-		Timezone:                       data.Timezone.ValueString(),
-		GroupIssueHistory:              data.EnableIssueHistoryGrouping.ValueBool(),
-		SetIssueSortOrderOnStateChange: setIssueSortOrderOnStateChange,
-		AiThreadSummariesEnabled:       data.EnableThreadSummaries.ValueBool(),
-		AutoArchivePeriod:              data.AutoArchivePeriod.ValueFloat64(),
-		AutoCloseParentIssues:          data.AutoCloseParentIssues.ValueBool(),
-		AutoCloseChildIssues:           data.AutoCloseChildIssues.ValueBool(),
+		ParentId:    data.ParentId.ValueStringPointer(),
+		Description: data.Description.ValueStringPointer(),
 	}
-	input.InheritIssueEstimation = boolPointerIfKnown(data.InheritIssueEstimation)
-	input.InheritWorkflowStatuses = boolPointerIfKnown(data.InheritWorkflowStatuses)
+	if !data.Private.Equal(state.Private) {
+		input.Private = data.Private.ValueBoolPointer()
+	}
+	if !data.Timezone.Equal(state.Timezone) {
+		input.Timezone = data.Timezone.ValueStringPointer()
+	}
+	if !data.EnableIssueHistoryGrouping.Equal(state.EnableIssueHistoryGrouping) {
+		input.GroupIssueHistory = data.EnableIssueHistoryGrouping.ValueBoolPointer()
+	}
+	if !data.EnableIssueDefaultToBottom.Equal(state.EnableIssueDefaultToBottom) {
+		input.SetIssueSortOrderOnStateChange = &setIssueSortOrderOnStateChange
+	}
+	if !data.EnableThreadSummaries.Equal(state.EnableThreadSummaries) {
+		input.AiThreadSummariesEnabled = data.EnableThreadSummaries.ValueBoolPointer()
+	}
+	if !data.AutoArchivePeriod.Equal(state.AutoArchivePeriod) {
+		input.AutoArchivePeriod = data.AutoArchivePeriod.ValueFloat64Pointer()
+	}
+	if !data.AutoCloseParentIssues.Equal(state.AutoCloseParentIssues) {
+		input.AutoCloseParentIssues = data.AutoCloseParentIssues.ValueBoolPointer()
+	}
+	if !data.AutoCloseChildIssues.Equal(state.AutoCloseChildIssues) {
+		input.AutoCloseChildIssues = data.AutoCloseChildIssues.ValueBoolPointer()
+	}
+	if !data.InheritIssueEstimation.Equal(state.InheritIssueEstimation) || !data.ParentId.Equal(state.ParentId) {
+		input.InheritIssueEstimation = boolPointerIfKnown(data.InheritIssueEstimation)
+	}
+	if !data.InheritWorkflowStatuses.Equal(state.InheritWorkflowStatuses) || !data.ParentId.Equal(state.ParentId) {
+		input.InheritWorkflowStatuses = boolPointerIfKnown(data.InheritWorkflowStatuses)
+	}
 
 	changedSecuritySettings := false
 	securitySettings := TeamSecuritySettingsInput{}
@@ -1393,25 +1438,27 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 		return diags
 	}
 
-	input.TriageEnabled = triageData.Enabled.ValueBool()
-	input.RequirePriorityToLeaveTriage = triageData.RequirePriority.ValueBool()
-
-	diags = data.Cycles.As(ctx, &cyclesData, basetypes.ObjectAsOptions{})
-
-	if diags.HasError() {
-		return diags
+	if !data.Triage.Equal(state.Triage) {
+		input.TriageEnabled = triageData.Enabled.ValueBoolPointer()
+		input.RequirePriorityToLeaveTriage = triageData.RequirePriority.ValueBoolPointer()
 	}
 
-	input.CyclesEnabled = cyclesData.Enabled.ValueBool()
-	input.CycleStartDay = cyclesData.StartDay.ValueFloat64()
-	input.CycleDuration = int(cyclesData.Duration.ValueFloat64())
-	input.CycleCooldownTime = int(cyclesData.Cooldown.ValueFloat64())
-	input.UpcomingCycleCount = cyclesData.Upcoming.ValueFloat64()
-	input.CycleIssueAutoAssignStarted = cyclesData.AutoAddStarted.ValueBool()
-	input.CycleIssueAutoAssignCompleted = cyclesData.AutoAddCompleted.ValueBool()
-	input.CycleLockToActive = cyclesData.NeedForActive.ValueBool()
+	if !data.Cycles.IsUnknown() && !data.Cycles.IsNull() && !data.Cycles.Equal(state.Cycles) {
+		diags = data.Cycles.As(ctx, &cyclesData, basetypes.ObjectAsOptions{})
+		if diags.HasError() {
+			return diags
+		}
+		input.CyclesEnabled = cyclesData.Enabled.ValueBoolPointer()
+		input.CycleStartDay = cyclesData.StartDay.ValueFloat64Pointer()
+		input.CycleDuration = intPointer(int(cyclesData.Duration.ValueFloat64()))
+		input.CycleCooldownTime = intPointer(int(cyclesData.Cooldown.ValueFloat64()))
+		input.UpcomingCycleCount = cyclesData.Upcoming.ValueFloat64Pointer()
+		input.CycleIssueAutoAssignStarted = cyclesData.AutoAddStarted.ValueBoolPointer()
+		input.CycleIssueAutoAssignCompleted = cyclesData.AutoAddCompleted.ValueBoolPointer()
+		input.CycleLockToActive = cyclesData.NeedForActive.ValueBoolPointer()
+	}
 
-	if !data.InheritIssueEstimation.ValueBool() {
+	if !data.InheritIssueEstimation.ValueBool() && !data.Estimation.IsUnknown() && !data.Estimation.IsNull() && (!data.Estimation.Equal(state.Estimation) || state.InheritIssueEstimation.ValueBool()) {
 		diags = data.Estimation.As(ctx, &estimationData, basetypes.ObjectAsOptions{})
 
 		if diags.HasError() {
@@ -1419,9 +1466,9 @@ func update(ctx context.Context, client *graphql.Client, state TeamResourceModel
 		}
 
 		input.IssueEstimationType = estimationData.Type.ValueString()
-		input.IssueEstimationExtended = estimationData.Extended.ValueBool()
-		input.IssueEstimationAllowZero = estimationData.AllowZero.ValueBool()
-		input.DefaultIssueEstimate = estimationData.Default.ValueFloat64()
+		input.IssueEstimationExtended = estimationData.Extended.ValueBoolPointer()
+		input.IssueEstimationAllowZero = estimationData.AllowZero.ValueBoolPointer()
+		input.DefaultIssueEstimate = estimationData.Default.ValueFloat64Pointer()
 	}
 
 	response, err := updateTeam(ctx, *client, input, state.Id.ValueString())
