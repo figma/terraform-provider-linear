@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.5.1
+
+### Bug Fixes
+* Preserve imported team cycle, estimation, and workflow settings when they are ignored in Terraform configuration.
+* Only send cycle, estimation, and workflow changes to Linear when those settings change.
+* Let Linear choose cycle, estimation, and workflow defaults when creating teams without those settings.
+
 ## 0.5.0
 
 ### Enhancements

@@ -1711,21 +1711,21 @@ type TeamCreateInput struct {
 	// The color of the team.
 	Color *string `json:"color,omitempty"`
 	// Whether the team uses cycles.
-	CyclesEnabled bool `json:"cyclesEnabled"`
+	CyclesEnabled *bool `json:"cyclesEnabled,omitempty"`
 	// The day of the week that a new cycle starts.
-	CycleStartDay float64 `json:"cycleStartDay"`
+	CycleStartDay *float64 `json:"cycleStartDay,omitempty"`
 	// The duration of each cycle in weeks.
-	CycleDuration int `json:"cycleDuration"`
+	CycleDuration *int `json:"cycleDuration,omitempty"`
 	// The cooldown time after each cycle in weeks.
-	CycleCooldownTime int `json:"cycleCooldownTime"`
+	CycleCooldownTime *int `json:"cycleCooldownTime,omitempty"`
 	// Auto assign started issues to current active cycle setting.
-	CycleIssueAutoAssignStarted bool `json:"cycleIssueAutoAssignStarted"`
+	CycleIssueAutoAssignStarted *bool `json:"cycleIssueAutoAssignStarted,omitempty"`
 	// Auto assign completed issues to current active cycle setting.
-	CycleIssueAutoAssignCompleted bool `json:"cycleIssueAutoAssignCompleted"`
+	CycleIssueAutoAssignCompleted *bool `json:"cycleIssueAutoAssignCompleted,omitempty"`
 	// Only allow issues issues with cycles in Active Issues.
-	CycleLockToActive bool `json:"cycleLockToActive"`
+	CycleLockToActive *bool `json:"cycleLockToActive,omitempty"`
 	// How many upcoming cycles to create.
-	UpcomingCycleCount float64 `json:"upcomingCycleCount"`
+	UpcomingCycleCount *float64 `json:"upcomingCycleCount,omitempty"`
 	// Whether triage mode is enabled for the team.
 	TriageEnabled bool `json:"triageEnabled"`
 	// Whether an issue needs to have a priority set before leaving triage.
@@ -1739,13 +1739,13 @@ type TeamCreateInput struct {
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
 	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
-	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
+	IssueEstimationAllowZero *bool `json:"issueEstimationAllowZero,omitempty"`
 	// Whether to move issues to bottom of the column when changing state.
 	SetIssueSortOrderOnStateChange string `json:"setIssueSortOrderOnStateChange"`
 	// Whether to add additional points to the estimate scale.
-	IssueEstimationExtended bool `json:"issueEstimationExtended"`
+	IssueEstimationExtended *bool `json:"issueEstimationExtended,omitempty"`
 	// What to use as an default estimate for unestimated issues.
-	DefaultIssueEstimate float64 `json:"defaultIssueEstimate"`
+	DefaultIssueEstimate *float64 `json:"defaultIssueEstimate,omitempty"`
 	// Whether to group recent issue history entries.
 	GroupIssueHistory bool `json:"groupIssueHistory"`
 	// The identifier of the default template for members of this team.
@@ -1799,30 +1799,32 @@ func (v *TeamCreateInput) GetIcon() *string { return v.Icon }
 func (v *TeamCreateInput) GetColor() *string { return v.Color }
 
 // GetCyclesEnabled returns TeamCreateInput.CyclesEnabled, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCyclesEnabled() bool { return v.CyclesEnabled }
+func (v *TeamCreateInput) GetCyclesEnabled() *bool { return v.CyclesEnabled }
 
 // GetCycleStartDay returns TeamCreateInput.CycleStartDay, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleStartDay() float64 { return v.CycleStartDay }
+func (v *TeamCreateInput) GetCycleStartDay() *float64 { return v.CycleStartDay }
 
 // GetCycleDuration returns TeamCreateInput.CycleDuration, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleDuration() int { return v.CycleDuration }
+func (v *TeamCreateInput) GetCycleDuration() *int { return v.CycleDuration }
 
 // GetCycleCooldownTime returns TeamCreateInput.CycleCooldownTime, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleCooldownTime() int { return v.CycleCooldownTime }
+func (v *TeamCreateInput) GetCycleCooldownTime() *int { return v.CycleCooldownTime }
 
 // GetCycleIssueAutoAssignStarted returns TeamCreateInput.CycleIssueAutoAssignStarted, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleIssueAutoAssignStarted() bool { return v.CycleIssueAutoAssignStarted }
+func (v *TeamCreateInput) GetCycleIssueAutoAssignStarted() *bool {
+	return v.CycleIssueAutoAssignStarted
+}
 
 // GetCycleIssueAutoAssignCompleted returns TeamCreateInput.CycleIssueAutoAssignCompleted, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleIssueAutoAssignCompleted() bool {
+func (v *TeamCreateInput) GetCycleIssueAutoAssignCompleted() *bool {
 	return v.CycleIssueAutoAssignCompleted
 }
 
 // GetCycleLockToActive returns TeamCreateInput.CycleLockToActive, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetCycleLockToActive() bool { return v.CycleLockToActive }
+func (v *TeamCreateInput) GetCycleLockToActive() *bool { return v.CycleLockToActive }
 
 // GetUpcomingCycleCount returns TeamCreateInput.UpcomingCycleCount, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetUpcomingCycleCount() float64 { return v.UpcomingCycleCount }
+func (v *TeamCreateInput) GetUpcomingCycleCount() *float64 { return v.UpcomingCycleCount }
 
 // GetTriageEnabled returns TeamCreateInput.TriageEnabled, and is useful for accessing the field via an interface.
 func (v *TeamCreateInput) GetTriageEnabled() bool { return v.TriageEnabled }
@@ -1845,7 +1847,7 @@ func (v *TeamCreateInput) GetInheritWorkflowStatuses() *bool { return v.InheritW
 func (v *TeamCreateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
 
 // GetIssueEstimationAllowZero returns TeamCreateInput.IssueEstimationAllowZero, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetIssueEstimationAllowZero() bool { return v.IssueEstimationAllowZero }
+func (v *TeamCreateInput) GetIssueEstimationAllowZero() *bool { return v.IssueEstimationAllowZero }
 
 // GetSetIssueSortOrderOnStateChange returns TeamCreateInput.SetIssueSortOrderOnStateChange, and is useful for accessing the field via an interface.
 func (v *TeamCreateInput) GetSetIssueSortOrderOnStateChange() string {
@@ -1853,10 +1855,10 @@ func (v *TeamCreateInput) GetSetIssueSortOrderOnStateChange() string {
 }
 
 // GetIssueEstimationExtended returns TeamCreateInput.IssueEstimationExtended, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetIssueEstimationExtended() bool { return v.IssueEstimationExtended }
+func (v *TeamCreateInput) GetIssueEstimationExtended() *bool { return v.IssueEstimationExtended }
 
 // GetDefaultIssueEstimate returns TeamCreateInput.DefaultIssueEstimate, and is useful for accessing the field via an interface.
-func (v *TeamCreateInput) GetDefaultIssueEstimate() float64 { return v.DefaultIssueEstimate }
+func (v *TeamCreateInput) GetDefaultIssueEstimate() *float64 { return v.DefaultIssueEstimate }
 
 // GetGroupIssueHistory returns TeamCreateInput.GroupIssueHistory, and is useful for accessing the field via an interface.
 func (v *TeamCreateInput) GetGroupIssueHistory() bool { return v.GroupIssueHistory }
@@ -1988,37 +1990,37 @@ type TeamUpdateInput struct {
 	// The color of the team.
 	Color *string `json:"color,omitempty"`
 	// Whether the team uses cycles.
-	CyclesEnabled bool `json:"cyclesEnabled"`
+	CyclesEnabled *bool `json:"cyclesEnabled,omitempty"`
 	// The day of the week that a new cycle starts.
-	CycleStartDay float64 `json:"cycleStartDay"`
+	CycleStartDay *float64 `json:"cycleStartDay,omitempty"`
 	// The duration of each cycle in weeks.
-	CycleDuration int `json:"cycleDuration"`
+	CycleDuration *int `json:"cycleDuration,omitempty"`
 	// The cooldown time after each cycle in weeks.
-	CycleCooldownTime int `json:"cycleCooldownTime"`
+	CycleCooldownTime *int `json:"cycleCooldownTime,omitempty"`
 	// Auto assign started issues to current active cycle setting.
-	CycleIssueAutoAssignStarted bool `json:"cycleIssueAutoAssignStarted"`
+	CycleIssueAutoAssignStarted *bool `json:"cycleIssueAutoAssignStarted,omitempty"`
 	// Auto assign completed issues to current active cycle setting.
-	CycleIssueAutoAssignCompleted bool `json:"cycleIssueAutoAssignCompleted"`
+	CycleIssueAutoAssignCompleted *bool `json:"cycleIssueAutoAssignCompleted,omitempty"`
 	// Only allow issues with cycles in Active Issues.
-	CycleLockToActive bool `json:"cycleLockToActive"`
+	CycleLockToActive *bool `json:"cycleLockToActive,omitempty"`
 	// The time at which to begin cycles.
 	CycleEnabledStartDate *time.Time `json:"cycleEnabledStartDate,omitempty"`
 	// How many upcoming cycles to create.
-	UpcomingCycleCount float64 `json:"upcomingCycleCount"`
+	UpcomingCycleCount *float64 `json:"upcomingCycleCount,omitempty"`
 	// The timezone of the team.
-	Timezone string `json:"timezone"`
+	Timezone *string `json:"timezone,omitempty"`
 	// Whether the team should inherit estimation settings from its parent. Only applies to sub-teams.
 	InheritIssueEstimation *bool `json:"inheritIssueEstimation,omitempty"`
 	// The issue estimation type to use. Must be one of "notUsed", "exponential", "fibonacci", "linear", "tShirt".
 	IssueEstimationType string `json:"issueEstimationType,omitempty"`
 	// Whether to allow zeros in issues estimates.
-	IssueEstimationAllowZero bool `json:"issueEstimationAllowZero"`
+	IssueEstimationAllowZero *bool `json:"issueEstimationAllowZero,omitempty"`
 	// Whether to move issues to bottom of the column when changing state.
-	SetIssueSortOrderOnStateChange string `json:"setIssueSortOrderOnStateChange"`
+	SetIssueSortOrderOnStateChange *string `json:"setIssueSortOrderOnStateChange,omitempty"`
 	// Whether to add additional points to the estimate scale.
-	IssueEstimationExtended bool `json:"issueEstimationExtended"`
+	IssueEstimationExtended *bool `json:"issueEstimationExtended,omitempty"`
 	// What to use as an default estimate for unestimated issues.
-	DefaultIssueEstimate float64 `json:"defaultIssueEstimate"`
+	DefaultIssueEstimate *float64 `json:"defaultIssueEstimate,omitempty"`
 	// Whether to send new issue notifications to Slack.
 	SlackNewIssue bool `json:"slackNewIssue,omitempty"`
 	// Whether to send new issue comment notifications to Slack.
@@ -2026,9 +2028,9 @@ type TeamUpdateInput struct {
 	// Whether to send issue status update notifications to Slack.
 	SlackIssueStatuses bool `json:"slackIssueStatuses,omitempty"`
 	// Whether to group recent issue history entries.
-	GroupIssueHistory bool `json:"groupIssueHistory"`
+	GroupIssueHistory *bool `json:"groupIssueHistory,omitempty"`
 	// Whether to enable resolved thread AI summaries.
-	AiThreadSummariesEnabled bool `json:"aiThreadSummariesEnabled"`
+	AiThreadSummariesEnabled *bool `json:"aiThreadSummariesEnabled,omitempty"`
 	// Whether to enable AI discussion summaries for issues.
 	AiDiscussionSummariesEnabled bool `json:"aiDiscussionSummariesEnabled,omitempty"`
 	// The identifier of the default template for members of this team.
@@ -2038,11 +2040,11 @@ type TeamUpdateInput struct {
 	// The identifier of the default project template of this team.
 	DefaultProjectTemplateId string `json:"defaultProjectTemplateId,omitempty"`
 	// Whether the team is private or not.
-	Private bool `json:"private"`
+	Private *bool `json:"private,omitempty"`
 	// Whether triage mode is enabled for the team.
-	TriageEnabled bool `json:"triageEnabled"`
+	TriageEnabled *bool `json:"triageEnabled,omitempty"`
 	// Whether an issue needs to have a priority set before leaving triage.
-	RequirePriorityToLeaveTriage bool `json:"requirePriorityToLeaveTriage"`
+	RequirePriorityToLeaveTriage *bool `json:"requirePriorityToLeaveTriage,omitempty"`
 	// Default status for newly created issues.
 	DefaultIssueStateId string `json:"defaultIssueStateId,omitempty"`
 	// Period after which issues are automatically closed, in months.
@@ -2050,11 +2052,11 @@ type TeamUpdateInput struct {
 	// The canceled workflow state which auto closed issues will be set to.
 	AutoCloseStateId string `json:"autoCloseStateId,omitempty"`
 	// Whether to automatically close a parent issue in this team if all its sub-issues are closed.
-	AutoCloseParentIssues bool `json:"autoCloseParentIssues"`
+	AutoCloseParentIssues *bool `json:"autoCloseParentIssues,omitempty"`
 	// Whether to automatically close all sub-issues when a parent issue in this team is closed.
-	AutoCloseChildIssues bool `json:"autoCloseChildIssues"`
+	AutoCloseChildIssues *bool `json:"autoCloseChildIssues,omitempty"`
 	// Period after which closed (completed, canceled, or duplicate) issues are automatically archived, in months.
-	AutoArchivePeriod float64 `json:"autoArchivePeriod"`
+	AutoArchivePeriod *float64 `json:"autoArchivePeriod,omitempty"`
 	// The workflow state into which issues are moved when they are marked as a duplicate of another issue.
 	MarkedAsDuplicateWorkflowStateId string `json:"markedAsDuplicateWorkflowStateId,omitempty"`
 	// Whether new users should join this team by default. Mutation restricted to workspace admins or owners!
@@ -2103,36 +2105,38 @@ func (v *TeamUpdateInput) GetIcon() *string { return v.Icon }
 func (v *TeamUpdateInput) GetColor() *string { return v.Color }
 
 // GetCyclesEnabled returns TeamUpdateInput.CyclesEnabled, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCyclesEnabled() bool { return v.CyclesEnabled }
+func (v *TeamUpdateInput) GetCyclesEnabled() *bool { return v.CyclesEnabled }
 
 // GetCycleStartDay returns TeamUpdateInput.CycleStartDay, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleStartDay() float64 { return v.CycleStartDay }
+func (v *TeamUpdateInput) GetCycleStartDay() *float64 { return v.CycleStartDay }
 
 // GetCycleDuration returns TeamUpdateInput.CycleDuration, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleDuration() int { return v.CycleDuration }
+func (v *TeamUpdateInput) GetCycleDuration() *int { return v.CycleDuration }
 
 // GetCycleCooldownTime returns TeamUpdateInput.CycleCooldownTime, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleCooldownTime() int { return v.CycleCooldownTime }
+func (v *TeamUpdateInput) GetCycleCooldownTime() *int { return v.CycleCooldownTime }
 
 // GetCycleIssueAutoAssignStarted returns TeamUpdateInput.CycleIssueAutoAssignStarted, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleIssueAutoAssignStarted() bool { return v.CycleIssueAutoAssignStarted }
+func (v *TeamUpdateInput) GetCycleIssueAutoAssignStarted() *bool {
+	return v.CycleIssueAutoAssignStarted
+}
 
 // GetCycleIssueAutoAssignCompleted returns TeamUpdateInput.CycleIssueAutoAssignCompleted, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleIssueAutoAssignCompleted() bool {
+func (v *TeamUpdateInput) GetCycleIssueAutoAssignCompleted() *bool {
 	return v.CycleIssueAutoAssignCompleted
 }
 
 // GetCycleLockToActive returns TeamUpdateInput.CycleLockToActive, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetCycleLockToActive() bool { return v.CycleLockToActive }
+func (v *TeamUpdateInput) GetCycleLockToActive() *bool { return v.CycleLockToActive }
 
 // GetCycleEnabledStartDate returns TeamUpdateInput.CycleEnabledStartDate, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetCycleEnabledStartDate() *time.Time { return v.CycleEnabledStartDate }
 
 // GetUpcomingCycleCount returns TeamUpdateInput.UpcomingCycleCount, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetUpcomingCycleCount() float64 { return v.UpcomingCycleCount }
+func (v *TeamUpdateInput) GetUpcomingCycleCount() *float64 { return v.UpcomingCycleCount }
 
 // GetTimezone returns TeamUpdateInput.Timezone, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetTimezone() string { return v.Timezone }
+func (v *TeamUpdateInput) GetTimezone() *string { return v.Timezone }
 
 // GetInheritIssueEstimation returns TeamUpdateInput.InheritIssueEstimation, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetInheritIssueEstimation() *bool { return v.InheritIssueEstimation }
@@ -2141,18 +2145,18 @@ func (v *TeamUpdateInput) GetInheritIssueEstimation() *bool { return v.InheritIs
 func (v *TeamUpdateInput) GetIssueEstimationType() string { return v.IssueEstimationType }
 
 // GetIssueEstimationAllowZero returns TeamUpdateInput.IssueEstimationAllowZero, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetIssueEstimationAllowZero() bool { return v.IssueEstimationAllowZero }
+func (v *TeamUpdateInput) GetIssueEstimationAllowZero() *bool { return v.IssueEstimationAllowZero }
 
 // GetSetIssueSortOrderOnStateChange returns TeamUpdateInput.SetIssueSortOrderOnStateChange, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetSetIssueSortOrderOnStateChange() string {
+func (v *TeamUpdateInput) GetSetIssueSortOrderOnStateChange() *string {
 	return v.SetIssueSortOrderOnStateChange
 }
 
 // GetIssueEstimationExtended returns TeamUpdateInput.IssueEstimationExtended, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetIssueEstimationExtended() bool { return v.IssueEstimationExtended }
+func (v *TeamUpdateInput) GetIssueEstimationExtended() *bool { return v.IssueEstimationExtended }
 
 // GetDefaultIssueEstimate returns TeamUpdateInput.DefaultIssueEstimate, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetDefaultIssueEstimate() float64 { return v.DefaultIssueEstimate }
+func (v *TeamUpdateInput) GetDefaultIssueEstimate() *float64 { return v.DefaultIssueEstimate }
 
 // GetSlackNewIssue returns TeamUpdateInput.SlackNewIssue, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetSlackNewIssue() bool { return v.SlackNewIssue }
@@ -2164,10 +2168,10 @@ func (v *TeamUpdateInput) GetSlackIssueComments() bool { return v.SlackIssueComm
 func (v *TeamUpdateInput) GetSlackIssueStatuses() bool { return v.SlackIssueStatuses }
 
 // GetGroupIssueHistory returns TeamUpdateInput.GroupIssueHistory, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetGroupIssueHistory() bool { return v.GroupIssueHistory }
+func (v *TeamUpdateInput) GetGroupIssueHistory() *bool { return v.GroupIssueHistory }
 
 // GetAiThreadSummariesEnabled returns TeamUpdateInput.AiThreadSummariesEnabled, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetAiThreadSummariesEnabled() bool { return v.AiThreadSummariesEnabled }
+func (v *TeamUpdateInput) GetAiThreadSummariesEnabled() *bool { return v.AiThreadSummariesEnabled }
 
 // GetAiDiscussionSummariesEnabled returns TeamUpdateInput.AiDiscussionSummariesEnabled, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetAiDiscussionSummariesEnabled() bool {
@@ -2188,13 +2192,13 @@ func (v *TeamUpdateInput) GetDefaultTemplateForNonMembersId() string {
 func (v *TeamUpdateInput) GetDefaultProjectTemplateId() string { return v.DefaultProjectTemplateId }
 
 // GetPrivate returns TeamUpdateInput.Private, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetPrivate() bool { return v.Private }
+func (v *TeamUpdateInput) GetPrivate() *bool { return v.Private }
 
 // GetTriageEnabled returns TeamUpdateInput.TriageEnabled, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetTriageEnabled() bool { return v.TriageEnabled }
+func (v *TeamUpdateInput) GetTriageEnabled() *bool { return v.TriageEnabled }
 
 // GetRequirePriorityToLeaveTriage returns TeamUpdateInput.RequirePriorityToLeaveTriage, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetRequirePriorityToLeaveTriage() bool {
+func (v *TeamUpdateInput) GetRequirePriorityToLeaveTriage() *bool {
 	return v.RequirePriorityToLeaveTriage
 }
 
@@ -2208,13 +2212,13 @@ func (v *TeamUpdateInput) GetAutoClosePeriod() *float64 { return v.AutoClosePeri
 func (v *TeamUpdateInput) GetAutoCloseStateId() string { return v.AutoCloseStateId }
 
 // GetAutoCloseParentIssues returns TeamUpdateInput.AutoCloseParentIssues, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetAutoCloseParentIssues() bool { return v.AutoCloseParentIssues }
+func (v *TeamUpdateInput) GetAutoCloseParentIssues() *bool { return v.AutoCloseParentIssues }
 
 // GetAutoCloseChildIssues returns TeamUpdateInput.AutoCloseChildIssues, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetAutoCloseChildIssues() bool { return v.AutoCloseChildIssues }
+func (v *TeamUpdateInput) GetAutoCloseChildIssues() *bool { return v.AutoCloseChildIssues }
 
 // GetAutoArchivePeriod returns TeamUpdateInput.AutoArchivePeriod, and is useful for accessing the field via an interface.
-func (v *TeamUpdateInput) GetAutoArchivePeriod() float64 { return v.AutoArchivePeriod }
+func (v *TeamUpdateInput) GetAutoArchivePeriod() *float64 { return v.AutoArchivePeriod }
 
 // GetMarkedAsDuplicateWorkflowStateId returns TeamUpdateInput.MarkedAsDuplicateWorkflowStateId, and is useful for accessing the field via an interface.
 func (v *TeamUpdateInput) GetMarkedAsDuplicateWorkflowStateId() string {

@@ -51,10 +51,10 @@ resource "linear_team" "child" {
 - `auto_close_child_issues` (Boolean) Whether to automatically close child issues when their parent issue is closed. **Default** `false`.
 - `auto_close_parent_issues` (Boolean) Whether to automatically close parent issues when all their child issues are closed. **Default** `false`.
 - `auto_close_period` (Number) Period after which non-completed or non-canceled issues are automatically closed, in months. **Default** `6`. *Use `0` for turning this off.*
-- `backlog_workflow_state` (Attributes) Settings for the `backlog` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.* (see [below for nested schema](#nestedatt--backlog_workflow_state))
-- `canceled_workflow_state` (Attributes) Settings for the `canceled` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.* (see [below for nested schema](#nestedatt--canceled_workflow_state))
+- `backlog_workflow_state` (Attributes) Settings for the `backlog` workflow state that is created by default for the team. *This can not be deleted.* (see [below for nested schema](#nestedatt--backlog_workflow_state))
+- `canceled_workflow_state` (Attributes) Settings for the `canceled` workflow state that is created by default for the team. *This can not be deleted.* (see [below for nested schema](#nestedatt--canceled_workflow_state))
 - `color` (String) Color of the team.
-- `completed_workflow_state` (Attributes) Settings for the `completed` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.* (see [below for nested schema](#nestedatt--completed_workflow_state))
+- `completed_workflow_state` (Attributes) Settings for the `completed` workflow state that is created by default for the team. *This can not be deleted.* (see [below for nested schema](#nestedatt--completed_workflow_state))
 - `cycles` (Attributes) Cycle settings of the team. (see [below for nested schema](#nestedatt--cycles))
 - `description` (String) Description of the team.
 - `enable_issue_default_to_bottom` (Boolean) Enable moving issues to bottom of the column when changing state. **Default** `false`.
@@ -66,10 +66,10 @@ resource "linear_team" "child" {
 - `inherit_workflow_statuses` (Boolean) Whether the team inherits workflow statuses from its parent. Only applies to sub-teams.
 - `parent_id` (String) Identifier of the parent team.
 - `private` (Boolean) Privacy of the team. **Default** `false`.
-- `started_workflow_state` (Attributes) Settings for the `started` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.* (see [below for nested schema](#nestedatt--started_workflow_state))
+- `started_workflow_state` (Attributes) Settings for the `started` workflow state that is created by default for the team. *This can not be deleted.* (see [below for nested schema](#nestedatt--started_workflow_state))
 - `timezone` (String) Timezone of the team. **Default** `Etc/GMT`.
 - `triage` (Attributes) Triage settings of the team. (see [below for nested schema](#nestedatt--triage))
-- `unstarted_workflow_state` (Attributes) Settings for the `unstarted` workflow state that is created by default for the team. *Position is always `0`. This can not be deleted.* (see [below for nested schema](#nestedatt--unstarted_workflow_state))
+- `unstarted_workflow_state` (Attributes) Settings for the `unstarted` workflow state that is created by default for the team. *This can not be deleted.* (see [below for nested schema](#nestedatt--unstarted_workflow_state))
 
 ### Read-Only
 
